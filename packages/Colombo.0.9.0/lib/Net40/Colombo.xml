@@ -1,0 +1,2589 @@
+<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>Colombo</name>
+  </assembly>
+  <members>
+    <member name="T:Colombo.BaseMessage">
+      <summary>
+            Base class for all the Colombo messages.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseMessage.ToString">
+      <summary>
+            A standard message representation : {GetType} | {CorrelationGuid} | {UtcTimestamp}
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseMessage.CorrelationGuid">
+      <summary>
+            Represents an identifier that could relate several messages together.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseMessage.UtcTimestamp">
+      <summary>
+            Timestamp for the creation of the message, expressed as UTC.
+            </summary>
+    </member>
+    <member name="T:Colombo.Response">
+      <summary>
+            Base class for responses.
+            </summary>
+    </member>
+    <member name="T:Colombo.ACKResponse">
+      <summary>
+            Represent a simple acknowledgement response.
+            </summary>
+    </member>
+    <member name="T:Colombo.IColomboAlert">
+      <summary>
+            Represents an alert that can be emitted during various checks performed by Colombo.
+            </summary>
+    </member>
+    <member name="T:Colombo.Alerts.ExceptionAlert">
+      <summary>
+            This alert means that an exception occured.
+            </summary>
+    </member>
+    <member name="M:Colombo.Alerts.ExceptionAlert.#ctor(Colombo.BaseRequest[],System.Exception)">
+      <summary>
+            Constructor.
+            </summary>
+      <param name="requests">Requests that where operated.</param>
+      <param name="ex">Exception that occured.</param>
+    </member>
+    <member name="M:Colombo.Alerts.ExceptionAlert.ToString">
+      <summary>
+            A description of the alert.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.ExceptionAlert.Requests">
+      <summary>
+            Requests that where operated.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.ExceptionAlert.Exception">
+      <summary>
+            Exception that occured.
+            </summary>
+    </member>
+    <member name="T:Colombo.Alerts.HealthCheckFailedAlert">
+      <summary>
+            This alert means that a healthcheck failed.
+            </summary>
+    </member>
+    <member name="M:Colombo.Alerts.HealthCheckFailedAlert.#ctor(System.String,System.String,System.Exception)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="machineNameOrigin">Name of machine from which the health check executes (source).</param>
+      <param name="address">Address of the endpoint for which the health check failed. (target)</param>
+      <param name="exception">Exception that occured during the health check.</param>
+    </member>
+    <member name="M:Colombo.Alerts.HealthCheckFailedAlert.ToString">
+      <summary>
+            A description of the alert.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.HealthCheckFailedAlert.MachineNameOrigin">
+      <summary>
+            Name of machine from which the health check executes (source).
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.HealthCheckFailedAlert.Address">
+      <summary>
+            Address of the endpoint for which the health check failed. (target)
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.HealthCheckFailedAlert.Exception">
+      <summary>
+            Exception that occured during the health check.
+            </summary>
+    </member>
+    <member name="T:Colombo.Alerts.MemcachedUnreachableAlert">
+      <summary>
+            This alert means that a Memcached server was unreachable.
+            </summary>
+    </member>
+    <member name="M:Colombo.Alerts.MemcachedUnreachableAlert.#ctor(System.String,System.String[])">
+      <summary>
+            Constructor
+            </summary>
+      <param name="machineNameOrigin">Name of machine from which the Colombo client executes (source).</param>
+      <param name="memcachedServers">Addresses of the memcached servers. (target)</param>
+    </member>
+    <member name="M:Colombo.Alerts.MemcachedUnreachableAlert.ToString">
+      <summary>
+            A description of the alert.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.MemcachedUnreachableAlert.MachineNameOrigin">
+      <summary>
+            Name of machine from which the Colombo client executes (source).
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.MemcachedUnreachableAlert.MemcachedServers">
+      <summary>
+            Addresses of the memcached servers. (target). Only one of these servers might be down.
+            </summary>
+    </member>
+    <member name="T:Colombo.Alerts.SLABreachedAlert">
+      <summary>
+            Alert that means that a SLA for a request has not been respected.
+            </summary>
+    </member>
+    <member name="M:Colombo.Alerts.SLABreachedAlert.#ctor(Colombo.BaseRequest[],System.TimeSpan,System.TimeSpan)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="requests">The requests that where sent.</param>
+      <param name="allowed">The allowed time defined by the SLA.</param>
+      <param name="measured">The measured time for the operation.</param>
+    </member>
+    <member name="M:Colombo.Alerts.SLABreachedAlert.ToString">
+      <summary>
+            A description of the alert.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.SLABreachedAlert.Requests">
+      <summary>
+            The requests that where sent.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.SLABreachedAlert.Allowed">
+      <summary>
+            The allowed time defined by the SLA.
+            </summary>
+    </member>
+    <member name="P:Colombo.Alerts.SLABreachedAlert.Measured">
+      <summary>
+            The measured time for the operation.
+            </summary>
+    </member>
+    <member name="T:Colombo.IMessageBus">
+      <summary>
+            Allow the sending of messages through Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.Send(Colombo.BaseRequest)">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.Send``1(Colombo.Request{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.SendAsync``1(Colombo.Request{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.Send``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.Send``2(System.Action{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.SendAsync``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBus.Send(Colombo.BaseSideEffectFreeRequest,Colombo.BaseSideEffectFreeRequest[])">
+      <summary>
+            Send synchronously, but in parallel, several requests and returns all the responses at once.
+            Only side effect-free requests can be parallelized.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.BaseMessageBus">
+      <summary>
+            Base class for <see cref="T:Colombo.IMessageBus" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.Send(Colombo.BaseRequest)">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.Send``1(Colombo.Request{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.SendAsync``1(Colombo.Request{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.Send``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.Send``2(System.Action{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.SendAsync``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.Send(Colombo.BaseSideEffectFreeRequest,Colombo.BaseSideEffectFreeRequest[])">
+      <summary>
+            Send synchronously, but in parallel, several requests and returns all the responses at once.
+            Only side effect-free requests can be parallelized.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.InternalSend(System.Collections.Generic.IList{Colombo.BaseRequest})">
+      <summary>
+            Real sending of the requests. All the other send methods delegates to this one.
+            Uses <see cref="M:Colombo.Impl.BaseMessageBus.BuildSendInvocationChain" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.InternalSendAsync``1(Colombo.BaseRequest)">
+      <summary>
+            Internal method that is used by Async send operations. Uses <see cref="M:Colombo.Impl.BaseMessageBus.InternalSend(System.Collections.Generic.IList{Colombo.BaseRequest})" /> under the cover.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.LogAndThrowError(System.String,System.Object[])">
+      <summary>
+            Log an error using the <see cref="P:Colombo.Impl.BaseMessageBus.Logger" /> and throw a <see cref="T:Colombo.ColomboException" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.BaseMessageBus.BuildSendInvocationChain">
+      <summary>
+            Return a invocation chain for the Send operation.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.BaseMessageBus.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.BaseMessageBus.MessageBusSendInterceptors">
+      <summary>
+            The list of <see cref="T:Colombo.IMessageBusSendInterceptor" /> to use.
+            </summary>
+    </member>
+    <member name="T:Colombo.IColomboInterceptor">
+      <summary>
+            Common interface for all the interceptors.
+            </summary>
+    </member>
+    <member name="P:Colombo.IColomboInterceptor.InterceptionPriority">
+      <summary>
+            Priority of the interceptor execution. Please use values from <see cref="T:Colombo.InterceptionPrority" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestHandlerHandleInterceptor">
+      <summary>
+            Interceptor for the <see cref="M:Colombo.IRequestHandler.Handle(Colombo.BaseRequest)" /> operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandlerHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Called when the interceptor is asked to intercept.
+            Must call <see cref="M:Colombo.IColomboRequestHandleInvocation.Proceed" /> to allow the invocation chain to continue.
+            </summary>
+      <param name="nextInvocation">The next invocation to proceed.</param>
+    </member>
+    <member name="T:Colombo.Interceptors.ExceptionsHandleInterceptor">
+      <summary>
+        <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> that sends <see cref="T:Colombo.Alerts.ExceptionAlert" /> when an exception occurs.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.ExceptionsHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Alerts when exceptions.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsHandleInterceptor.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsHandleInterceptor.Alerters">
+      <summary>
+            Alerters to use. All will be notified.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsHandleInterceptor.InterceptionPriority">
+      <summary>
+            High
+            </summary>
+    </member>
+    <member name="T:Colombo.IMessageBusSendInterceptor">
+      <summary>
+            Interceptor for the Send operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.IMessageBusSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Called when the interceptor is asked to intercept.
+            Must call <see cref="M:Colombo.IColomboSendInvocation.Proceed" /> to allow the invocation chain to continue.
+            </summary>
+      <param name="nextInvocation">The next invocation to proceed.</param>
+    </member>
+    <member name="T:Colombo.Interceptors.ExceptionsSendInterceptor">
+      <summary>
+        <see cref="T:Colombo.IMessageBusSendInterceptor" /> that sends <see cref="T:Colombo.Alerts.ExceptionAlert" /> when an exception occurs.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.ExceptionsSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Alerts when exceptions.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsSendInterceptor.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsSendInterceptor.Alerters">
+      <summary>
+            Alerters to use. All will be notified.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ExceptionsSendInterceptor.InterceptionPriority">
+      <summary>
+            High
+            </summary>
+    </member>
+    <member name="T:Colombo.ICacheable">
+      <summary>
+            Represents an item that can return a cache key.
+            </summary>
+    </member>
+    <member name="M:Colombo.ICacheable.GetCacheKey">
+      <summary>
+            Returns a cache key.
+            </summary>
+    </member>
+    <member name="T:Colombo.BaseRequest">
+      <summary>
+            Base class for requests - non generic version.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetGroupName">
+      <summary>
+            Get the name of the group that this request belongs to.
+            </summary>
+      <remarks>
+            Defaults to the name of the assembly.
+            </remarks>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetResponseType">
+      <summary>
+            Get the System.Type of the response associated with this request.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.BaseRequest.CreateResponse">
+      <summary>
+            Create a Response object that is related to the current request.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.ToString">
+      <summary>
+        <see cref="M:Colombo.BaseMessage.ToString" />. Adds Context information.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetCacheKey">
+      <summary>
+            Returns the key that is meant to be used when put in a cache.
+            The default implementation throws an exception, this means you must explicitly override it in Request classes.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseRequest.Context">
+      <summary>
+            Context of the request. Garanteed to be non-null.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseRequest.IsSideEffectFree">
+      <summary>
+        <c>true</c> is this request is side-effect free, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="T:Colombo.BaseSideEffectFreeRequest">
+      <summary>
+            Base class for side effect-free requests - non generic version.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseSideEffectFreeRequest.IsSideEffectFree">
+      <summary>
+        <c>true</c>.
+            </summary>
+    </member>
+    <member name="T:Colombo.CacheSegmentAttribute">
+      <summary>
+            Specify the cache segment to use. Must be applied on a request.
+            The segment can be defined by either a name or a pointer to a value in the Context.
+            </summary>
+    </member>
+    <member name="M:Colombo.CacheSegmentAttribute.#ctor">
+      <summary>
+            Specify the cache segment to use. Must be applied on a request.
+            </summary>
+    </member>
+    <member name="M:Colombo.CacheSegmentAttribute.#ctor(System.String)">
+      <summary>
+            Specify the cache segment to use. Must be applied on a request.
+            </summary>
+      <param name="name">Name of the cache segment.</param>
+    </member>
+    <member name="M:Colombo.CacheSegmentAttribute.GetCacheSegment(Colombo.BaseRequest)">
+      <summary>
+            Returns the cache segment, specified either by the <see cref="P:Colombo.CacheSegmentAttribute.FromContextKey" /> or <see cref="P:Colombo.CacheSegmentAttribute.Name" /> properties.
+            The FromContextKey has priority over the Name.
+            </summary>
+    </member>
+    <member name="P:Colombo.CacheSegmentAttribute.Name">
+      <summary>
+            The name of the cache segment to use.
+            </summary>
+    </member>
+    <member name="P:Colombo.CacheSegmentAttribute.FromContextKey">
+      <summary>
+            The name of the ContextKey which value will be used for the cache segment.
+            If no value is in the Context and a <see cref="P:Colombo.CacheSegmentAttribute.Name" /> is provided, the Name will be used instead.
+            </summary>
+    </member>
+    <member name="T:Colombo.Caching.IColomboCache">
+      <summary>
+            Represents a cache that can be used to store responses associated with requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.Caching.IColomboCache.Store(System.String,System.String,System.Object,System.TimeSpan)">
+      <summary>
+            Store an object inside the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="cacheKey">The key for which the object will be store. Must be unique per Cache segment.</param>
+      <param name="object">The object to store.</param>
+      <param name="duration">The duration for which the object will be valid.</param>
+    </member>
+    <member name="M:Colombo.Caching.IColomboCache.Get(System.String,System.Type,System.String)">
+      <summary>
+            Get an object from the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the object to retrieve.</param>
+      <param name="cacheKey">The key associated with the object.</param>
+      <returns>The object if it's in the cache and no expired, null otherwise.</returns>
+    </member>
+    <member name="M:Colombo.Caching.IColomboCache.Flush(System.String,System.Type)">
+      <summary>
+            Flush all objects of a specific type in a segment.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the objects to flush.</param>
+    </member>
+    <member name="M:Colombo.Caching.IColomboCache.FlushAll">
+      <summary>
+            Flush the entire cache.
+            </summary>
+    </member>
+    <member name="T:Colombo.Caching.Impl.InMemoryCache">
+      <summary>
+            Implementation of a <see cref="T:Colombo.Caching.IColomboCache" /> that stores values in-memory.
+            </summary>
+      <seealso cref="M:Colombo.Facilities.ColomboFacility.EnableInMemoryCaching" />
+    </member>
+    <member name="F:Colombo.Caching.Impl.InMemoryCache.ScavengingTimeInMilliseconds">
+      <summary>
+            Interval in milliseconds between scavenging operations. The scavenging empty expired objects from the cache.
+            </summary>
+    </member>
+    <member name="M:Colombo.Caching.Impl.InMemoryCache.#ctor">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Caching.Impl.InMemoryCache.Store(System.String,System.String,System.Object,System.TimeSpan)">
+      <summary>
+            Store an object inside the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="cacheKey">The key for which the object will be store. Must be unique per Cache segment.</param>
+      <param name="object">The object to store.</param>
+      <param name="duration">The duration for which the object will be valid.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.InMemoryCache.Get(System.String,System.Type,System.String)">
+      <summary>
+            Get an object from the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the object to retrieve.</param>
+      <param name="cacheKey">The key associated with the object.</param>
+      <returns>The object if it's in the cache and no expired, null otherwise.</returns>
+    </member>
+    <member name="M:Colombo.Caching.Impl.InMemoryCache.Flush(System.String,System.Type)">
+      <summary>
+            Flush all objects of a specific type in a segment.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the objects to flush.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.InMemoryCache.FlushAll">
+      <summary>
+            Flush the entire cache.
+            </summary>
+    </member>
+    <member name="P:Colombo.Caching.Impl.InMemoryCache.Count">
+      <summary>
+            Number of items in the cache, in all segments.
+            </summary>
+    </member>
+    <member name="T:Colombo.Caching.Impl.MemcachedCache">
+      <summary>
+            Implementation of a <see cref="T:Colombo.Caching.IColomboCache" /> that stores values in a memcached server.
+            </summary>
+      <seealso cref="M:Colombo.Facilities.ColomboFacility.EnableMemcachedCaching(System.String[])" />
+      <remarks>
+            Memcached: http://memcached.org
+            
+            This implementation encode the keys in a non human-readable format.
+            This cache is fail-safe: no exceptions should be thrown even if the memcached servers are unreachable.
+            Only <see cref="T:Colombo.Alerts.MemcachedUnreachableAlert" /> will be emitted.
+            </remarks>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.#ctor(System.String)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="serverUri">Uri of the memcached server to use.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.#ctor(System.String[])">
+      <summary>
+            Constructor
+            </summary>
+      <param name="servers">List of memcached servers to use.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.Store(System.String,System.String,System.Object,System.TimeSpan)">
+      <summary>
+            Store an object inside the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="cacheKey">The key for which the object will be store. Must be unique per Cache segment.</param>
+      <param name="object">The object to store.</param>
+      <param name="duration">The duration for which the object will be valid.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.Get(System.String,System.Type,System.String)">
+      <summary>
+            Get an object from the cache.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the object to retrieve.</param>
+      <param name="cacheKey">The key associated with the object.</param>
+      <returns>The object if it's in the cache and no expired, null otherwise.</returns>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.Flush(System.String,System.Type)">
+      <summary>
+            Flush all objects of a specific type in a segment.
+            </summary>
+      <param name="segment">The segment to use. Can be null for default segment.</param>
+      <param name="objectType">The type of the objects to flush.</param>
+    </member>
+    <member name="M:Colombo.Caching.Impl.MemcachedCache.FlushAll">
+      <summary>
+            Flush the entire cache.
+            </summary>
+    </member>
+    <member name="P:Colombo.Caching.Impl.MemcachedCache.Logger">
+      <summary>
+            Logger instance.
+            </summary>
+    </member>
+    <member name="P:Colombo.Caching.Impl.MemcachedCache.Alerters">
+      <summary>
+            List of alerters to use when Memcached servers are unreachable.
+            Will emit <see cref="T:Colombo.Alerts.MemcachedUnreachableAlert" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.EnableClientCachingAttribute">
+      <summary>
+            Allow a Colombo client to puts responses associated with requests of this type to puts them in a cache.
+            To enable caching, you have to either register a <see cref="T:Colombo.Caching.IColomboCache" /> or use 
+            <seealso cref="M:Colombo.Facilities.ColomboFacility.EnableInMemoryCaching" /> / <seealso cref="M:Colombo.Facilities.ColomboFacility.EnableMemcachedCaching(System.String[])" />.
+            To allow a request to be put in cache you have to implement <see cref="M:Colombo.ICacheable.GetCacheKey" />.
+            Cache segments can be control via <see cref="T:Colombo.CacheSegmentAttribute" />, and expiration is time-based or control by <see cref="T:Colombo.InvalidateCachedInstancesOfAttribute" />.
+            </summary>
+    </member>
+    <member name="P:Colombo.EnableClientCachingAttribute.Hours">
+      <summary>
+            Number of hours before the cached response will expired.
+            </summary>
+    </member>
+    <member name="P:Colombo.EnableClientCachingAttribute.Minutes">
+      <summary>
+            Number of minutes before the cached response will expired.
+            </summary>
+    </member>
+    <member name="P:Colombo.EnableClientCachingAttribute.Seconds">
+      <summary>
+            Number of seconds before the cached response will expired.
+            </summary>
+    </member>
+    <member name="P:Colombo.EnableClientCachingAttribute.Duration">
+      <summary>
+            Duration before the cached response will expired.
+            </summary>
+    </member>
+    <member name="T:Colombo.ColomboException">
+      <summary>
+            An exception that occured inside Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.ColomboException.#ctor">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.ColomboException.#ctor(System.String)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.ColomboException.#ctor(System.String,System.Exception)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.ColomboException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.ColomboException.ToString">
+      <summary>
+            String representation of the exception.
+            </summary>
+    </member>
+    <member name="T:Colombo.IAsyncCallback`1">
+      <summary>
+            Allows the registration of a callback function that will be called when a response arrive.
+            </summary>
+      <remarks>
+            Used with the IMessageBus.SendAsync method.
+            </remarks>
+    </member>
+    <member name="M:Colombo.IAsyncCallback`1.Register(System.Action{`0})">
+      <summary>
+            Register a callback function that will be called when the response arrived.
+            Be careful because you will NOT be notified of a failure (Exception).
+            </summary>
+      <param name="theCallback">The function to call when a response arrives.</param>
+    </member>
+    <member name="M:Colombo.IAsyncCallback`1.Register(System.Action{`0},System.Action{System.Exception})">
+      <summary>
+            Register a callback function that will be called when the response arrived,
+            and an error callback that will be called if a failure happens.
+            Either one of these callbacks will be called, but not both.
+            </summary>
+      <param name="theCallback">The function to call when a response arrives.</param>
+      <param name="theErrorCallback">The function to call when an exception happens.</param>
+    </member>
+    <member name="T:Colombo.IColomboAlerter">
+      <summary>
+            Represents an alerter that will be notified in case of alerts.
+            You must register all the alerter through the container.
+            </summary>
+    </member>
+    <member name="M:Colombo.IColomboAlerter.Alert(Colombo.IColomboAlert)">
+      <summary>
+            Called when an alert has been raised.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestHandler">
+      <summary>
+            Represent a component that handles requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandler.Handle(Colombo.BaseRequest)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandler.GetRequestType">
+      <summary>
+            Get the type of request that this request handler handles.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.IRequestHandler.GetResponseType">
+      <summary>
+            Get the type of response that this request handler produces.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:Colombo.ISideEffectFreeRequestHandler`2">
+      <summary>
+            Interface used to defined request handlers for side effect-free requests.
+            You may prefer to use the abstract SideEffectFreeRequestHandler class instead.
+            </summary>
+    </member>
+    <member name="M:Colombo.ISideEffectFreeRequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestHandler`2">
+      <summary>
+            Interface used to defined request handlers for requests.
+            You may prefer to use the abstract RequestHandler class instead.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestHandlerFactory">
+      <summary>
+            Component that can create <see cref="T:Colombo.IRequestHandler" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandlerFactory.CanCreateRequestHandlerFor(Colombo.BaseRequest)">
+      <summary>
+        <c>true</c> if the factory can create a <see cref="T:Colombo.IRequestHandler" /> to handle the request, <c>false</c> otherwise.
+            </summary>
+      <param name="request">
+      </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.IRequestHandlerFactory.CreateRequestHandlerFor(Colombo.BaseRequest)">
+      <summary>
+            Creates a <see cref="T:Colombo.IRequestHandler" /> to handle the <paramref name="request" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandlerFactory.DisposeRequestHandler(Colombo.IRequestHandler)">
+      <summary>
+            Dispose the <paramref name="requestHandler" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestProcessor">
+      <summary>
+            A components that can process requests into responses
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestProcessor.CanProcess(Colombo.BaseRequest)">
+      <summary>
+        <c>true</c> if the processor can process the request, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestProcessor.Process(System.Collections.Generic.IList{Colombo.BaseRequest})">
+      <summary>
+            Process the requests.
+            </summary>
+    </member>
+    <member name="T:Colombo.IStatefulMessageBus">
+      <summary>
+            A stateful message bus is a <see cref="T:Colombo.IMessageBus" /> that tracks its state and complement the base <see cref="T:Colombo.IMessageBus" />
+            with additional functionality such as the ability to automatically batch sends and to limit the number of sends it allows.
+            </summary>
+    </member>
+    <member name="M:Colombo.IStatefulMessageBus.FutureSend``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Return a promise of response - that is a proxy that when accessed the first time, it will send.
+            This allow the batching of several FutureSend together.
+            </summary>
+    </member>
+    <member name="P:Colombo.IStatefulMessageBus.NumberOfSend">
+      <summary>
+            The number of time this <see cref="T:Colombo.IStatefulMessageBus" /> has already sent.
+            </summary>
+    </member>
+    <member name="P:Colombo.IStatefulMessageBus.MaxAllowedNumberOfSend">
+      <summary>
+            The maximum allowed number of send that this <see cref="T:Colombo.IStatefulMessageBus" /> will allow.
+            After this quota, every attempt to send will result in a <see cref="T:Colombo.ColomboException" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.IColomboServiceFactory">
+      <summary>
+            Components that create <see cref="T:Colombo.Wcf.IColomboService" /> channels.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboServiceFactory.CanCreateChannelForRequestGroup(System.String)">
+      <summary>
+        <c>true</c> if can create a channel for the group named <paramref name="name" />, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboServiceFactory.GetAddressForRequestGroup(System.String)">
+      <summary>
+            Return the address of the endpoint associated with the name <paramref name="name" />.
+            Return null if not found.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboServiceFactory.CreateChannel(System.String)">
+      <summary>
+            Create a <see cref="T:System.ServiceModel.IClientChannel" /> associated with the name <paramref name="name" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboServiceFactory.CreateChannelsForAllEndPoints">
+      <summary>
+            Create a <see cref="T:System.ServiceModel.IClientChannel" /> for all the available endpoints.
+            </summary>
+    </member>
+    <member name="T:Colombo.Facilities.ColomboFacility">
+      <summary>
+        <see cref="T:Castle.MicroKernel.IFacility" /> that simplifies the registration of Colombo.
+            </summary>
+      <example>
+        <code>
+            var container = new WindsorContainer();
+            container.AddFacility&lt;ColomboFacility&gt;(f =&gt; f.ClientOnly());
+            </code>
+      </example>
+    </member>
+    <member name="F:Colombo.Facilities.ColomboFacility.DefaultMaxAllowedNumberOfSendForStatefulMessageBus">
+      <summary>
+            Default value for the number of send allowed in <see cref="T:Colombo.IStatefulMessageBus" />.
+            <see cref="P:Colombo.IStatefulMessageBus.MaxAllowedNumberOfSend" /></summary>
+    </member>
+    <member name="F:Colombo.Facilities.ColomboFacility.DefaultHealthCheckHeartBeatInSeconds">
+      <summary>
+            Default interval in seconds between health check for endpoints.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.Init">
+      <summary>
+            The custom initialization for the Facility.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.ClientOnly">
+      <summary>
+            Only register the components needed to act as a client, which means no message handling can happen locally.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.MaxAllowedNumberOfSendForStatefulMessageBus(System.Int32)">
+      <summary>
+            Number of Send operations allowed in <see cref="T:Colombo.IStatefulMessageBus" />.
+            Set to 0 or a negative number to disable the check.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.HealthCheckHeartBeatInSeconds(System.Int32)">
+      <summary>
+            Interval in seconds between health check for endpoints.
+            Set to 0 or a negative number to disable the check.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotHandleInsideTransactionScope">
+      <summary>
+            Disabled the creation and management of a transcation per message handling.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotManageCurrentCulture">
+      <summary>
+            Disable the transmission of the CurrentCulture between a client and a server through the "Culture" context key,
+            and the automatic positionning of the CurrentCulture on the server-side when handling a request.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotEnforceRequiredInContext">
+      <summary>
+            Disable checks for <see cref="T:Colombo.RequiredInContextAttribute" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotValidateDataAnnotations">
+      <summary>
+            Disable automatic validation for <see cref="N:System.ComponentModel.DataAnnotations" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotAlertInApplicationEventLog">
+      <summary>
+            Disable the default <see cref="T:Colombo.IColomboAlerter" /> that writes alerts as warning in the Application event log.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotManageSLA">
+      <summary>
+            Disable checks for <see cref="T:Colombo.SLAAttribute" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotAlertOnExceptions">
+      <summary>
+            Disable alerts when a operation throws an exception.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.MonitorWithPerformanceCounters">
+      <summary>
+            Enable monitoring of messages sent / handled through performance counters.
+            Performance counters will be created on-the-fly if allowed, or could be created using <see cref="M:Colombo.Interceptors.PerfCounterFactory.CreatePerfCounters" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.EnableInMemoryCaching">
+      <summary>
+            Enable caching of the requests marked with <see cref="T:Colombo.EnableClientCachingAttribute" /> in-memory.
+            Incompatible with <see cref="M:Colombo.Facilities.ColomboFacility.EnableMemcachedCaching(System.String[])" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.EnableMemcachedCaching(System.String[])">
+      <summary>
+            Enable caching of the requests marked with <see cref="T:Colombo.EnableClientCachingAttribute" /> using memcached servers.
+            Incompatible with <see cref="M:Colombo.Facilities.ColomboFacility.EnableInMemoryCaching" />.
+            </summary>
+      <param name="servers">List of memcached servers addresses.</param>
+      <example>
+        <code>
+                EnableMemcachedCaching(new[] { "localhost:11211", "cacheserver:1234" });
+            </code>
+      </example>
+    </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.TestSupportMode">
+      <summary>
+            Registers Colombo components in test mode. It means that no real send operations will be performed,
+            But using the <see cref="T:Colombo.TestSupport.IStubMessageBus" /> you will be able to assert certain operations.
+            </summary>
+    </member>
+    <member name="T:Colombo.Facilities.LifestyleRegistrationExtensions">
+      <summary>
+            Static class to hold extensions method for Castle Windsor Lifestyles.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.LifestyleRegistrationExtensions.PerRequestHandling``1(Castle.MicroKernel.Registration.Lifestyle.LifestyleGroup{``0})">
+      <summary>
+            Inside a request handling activity, resolve one instance per handling.
+            Outside a request handling, resolve one instance per thread.
+            </summary>
+    </member>
+    <member name="T:Colombo.Facilities.PerRequestHandlingLifestyleManager">
+      <summary>
+            Inside a request handling activity, resolve one instance per handling.
+            Outside a request handling, resolve one instance per thread.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.PerRequestHandlingLifestyleManager.Dispose">
+      <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.PerRequestHandlingLifestyleManager.Resolve(Castle.MicroKernel.Context.CreationContext)">
+      <summary>
+            Return the component instance based on the lifestyle semantic.
+            </summary>
+    </member>
+    <member name="M:Colombo.Facilities.PerRequestHandlingLifestyleManager.Release(System.Object)">
+      <summary>
+            Release the component instance based on the lifestyle semantic.
+            </summary>
+    </member>
+    <member name="T:Colombo.SideEffectFreeRequest`1">
+      <summary>
+            Base class for requests that are side-effect free, meaning they don't impact the state of the server.
+            Use this base class to enable parallelism.
+            </summary>
+      <typeparam name="TResponse">
+      </typeparam>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequest`1.GetResponseType">
+      <summary>
+            Get the System.Type of the response associated with this request.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:Colombo.HealthCheck.HealthCheckRequest">
+      <summary>
+            Request that can be send to a Colombo server, and for which a response will indicate that this server is up and running.
+            </summary>
+    </member>
+    <member name="T:Colombo.SideEffectFreeRequestHandler`2">
+      <summary>
+            Use this base class to create request handlers for side effect-free requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(Colombo.BaseRequest)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.CreateRequest``1">
+      <summary>
+            Create a new request to be used inside this request handler.
+            The CorrelationGuid and the Context are copied.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetRequestType">
+      <summary>
+            Get the type of request that this request handler handles.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetResponseType">
+      <summary>
+            Get the type of response that this request handler produces.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Request">
+      <summary>
+            Incoming request.
+            </summary>
+    </member>
+    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Response">
+      <summary>
+            Outgoing response. It will be created before Handle() and the CorrelationGuid will be set.
+            </summary>
+    </member>
+    <member name="T:Colombo.HealthCheck.HealthCheckRequestHandler">
+      <summary>
+            Handler for <see cref="T:Colombo.HealthCheck.HealthCheckRequest" />. Merely do anything than respond.
+            </summary>
+    </member>
+    <member name="M:Colombo.HealthCheck.HealthCheckRequestHandler.Handle">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="T:Colombo.IColomboRequestHandleInvocation">
+      <summary>
+            Invocation used in the interception process for handling requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.IColomboRequestHandleInvocation.Proceed">
+      <summary>
+            Proceed with the invocation.
+            </summary>
+    </member>
+    <member name="P:Colombo.IColomboRequestHandleInvocation.Request">
+      <summary>
+            The request to handle.
+            </summary>
+    </member>
+    <member name="P:Colombo.IColomboRequestHandleInvocation.Response">
+      <summary>
+            The response.
+            </summary>
+    </member>
+    <member name="T:Colombo.InterceptionPrority">
+      <summary>
+            Defines constant values for <see cref="T:Colombo.IColomboInterceptor" /> priorities.
+            </summary>
+      <see cref="P:Colombo.IColomboInterceptor.InterceptionPriority" />
+    </member>
+    <member name="F:Colombo.InterceptionPrority.High">
+      <summary>
+            High priority - will run first
+            </summary>
+    </member>
+    <member name="F:Colombo.InterceptionPrority.Medium">
+      <summary>
+            Medium priority
+            </summary>
+    </member>
+    <member name="F:Colombo.InterceptionPrority.Low">
+      <summary>
+            Low priority - will run last
+            </summary>
+    </member>
+    <member name="T:Colombo.IColomboSendInvocation">
+      <summary>
+            Represents an invocation for the Send operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.IColomboSendInvocation.Proceed">
+      <summary>
+            Proceed with the execution of the invocation.
+            </summary>
+    </member>
+    <member name="P:Colombo.IColomboSendInvocation.Requests">
+      <summary>
+            The list of requests that will be send or that have been sent.
+            </summary>
+    </member>
+    <member name="P:Colombo.IColomboSendInvocation.Responses">
+      <summary>
+            The responses at this moment.
+            </summary>
+    </member>
+    <member name="T:Colombo.ILocalRequestProcessor">
+      <summary>
+            Represents a component that can process requests locally.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.Async.AsyncCallback`1">
+      <summary>
+            IAsyncCallback implementation.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.Async.AsyncCallback`1.Register(System.Action{`0})">
+      <summary>
+            Register a callback function that will be called when the response arrived.
+            Be careful because you will NOT be notified of a failure (Exception).
+            </summary>
+      <param name="callback">The function to call when a response arrives.</param>
+    </member>
+    <member name="M:Colombo.Impl.Async.AsyncCallback`1.Register(System.Action{`0},System.Action{System.Exception})">
+      <summary>
+            Register a callback function that will be called when the response arrived,
+            and an error callback that will be called if a failure happens.
+            Either one of these callbacks will be called, but not both.
+            </summary>
+      <param name="callback">The function to call when a response arrives.</param>
+      <param name="errorCallback">The function to call when an exception happens.</param>
+    </member>
+    <member name="T:Colombo.Impl.RequestHandle.BaseRequestHandleInvocation">
+      <summary>
+            Base class for <see cref="T:Colombo.IColomboRequestHandleInvocation"></see>.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.Send.BaseSendInvocation">
+      <summary>
+            Base class for <see cref="T:Colombo.IColomboSendInvocation"></see>.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.Alerters.EventLogColomboAlerter">
+      <summary>
+        <see cref="T:Colombo.IColomboAlerter" /> that writes <see cref="T:Colombo.IColomboAlert" /> to the Application event log as Warnings.
+            </summary>
+    </member>
+    <member name="F:Colombo.Impl.Alerters.EventLogColomboAlerter.SourceName">
+      <summary>
+            Name of the source in the event log.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.Alerters.EventLogColomboAlerter.Alert(Colombo.IColomboAlert)">
+      <summary>
+            Called when an alert has been raised.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.Alerters.EventLogColomboAlerter.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.RequestHandle.KernelRequestHandlerFactory">
+      <summary>
+            Implementation of <see cref="T:Colombo.IRequestHandlerFactory" /> that uses <see cref="T:Castle.MicroKernel.IKernel" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.RequestHandle.KernelRequestHandlerFactory.#ctor(Castle.MicroKernel.IKernel)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="kernel">Kernel used to resolve the request handlers.</param>
+    </member>
+    <member name="M:Colombo.Impl.RequestHandle.KernelRequestHandlerFactory.CanCreateRequestHandlerFor(Colombo.BaseRequest)">
+      <summary>
+        <c>true</c> if the factory can create a <see cref="T:Colombo.IRequestHandler" /> to handle the request, <c>false</c> otherwise.
+            </summary>
+      <param name="request">
+      </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.Impl.RequestHandle.KernelRequestHandlerFactory.CreateRequestHandlerFor(Colombo.BaseRequest)">
+      <summary>
+            Creates a <see cref="T:Colombo.IRequestHandler" /> to handle the <paramref name="request" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.RequestHandle.KernelRequestHandlerFactory.DisposeRequestHandler(Colombo.IRequestHandler)">
+      <summary>
+            Dispose the <paramref name="requestHandler" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.LocalRequestProcessor">
+      <summary>
+            Default implementation for processing requests locally.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.LocalRequestProcessor.#ctor(Colombo.IRequestHandlerFactory)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="requestHandlerFactory">The <see cref="T:Colombo.IRequestHandlerFactory" /> used to create <see cref="T:Colombo.IRequestHandler" />.</param>
+    </member>
+    <member name="M:Colombo.Impl.LocalRequestProcessor.CanProcess(Colombo.BaseRequest)">
+      <summary>
+        <c>true</c> if the processor can process the request, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.LocalRequestProcessor.Process(System.Collections.Generic.IList{Colombo.BaseRequest})">
+      <summary>
+            Process the requests.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.LocalRequestProcessor.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.LocalRequestProcessor.RequestHandlerInterceptors">
+      <summary>
+            The list of <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> to use.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.MessageBus">
+      <summary>
+            Default implementaion of <see cref="T:Colombo.IMessageBus" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.MessageBus.#ctor(Colombo.IRequestProcessor[])">
+      <summary>
+            Constructor
+            </summary>
+      <param name="requestProcessors">List of <see cref="T:Colombo.IRequestProcessor" /> that could process requests.</param>
+    </member>
+    <member name="M:Colombo.Impl.MessageBus.BuildSendInvocationChain">
+      <summary>
+            Return a invocation chain for the Send operation.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.RequestHandle.RequestHandlerExtensions">
+      <summary>
+            Holds extension methods the applies to <see cref="T:Colombo.IRequestHandler" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.RequestHandle.RequestHandlerExtensions.GetCustomAttribute``1(Colombo.IRequestHandler,System.Boolean)">
+      <summary>
+            Return a custom attribute applied to the <paramref name="requestHandler" />.
+            Return null if not found.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.RequestHandle.RequestHandlerHandleInvocation">
+      <summary>
+            An <see cref="T:Colombo.IColomboRequestHandleInvocation" /> that can invoke <see cref="T:Colombo.IRequestHandler" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.Send.RequestProcessorSendInvocation">
+      <summary>
+            A <see cref="T:Colombo.IColomboSendInvocation" /> that can invoke <see cref="T:Colombo.IRequestProcessor" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.Send.RequestProcessorSendInvocation.#ctor(Colombo.IRequestProcessor[])">
+      <summary>
+            Constructor
+            </summary>
+      <param name="requestProcessors">List of <see cref="T:Colombo.IRequestProcessor" /> that could process the request.</param>
+    </member>
+    <member name="T:Colombo.Impl.StatefulMessageBus">
+      <summary>
+            Default implementation of <see cref="T:Colombo.IStatefulMessageBus" /> that uses an <see cref="T:Colombo.IMessageBus" /> to send.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.#ctor(Colombo.IMessageBus)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="messageBus">The inner message bus to use.</param>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.FutureSend``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Return a promise of response - that is a proxy that when accessed the first time, it will send.
+            This allow the batching of several FutureSend together.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.Send(Colombo.BaseRequest)">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.Send``1(Colombo.Request{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.SendAsync``1(Colombo.Request{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.Send``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.Send``2(System.Action{``0})">
+      <summary>
+            Send synchronously a request and returns the response.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.SendAsync``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Send a request asynchronously. You must register a callback with the result to get the response or the error.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.StatefulMessageBus.Send(Colombo.BaseSideEffectFreeRequest,Colombo.BaseSideEffectFreeRequest[])">
+      <summary>
+            Send synchronously, but in parallel, several requests and returns all the responses at once.
+            Only side effect-free requests can be parallelized.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.StatefulMessageBus.NumberOfSend">
+      <summary>
+            The number of time this <see cref="T:Colombo.IStatefulMessageBus" /> has already sent.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.StatefulMessageBus.MaxAllowedNumberOfSend">
+      <summary>
+            The maximum allowed number of send that this <see cref="T:Colombo.IStatefulMessageBus" /> will allow.
+            After this quota, every attempt to send will result in a <see cref="T:Colombo.ColomboException" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.CacheHandleInterceptor">
+      <summary>
+            Interceptor used server-side to invalidate objects from the cache.
+            It does not put them in the cache, just invalidate the values.
+            </summary>
+      <see cref="T:Colombo.InvalidateCachedInstancesOfAttribute" />
+    </member>
+    <member name="M:Colombo.Interceptors.CacheHandleInterceptor.#ctor(Colombo.Caching.IColomboCache)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="cache">The cache to use</param>
+    </member>
+    <member name="M:Colombo.Interceptors.CacheHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Performs the invalidation if the request has an <see cref="T:Colombo.InvalidateCachedInstancesOfAttribute" /> attribute.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.CacheHandleInterceptor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.CacheHandleInterceptor.InterceptionPriority">
+      <summary>
+            Runs last in the invocation chain.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.ClientCacheSendInterceptor">
+      <summary>
+            Interceptor that puts request in the cache when possible, and also invalidates them.
+            </summary>
+      <see cref="T:Colombo.EnableClientCachingAttribute" />
+      <see cref="T:Colombo.CacheSegmentAttribute" />
+      <see cref="T:Colombo.InvalidateCachedInstancesOfAttribute" />
+    </member>
+    <member name="M:Colombo.Interceptors.ClientCacheSendInterceptor.#ctor(Colombo.Caching.IColomboCache)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="cache">The cache to use</param>
+    </member>
+    <member name="M:Colombo.Interceptors.ClientCacheSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Puts request marked with a <see cref="T:Colombo.EnableClientCachingAttribute" /> attribute in the cache.
+            The segment is determined by the <see cref="T:Colombo.CacheSegmentAttribute" /> attribute if any, otherwise <c>null</c> will be use.
+            It also invalidates the cache using <see cref="T:Colombo.InvalidateCachedInstancesOfAttribute" />.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ClientCacheSendInterceptor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.ClientCacheSendInterceptor.InterceptionPriority">
+      <summary>
+            Runs last in the invocation chain.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.CurrentCultureConstant">
+      <summary>
+            Holds constants used by the interceptors related to the current culture management.
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.CurrentCultureConstant.CultureContextKey">
+      <summary>
+            The key used to transport the current culture in the request context.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.CurrentCultureHandleInterceptor">
+      <summary>
+        <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> that uses a specific key in Context to set the CurrentThread.CurrentCulture and CurrentUICulture.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.CurrentCultureHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Sets the current culture.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.CurrentCultureHandleInterceptor.InterceptionPriority">
+      <summary>
+            Medium
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.CurrentCultureSendInterceptor">
+      <summary>
+        <see cref="T:Colombo.IMessageBusSendInterceptor" /> that puts in a specific key in Context the CurrentThread.CurrentUICulture .
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.CurrentCultureSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Puts the key in the Context.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.CurrentCultureSendInterceptor.InterceptionPriority">
+      <summary>
+            Medium.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.DataAnnotationsValidationHandleInterceptor">
+      <summary>
+            Interceptor that validates the request handled based on Data annotations.
+            The validation will fill the <see cref="P:Colombo.ValidatedResponse.ValidationResults" /> property of a <see cref="T:Colombo.ValidatedResponse" />
+            and returns it without invoking the handler if validation errors are found.
+            It will throw a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException" /> if the response associated with the request is not assignable to <see cref="T:Colombo.ValidatedResponse" />.
+            </summary>
+      <seealso cref="T:Colombo.Interceptors.DataAnnotationsValidationSendInterceptor" />
+    </member>
+    <member name="M:Colombo.Interceptors.DataAnnotationsValidationHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Performs the validations
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.DataAnnotationsValidationHandleInterceptor.InterceptionPriority">
+      <summary>
+            Low.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.DataAnnotationsValidationSendInterceptor">
+      <summary>
+            Interceptor that performs Data Annotations validations before requests are sent.
+            The validation will fill the <see cref="P:Colombo.ValidatedResponse.ValidationResults" /> property of a <see cref="T:Colombo.ValidatedResponse" />
+            and returns it without sending if validation errors are found.
+            It will throw a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException" /> if the response associated with the request is not assignable to <see cref="T:Colombo.ValidatedResponse" />.
+            </summary>
+      <seealso cref="T:Colombo.Interceptors.DataAnnotationsValidationHandleInterceptor" />
+    </member>
+    <member name="M:Colombo.Interceptors.DataAnnotationsValidationSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Performs the validations
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.DataAnnotationsValidationSendInterceptor.InterceptionPriority">
+      <summary>
+            Low.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.PerfCounterFactory">
+      <summary>
+            Factory that creates and returns performance counters
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounterFactory.PerfCounterCategoryRequestHandling">
+      <summary>
+            Performance counters category for the counters related to request handling.
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounterFactory.PerfCounterCategoryMessageSending">
+      <summary>
+            Performance counters category for the counters related to message sending.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.PerfCounterFactory.GetPerfCounter(Colombo.Interceptors.PerfCounter,System.String,System.Boolean)">
+      <summary>
+            Returns a performance counter.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.PerfCounterFactory.CreatePerfCounters">
+      <summary>
+            Create the necessary performance counters in the system.
+            Must be run with administrator privileges.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.PerfCounterFactory.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.PerfCounter">
+      <summary>
+            Performance counters
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.NumRequestsHandled">
+      <summary>
+            Total number of requests handled
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.NumRequestsHandledPerSec">
+      <summary>
+            Total number of requests handled per second
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.AverageDurationForRequestHandling">
+      <summary>
+            Average time spent handling (processing) a request
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.AverageDurationForRequestHandlingBase">
+      <summary>
+            Average time spent handling (processing) a request base
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.NumMessagesSent">
+      <summary>
+            Total number of messages sent
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.NumMessagesSentPerSec">
+      <summary>
+            Number of messages sent per second
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.AverageDurationForMessageSending">
+      <summary>
+            Average time spent sending messages
+            </summary>
+    </member>
+    <member name="F:Colombo.Interceptors.PerfCounter.AverageDurationForMessageSendingBase">
+      <summary>
+            Average time spent sending messages base
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.PerfCounterHandleInterceptor">
+      <summary>
+            Interceptor that monitor the performance of request handling through performance counters.
+            Will create a specific performance counter instance per request group name.
+            </summary>
+      <seealso cref="T:Colombo.Interceptors.PerfCounterSendInterceptor" />
+    </member>
+    <member name="M:Colombo.Interceptors.PerfCounterHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Monitor the performance.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.PerfCounterHandleInterceptor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.PerfCounterHandleInterceptor.InterceptionPriority">
+      <summary>
+            Really high - runs first.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.PerfCounterSendInterceptor">
+      <summary>
+            Interceptor that monitor the performance of message sending through performance counters.
+            Will create a specific performance counter instance per request group name.
+            </summary>
+      <seealso cref="T:Colombo.Interceptors.PerfCounterHandleInterceptor" />
+    </member>
+    <member name="M:Colombo.Interceptors.PerfCounterSendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Monitor the performance.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.PerfCounterSendInterceptor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.PerfCounterSendInterceptor.InterceptionPriority">
+      <summary>
+            Really high - runs first.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.RequestExtensions">
+      <summary>
+            Holds extensions methods for <see cref="T:Colombo.BaseRequest" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.RequestExtensions.GetCustomAttribute``1(Colombo.BaseRequest,System.Boolean)">
+      <summary>
+            Return a custom attribute applied to the <paramref name="request" />.
+            Return null if not found.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.RequestExtensions.GetCustomAttributes``1(Colombo.BaseRequest,System.Boolean)">
+      <summary>
+            Return a list of custom attributes applied to the <paramref name="request" />.
+            Return an empty array if none is found.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.RequiredInContextHandleInterceptor">
+      <summary>
+            Interceptor that validates the request annotated with <see cref="T:Colombo.RequiredInContextAttribute" />.
+            Throws a <see cref="T:Colombo.RequiredInContextException" /> if the key is null or empty.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.RequiredInContextHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Performs the validation.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.RequiredInContextHandleInterceptor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.RequiredInContextHandleInterceptor.InterceptionPriority">
+      <summary>
+            Medium.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.SLASendInterceptor">
+      <summary>
+            Interceptor that times and validates requests marked with <see cref="T:Colombo.SLAAttribute" />.
+            It will also print the elapsed send time in Log.Debug.
+            Uses <see cref="T:Colombo.IColomboAlerter" /> to emit <see cref="T:Colombo.Alerts.SLABreachedAlert" /> if the requests takes more time than specified.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.SLASendInterceptor.Intercept(Colombo.IColomboSendInvocation)">
+      <summary>
+            Measure the time spent and raise alerts.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.SLASendInterceptor.Logger">
+      <summary>
+            Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.SLASendInterceptor.Alerters">
+      <summary>
+            Alerters to use. All will be notified.
+            </summary>
+    </member>
+    <member name="P:Colombo.Interceptors.SLASendInterceptor.InterceptionPriority">
+      <summary>
+            Really high - runs firt.
+            </summary>
+    </member>
+    <member name="T:Colombo.Interceptors.TransactionScopeRequestHandleInterceptor">
+      <summary>
+        <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> that surrounds Handle operations for requests with a <see cref="T:System.Transactions.TransactionScope" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Interceptors.TransactionScopeRequestHandleInterceptor.Intercept(Colombo.IColomboRequestHandleInvocation)">
+      <summary>
+            Surrounds the following invocations inside a <see cref="T:System.Transactions.TransactionScope" /></summary>
+    </member>
+    <member name="P:Colombo.Interceptors.TransactionScopeRequestHandleInterceptor.InterceptionPriority">
+      <summary>
+            High.
+            </summary>
+    </member>
+    <member name="T:Colombo.InvalidateCachedInstancesOfAttribute">
+      <summary>
+            Indicates that whenever the request annotated with this attribute is sent, Colombo needs to invalidate all the responses
+            of the types indicated that belongs to the same cache segment.
+            </summary>
+    </member>
+    <member name="M:Colombo.InvalidateCachedInstancesOfAttribute.#ctor(System.Type)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="responseType">The type of the response to invalidate.</param>
+    </member>
+    <member name="M:Colombo.InvalidateCachedInstancesOfAttribute.#ctor(System.Type,System.Type[])">
+      <summary>
+            Constructor
+            </summary>
+      <param name="responseType">The type of the response to invalidate.</param>
+      <param name="responsesType">Other response types to invalidate.</param>
+    </member>
+    <member name="P:Colombo.InvalidateCachedInstancesOfAttribute.ResponsesTypes">
+      <summary>
+            Response types to invalidate.
+            </summary>
+    </member>
+    <member name="T:Colombo.Request`1">
+      <summary>
+            Base class for requests.
+            </summary>
+      <typeparam name="TResponse">The type of the associated response.</typeparam>
+    </member>
+    <member name="M:Colombo.Request`1.GetResponseType">
+      <summary>
+            Get the System.Type of the response associated with this request.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="P:Colombo.Request`1.IsSideEffectFree">
+      <summary>
+        <c>false</c>
+      </summary>
+    </member>
+    <member name="T:Colombo.RequestHandler`2">
+      <summary>
+            Use this base class to create request handlers for standard requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.Handle(Colombo.BaseRequest)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.Handle">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.CreateRequest``1">
+      <summary>
+            Create a new request to be used inside this request handler.
+            The CorrelationGuid and the Context are copied.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.GetRequestType">
+      <summary>
+            Get the type of request that this request handler handles.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.RequestHandler`2.GetResponseType">
+      <summary>
+            Get the type of response that this request handler produces.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="P:Colombo.RequestHandler`2.Request">
+      <summary>
+            Incoming request.
+            </summary>
+    </member>
+    <member name="P:Colombo.RequestHandler`2.Response">
+      <summary>
+            Outgoing response. It will be created before Handle() and the CorrelationGuid will be set.
+            </summary>
+    </member>
+    <member name="T:Colombo.RequiredInContextAttribute">
+      <summary>
+            Indicate that a request must contains certain keys in their Context to be considered valid.
+            </summary>
+      <see cref="T:Colombo.Interceptors.RequiredInContextHandleInterceptor" />
+    </member>
+    <member name="M:Colombo.RequiredInContextAttribute.#ctor(System.String)">
+      <summary>
+            Contructor
+            </summary>
+      <param name="key">Name of the required key in Context.</param>
+    </member>
+    <member name="M:Colombo.RequiredInContextAttribute.#ctor(System.String,System.String[])">
+      <summary>
+            Contructor
+            </summary>
+      <param name="key">Name of the required key in Context.</param>
+      <param name="keys">Names of other required keys in Context.</param>
+    </member>
+    <member name="M:Colombo.RequiredInContextAttribute.GetKeys">
+      <summary>
+            Get the list of keys.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:Colombo.RequiredInContextException">
+      <summary>
+            An exception raised when a request indicates required keys, but some are missing.
+            </summary>
+    </member>
+    <member name="M:Colombo.RequiredInContextException.#ctor">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.RequiredInContextException.#ctor(System.String)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.RequiredInContextException.#ctor(System.String,System.Exception)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.RequiredInContextException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="T:Colombo.ResponsesGroup">
+      <summary>
+            Represents a group of responses, index by the request that created them.
+            </summary>
+    </member>
+    <member name="M:Colombo.ResponsesGroup.GetFrom``1(Colombo.SideEffectFreeRequest{``0})">
+      <summary>
+            Returns the response associated with the request.
+            </summary>
+    </member>
+    <member name="T:Colombo.SLAAttribute">
+      <summary>
+            Indicates that a request should complete within a certain amount of time.
+            </summary>
+      <see cref="T:Colombo.Interceptors.SLASendInterceptor" />
+    </member>
+    <member name="M:Colombo.SLAAttribute.#ctor(System.Int32)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="allowedMilliseconds">Number of milliseconds that the time taken to complete the request should not exceed.</param>
+    </member>
+    <member name="M:Colombo.SLAAttribute.#ctor(System.TimeSpan)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="allowed">TimeSpan that the time taken to complete the request should not exceed.</param>
+    </member>
+    <member name="P:Colombo.SLAAttribute.Allowed">
+      <summary>
+            Allowed time.
+            </summary>
+    </member>
+    <member name="T:Colombo.ChooseWhenRequestContextContainsAttribute">
+      <summary>
+            Apply to a request handler to allow specialization of the request handler based on request.Context values.
+            </summary>
+    </member>
+    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.#ctor(System.String)">
+      <summary>
+            Apply to a request handler to allow specialization of the request handler based on Context values.
+            </summary>
+      <param name="key">Name of the key which, when not null, will make this request handler chosen.</param>
+    </member>
+    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.#ctor(System.String,System.String)">
+      <summary>
+            Apply to a request handler to allow specialization of the request handler based on Context values.
+            </summary>
+      <param name="key">Name of the key which, when the value is equal to <paramref name="value" />, will make this request handler chosen.</param>
+      <param name="value">Value associated with the key in request context.</param>
+    </member>
+    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.IsChoosen(Colombo.BaseRequest)">
+      <summary>
+            Determine if the request handler should be chosen.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.BaseExpectation">
+      <summary>
+            Base class for expectations.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.BaseExpectation.#ctor(Colombo.TestSupport.IStubMessageBus)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="stubMessageBus">The <see cref="T:Colombo.TestSupport.IStubMessageBus" /> that created the expectation.</param>
+    </member>
+    <member name="M:Colombo.TestSupport.BaseExpectation.Verify">
+      <summary>
+            Verify that all the operations meet what this expectation planned.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.BaseExpectation.StubMessageBus">
+      <summary>
+            The <see cref="T:Colombo.TestSupport.IStubMessageBus" /> that created the expectation.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.BaseExpectation.NumCalled">
+      <summary>
+            Number of times this expectation have been executed.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.BaseExpectation.ExpectedNumCalled">
+      <summary>
+            Number of times this expectation should be executed.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.ColomboTestSupportException">
+      <summary>
+            An exception that occured inside a test support utilization.
+            <see cref="T:Colombo.TestSupport.ColomboTest" /></summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTestSupportException.#ctor">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTestSupportException.#ctor(System.String)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTestSupportException.#ctor(System.String,System.Exception)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTestSupportException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.ColomboExpectationException">
+      <summary>
+            Indicates that an expectation failed.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboExpectationException.#ctor">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboExpectationException.#ctor(System.String)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboExpectationException.#ctor(System.String,System.Exception)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboExpectationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.ColomboTest">
+      <summary>
+            Base static classes for unit test support
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.ColomboTest.AssertThat">
+      <summary>
+            All assertions
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllMessagesAreConformInAssemblyThatContains``1">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any message (i.e. requests and responses)
+            in the assembly that contains <typeparamref name="T" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllMessagesAreConformInAssembly(System.Reflection.Assembly)">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any message (i.e. requests and responses)
+            in the assembly <paramref name="assembly" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllRequestsAreConformInAssemblyThatContains``1">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any request
+            in the assembly that contains <typeparamref name="T" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllRequestsAreConformInAssembly(System.Reflection.Assembly)">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any request
+            in the assembly <paramref name="assembly" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.RequestIsConform``1">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if the <typeparam name="TRequest" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.RequestIsConform(System.Type)">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if the <paramref name="requestType" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllResponsesAreConformInAssemblyThatContains``1">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any response
+            in the assembly that contains <typeparamref name="T" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.AllResponsesAreConformInAssembly(System.Reflection.Assembly)">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if any response
+            in the assembly <paramref name="assembly" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.ResponseIsConform``1">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if the <typeparam name="TResponse" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.ColomboTest.AssertThat.ResponseIsConform(System.Type)">
+      <summary>
+            Will raise a <see cref="T:Colombo.TestSupport.ColomboTestSupportException" /> if the <paramref name="responseType" /> cannot be used by Colombo.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.IStubMessageBus">
+      <summary>
+            Allow the setup and verifications of expectations - to be used inside unit tests of handlers.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.IStubMessageBus.TestHandler``1">
+      <summary>
+            Indicates a handler type that is under test.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.IStubMessageBus.ExpectSend``2">
+      <summary>
+            Indicates an expectation that a type of Request will be sent.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.IStubMessageBus.GetExpectationFor(System.Type)">
+      <summary>
+            Returns the <see cref="T:Colombo.TestSupport.BaseExpectation" /> associated with the <paramref name="messageType" /></summary>
+    </member>
+    <member name="M:Colombo.TestSupport.IStubMessageBus.Verify">
+      <summary>
+            Verify all the expectations
+            </summary>
+      <exception cref="T:Colombo.TestSupport.ColomboExpectationException" />
+    </member>
+    <member name="P:Colombo.TestSupport.IStubMessageBus.Kernel">
+      <summary>
+            The <see cref="T:Castle.MicroKernel.IKernel" /> that will be injected.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.IStubMessageBus.AllowUnexpectedMessages">
+      <summary>
+        <c>true</c> to allow the <see cref="T:Colombo.TestSupport.IStubMessageBus" /> to reply to requests using empty responses,
+            <c>false</c> to disallow and throw a <see cref="T:Colombo.TestSupport.ColomboExpectationException" /> when sending an unexpected request.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.MessageBusSendExpectation`2">
+      <summary>
+            Expectation for the Send operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.MessageBusSendExpectation`2.#ctor(Colombo.TestSupport.IStubMessageBus)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.MessageBusSendExpectation`2.Reply(System.Action{`0,`1})">
+      <summary>
+            Allow to specify some actions that will be used to Reply to the Send operation.
+            </summary>
+      <param name="action">
+      </param>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.TestSupport.MessageBusSendExpectation`2.Repeat(System.Int32)">
+      <summary>
+            Indicates that this expectation should be repeated n <paramref name="times" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.MessageBusSendExpectation`2.Verify">
+      <summary>
+            Verify that all the operations meet what this expectation planned.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.RequestHandlerExpectation`1">
+      <summary>
+            Expectation that is used to execute a <see cref="T:Colombo.IRequestHandler" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.RequestHandlerExpectation`1.#ctor(Colombo.TestSupport.IStubMessageBus)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.RequestHandlerExpectation`1.Repeat(System.Int32)">
+      <summary>
+            Indicates that this expectation should be repeated n <paramref name="times" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.RequestHandlerExpectation`1.ShouldBeInterceptedBeforeHandling">
+      <summary>
+            Indicates that an interceptor should respond in lieu of the handler.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.RequestHandlerExpectation`1.Verify">
+      <summary>
+            Verify that all the operations meet what this expectation planned.
+            </summary>
+    </member>
+    <member name="T:Colombo.TestSupport.StubMessageBus">
+      <summary>
+            Implementation of the <see cref="T:Colombo.TestSupport.IStubMessageBus" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.TestHandler``1">
+      <summary>
+            Indicates a handler type that is under test.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.ExpectSend``2">
+      <summary>
+            Indicates an expectation that a type of Request will be sent.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.GetExpectationFor(System.Type)">
+      <summary>
+            Returns the <see cref="T:Colombo.TestSupport.BaseExpectation" /> associated with the <paramref name="messageType" /></summary>
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.Verify">
+      <summary>
+            Verify all the expectations
+            </summary>
+      <exception cref="T:Colombo.TestSupport.ColomboExpectationException" />
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.InternalSend(System.Collections.Generic.IList{Colombo.BaseRequest})">
+      <summary>
+            Real sending of the requests. All the other send methods delegates to this one.
+            Uses <see cref="M:Colombo.Impl.BaseMessageBus.BuildSendInvocationChain" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.TestSupport.StubMessageBus.BuildSendInvocationChain">
+      <summary>
+            Return a invocation chain for the Send operation.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.StubMessageBus.RequestHandlerInterceptors">
+      <summary>
+            The list of <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> to use.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.StubMessageBus.Kernel">
+      <summary>
+            The <see cref="T:Castle.MicroKernel.IKernel" /> that will be injected.
+            </summary>
+    </member>
+    <member name="P:Colombo.TestSupport.StubMessageBus.AllowUnexpectedMessages">
+      <summary>
+        <c>true</c> to allow the <see cref="T:Colombo.TestSupport.IStubMessageBus" /> to reply to requests using empty responses,
+            <c>false</c> to disallow and throw a <see cref="T:Colombo.TestSupport.ColomboExpectationException" /> when sending an unexpected request.
+            </summary>
+    </member>
+    <member name="T:Colombo.ValidatedResponse">
+      <summary>
+            Base class for responses that contains validation information.
+            Based on DataAnnotations format.
+            </summary>
+    </member>
+    <member name="T:Colombo.ValidatedResponse.ValidationResult">
+      <summary>
+            Serialization friendly version of <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult" /></summary>
+    </member>
+    <member name="F:Colombo.ValidatedResponse.serializableValidationResults">
+      <summary>
+            Holds serialization-friendly <see cref="T:Colombo.ValidatedResponse.ValidationResult" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.ValidatedResponse.IsValid">
+      <summary>
+        <c>true</c> is the request was valid, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="P:Colombo.ValidatedResponse.ValidationResults">
+      <summary>
+            List of all the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.AddOperationsForRequestHandlersAttribute">
+      <summary>
+        <see cref="T:System.ServiceModel.Description.IContractBehavior" /> that dynamically adds registered request handlers operations as methods on a <see cref="T:System.ServiceModel.ServiceContractAttribute" /></summary>
+    </member>
+    <member name="M:Colombo.Wcf.AddOperationsForRequestHandlersAttribute.AddBindingParameters(System.ServiceModel.Description.ContractDescription,System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Channels.BindingParameterCollection)">
+      <summary>
+            Adds all the dynamic operation to the <paramref name="contractDescription" /></summary>
+    </member>
+    <member name="M:Colombo.Wcf.AddOperationsForRequestHandlersAttribute.ApplyClientBehavior(System.ServiceModel.Description.ContractDescription,System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.ClientRuntime)">
+      <summary>
+            Do nothing
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.AddOperationsForRequestHandlersAttribute.ApplyDispatchBehavior(System.ServiceModel.Description.ContractDescription,System.ServiceModel.Description.ServiceEndpoint,System.ServiceModel.Dispatcher.DispatchRuntime)">
+      <summary>
+            Binds each operation to the <see cref="T:Colombo.Wcf.RequestProcessorOperationInvoker" /> invoker.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.AddOperationsForRequestHandlersAttribute.Validate(System.ServiceModel.Description.ContractDescription,System.ServiceModel.Description.ServiceEndpoint)">
+      <summary>
+            Do nothing
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.EmbedTypeInSerializerAttribute">
+      <summary>
+        <see cref="T:System.ServiceModel.Description.IOperationBehavior" /> that forces the usage of the <see cref="T:System.Runtime.Serialization.NetDataContractSerializer" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.EmbedTypeInSerializerAttribute.AddBindingParameters(System.ServiceModel.Description.OperationDescription,System.ServiceModel.Channels.BindingParameterCollection)">
+      <summary>
+            Do nothing.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.EmbedTypeInSerializerAttribute.ApplyClientBehavior(System.ServiceModel.Description.OperationDescription,System.ServiceModel.Dispatcher.ClientOperation)">
+      <summary>
+            Attach a <see cref="T:Colombo.Wcf.NetDataContractSerializerOperationBehavior" /> and remove <see cref="T:System.ServiceModel.Description.DataContractSerializerOperationBehavior" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.EmbedTypeInSerializerAttribute.ApplyDispatchBehavior(System.ServiceModel.Description.OperationDescription,System.ServiceModel.Dispatcher.DispatchOperation)">
+      <summary>
+            Attach a <see cref="T:Colombo.Wcf.NetDataContractSerializerOperationBehavior" /> and remove <see cref="T:System.ServiceModel.Description.DataContractSerializerOperationBehavior" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.EmbedTypeInSerializerAttribute.Validate(System.ServiceModel.Description.OperationDescription)">
+      <summary>
+            Do nothing.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.NetDataContractSerializerOperationBehavior">
+      <summary>
+            Forces the usage of the <see cref="T:System.Runtime.Serialization.NetDataContractSerializer" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.NetDataContractSerializerOperationBehavior.#ctor(System.ServiceModel.Description.OperationDescription)">
+      <summary>
+            Constructor
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.NetDataContractSerializerOperationBehavior.CreateSerializer(System.Type,System.String,System.String,System.Collections.Generic.IList{System.Type})">
+      <summary>
+            Returns a <see cref="T:System.Runtime.Serialization.NetDataContractSerializer" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.NetDataContractSerializerOperationBehavior.CreateSerializer(System.Type,System.Xml.XmlDictionaryString,System.Xml.XmlDictionaryString,System.Collections.Generic.IList{System.Type})">
+      <summary>
+            Returns a <see cref="T:System.Runtime.Serialization.NetDataContractSerializer" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.IColomboService">
+      <summary>
+            Service exposed by Colombo to allow remote communications.
+            This service is dedicated to Colombo exchange communication, and not adapted for interoperability.
+            See <see cref="T:Colombo.Wcf.ISoapService" /> for exposing SOAP information correctly.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboService.BeginProcessAsync(Colombo.BaseRequest[],System.AsyncCallback,System.Object)">
+      <summary>
+            Process requests asynchronously.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.IColomboService.EndProcessAsync(System.IAsyncResult)">
+      <summary>
+            Process requests asynchronously.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.ISoapService">
+      <summary>
+            Service that can be exposed to maximise interoperability.
+            Exposes each request handler as an individual method, and ensures that the <see cref="T:System.Runtime.Serialization.DataContractSerializer" /> is used.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ISoapService.DummyOperationForWCF">
+      <summary>
+            This operation is mandatory, otherwise WCF will not expose an empty interface as a contract.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.ProcessAsyncResult">
+      <summary>
+            Implementation of <see cref="T:System.IAsyncResult" /> for the Process operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ProcessAsyncResult.#ctor(System.AsyncCallback,System.Object)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ProcessAsyncResult.OnCompleted">
+      <summary>
+            Call this method to set the WaitHandle and invoke the callback.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ProcessAsyncResult.Dispose">
+      <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+      <filterpriority>2</filterpriority>
+    </member>
+    <member name="M:Colombo.Wcf.ProcessAsyncResult.Dispose(System.Boolean)">
+      <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ProcessAsyncResult.Finalize">
+      <summary>
+            Destructor
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.Requests">
+      <summary>
+            Incoming requests
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.Responses">
+      <summary>
+            Outgoing responses
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.Exception">
+      <summary>
+            An eventual exception that occured
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.AsyncState">
+      <summary>
+            Gets a user-defined object that qualifies or contains information about an asynchronous operation.
+            </summary>
+      <returns>
+            A user-defined object that qualifies or contains information about an asynchronous operation.
+            </returns>
+      <filterpriority>2</filterpriority>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.AsyncWaitHandle">
+      <summary>
+            Gets a <see cref="T:System.Threading.WaitHandle" /> that is used to wait for an asynchronous operation to complete.
+            </summary>
+      <returns>
+            A <see cref="T:System.Threading.WaitHandle" /> that is used to wait for an asynchronous operation to complete.
+            </returns>
+      <filterpriority>2</filterpriority>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.CompletedSynchronously">
+      <summary>
+            Gets a value that indicates whether the asynchronous operation completed synchronously.
+            </summary>
+      <returns>
+            true if the asynchronous operation completed synchronously; otherwise, false.
+            </returns>
+      <filterpriority>2</filterpriority>
+    </member>
+    <member name="P:Colombo.Wcf.ProcessAsyncResult.IsCompleted">
+      <summary>
+            Gets a value that indicates whether the asynchronous operation has completed.
+            </summary>
+      <returns>
+            true if the operation is complete; otherwise, false.
+            </returns>
+      <filterpriority>2</filterpriority>
+    </member>
+    <member name="T:Colombo.Wcf.QueryStringMapper">
+      <summary>
+            Helper that maps Query string to objects.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.QueryStringMapper.Map(System.String,System.Type)">
+      <summary>
+            Map a querystring to a object of type <paramref name="type" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.QueryStringMapper.Map(System.Collections.Specialized.NameValueCollection,System.Type)">
+      <summary>
+            Map a <see cref="T:System.Collections.Specialized.NameValueCollection" /> extracted from a query string to an object of type <paramref name="type" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.RequestProcessorOperationInvoker">
+      <summary>
+        <see cref="T:System.ServiceModel.Dispatcher.IOperationInvoker" /> that redirect calls to dynamic methods added by <see cref="T:Colombo.Wcf.AddOperationsForRequestHandlersAttribute" />
+            to requests handlers.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.RequestProcessorOperationInvoker.#ctor(System.Type)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="requestType">Type of the request.</param>
+    </member>
+    <member name="M:Colombo.Wcf.RequestProcessorOperationInvoker.AllocateInputs">
+      <summary>
+            Returns an <see cref="T:System.Array" /> of parameter objects.
+            </summary>
+      <returns>
+            The parameters that are to be used as arguments to the operation.
+            </returns>
+    </member>
+    <member name="M:Colombo.Wcf.RequestProcessorOperationInvoker.Invoke(System.Object,System.Object[],System.Object[]@)">
+      <summary>
+            Returns an object and a set of output objects from an instance and set of input objects.  
+            </summary>
+      <returns>
+            The return value.
+            </returns>
+      <param name="instance">The object to be invoked.</param>
+      <param name="inputs">The inputs to the method.</param>
+      <param name="outputs">The outputs from the method.</param>
+    </member>
+    <member name="M:Colombo.Wcf.RequestProcessorOperationInvoker.InvokeBegin(System.Object,System.Object[],System.AsyncCallback,System.Object)">
+      <summary>
+            Not Implemented.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.RequestProcessorOperationInvoker.InvokeEnd(System.Object,System.Object[]@,System.IAsyncResult)">
+      <summary>
+            Not Implemented.
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.RequestProcessorOperationInvoker.IsSynchronous">
+      <summary>
+            True.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.WcfClientRequestProcessor">
+      <summary>
+        <see cref="T:Colombo.IRequestProcessor" /> implementation that uses WCF to transfer requests. See <see cref="T:Colombo.Wcf.IColomboService" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.WcfClientRequestProcessor.#ctor(Colombo.Wcf.IColomboServiceFactory)">
+      <summary>
+            Constructor
+            </summary>
+      <param name="serviceFactory">
+      </param>
+    </member>
+    <member name="M:Colombo.Wcf.WcfClientRequestProcessor.CanProcess(Colombo.BaseRequest)">
+      <summary>
+        <c>true</c> if the processor can process the request, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.WcfClientRequestProcessor.Process(System.Collections.Generic.IList{Colombo.BaseRequest})">
+      <summary>
+            Process the requests.
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.WcfClientRequestProcessor.Logger">
+      <summary>
+            Logger
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.WcfClientRequestProcessor.Alerters">
+      <summary>
+            Alerters to use. All will be notified.
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.WcfClientRequestProcessor.HealthCheckHeartBeatInSeconds">
+      <summary>
+            Interval in seconds between health check for endpoints.
+            Set to 0 or a negative number to disable the check.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.ColomboServiceFactory">
+      <summary>
+        <see cref="T:Colombo.Wcf.IColomboServiceFactory" /> that creates <see cref="T:Colombo.Wcf.IColomboService" /> channels based on standard
+            WCF configuration.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboServiceFactory.CanCreateChannelForRequestGroup(System.String)">
+      <summary>
+        <c>true</c> if can create a channel for the group named <paramref name="name" />, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboServiceFactory.GetAddressForRequestGroup(System.String)">
+      <summary>
+            Return the address of the endpoint associated with the name <paramref name="name" />.
+            Return null if not found.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboServiceFactory.CreateChannel(System.String)">
+      <summary>
+            Create a <see cref="T:System.ServiceModel.IClientChannel" /> associated with the name <paramref name="name" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboServiceFactory.CreateChannelsForAllEndPoints">
+      <summary>
+            Create a <see cref="T:System.ServiceModel.IClientChannel" /> for all the available endpoints.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.ColomboService">
+      <summary>
+            Implementation of the <see cref="T:Colombo.Wcf.IColomboService" /> service.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboService.BeginProcessAsync(Colombo.BaseRequest[],System.AsyncCallback,System.Object)">
+      <summary>
+            Process requests asynchronously.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ColomboService.EndProcessAsync(System.IAsyncResult)">
+      <summary>
+            Process requests asynchronously.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.ClientRestService">
+      <summary>
+            Service that exposes requests to Javascript GET and POST XMLHTTPRequests.
+            Must be used inside an ASP.NET application, il will then use <see cref="T:Colombo.IMessageBus" /> to send the requests normally.
+            Requests must be registered to be exposed.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.RegisterRequest``1">
+      <summary>
+            Register a request of type <typeparamref name="TRequest" />, it will be available to <see cref="T:Colombo.Wcf.ClientRestService" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.RegisterRequest(System.Type)">
+      <summary>
+            Register a request of type <paramref name="requestType" />, it will be available to <see cref="T:Colombo.Wcf.ClientRestService" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.ClearRegistrations">
+      <summary>
+            Clear all the previous requests registrations.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.GetKnownTypes(System.Reflection.ICustomAttributeProvider)">
+      <summary>
+            Return the list of Known Types (Response) for the WCF infrastructure.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.InvokeGet(System.String)">
+      <summary>
+            GET operation.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.ClientRestService.InvokePost(System.String)">
+      <summary>
+            POST operation.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.WcfServices">
+      <summary>
+            Static class that can be used by all WCF services.
+            </summary>
+    </member>
+    <member name="F:Colombo.Wcf.WcfServices.Namespace">
+      <summary>
+            The namespace to use with services.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.WcfServices.ProcessLocally(Colombo.BaseRequest[])">
+      <summary>
+            Processes the requests locally using <see cref="T:Colombo.ILocalRequestProcessor" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Wcf.WcfServices.Process(Colombo.BaseRequest)">
+      <summary>
+            Process a request by using the Send method of the currently registeres <see cref="T:Colombo.IMessageBus" />.
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.WcfServices.Kernel">
+      <summary>
+            Static <see cref="T:Castle.MicroKernel.IKernel" /> reference. - That means that when using WCF Services, only one container is allowed per AppDomain.
+            </summary>
+    </member>
+    <member name="T:Colombo.Wcf.SoapService">
+      <summary>
+            Implementation of the <see cref="T:Colombo.Wcf.ISoapService" /> service.
+            Exists as a placeholder for WCF infrastructure.
+            All the work is done through <see cref="T:Colombo.Wcf.RequestProcessorOperationInvoker" /></summary>
+    </member>
+    <member name="M:Colombo.Wcf.SoapService.DummyOperationForWCF">
+      <summary>
+            This operation is mandatory, otherwise WCF will not expose an empty interface as a contract.
+            </summary>
+    </member>
+  </members>
+</doc>

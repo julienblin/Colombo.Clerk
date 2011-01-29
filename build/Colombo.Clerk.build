@@ -104,4 +104,36 @@ THE SOFTWARE.-->
 
   </target>
 
+  <target name="test" depends="build">
+    <delete dir="${folder.test}" includeemptydirs="true" />
+    <copy todir="${folder.test}\bin">
+      <fileset basedir="${folder.bin}\${msbuild.configuration}">
+        <include name="Colombo.Clerk.Client.Tests\**"/>
+      </fileset>
+    </copy>
+    <property name="folder.test.results.xml" value="${folder.test}\results\xml"/>
+    <mkdir dir="${folder.test.results.xml}"/>
+    <foreach item="Folder" in="${folder.test}\bin" property="folder.test.current">
+      <do>
+        <property name="test.current" value="${path::get-file-name(folder.test.current)}" />
+        <exec program="${app.nunit.console}" workingdir="${folder.test.current}" failonerror="false">
+          <arg line="${test.current}.dll /xml=&quot;${folder.test.results.xml}\${test.current}.xml&quot;" />
+          <arg line="/nologo" />
+        </exec>
+      </do>
+    </foreach>
+
+    <if test="${test.open == 'true'}">
+      <property name="folder.test.results.html" value="${folder.test}\results\html"/>
+      <mkdir dir="${folder.test.results.html}"/>
+      <nunit2report todir="${folder.test.results.html}">
+        <fileset basedir="${folder.test.results.xml}">
+          <include name="*.xml" />
+        </fileset>
+      </nunit2report>
+
+      <exec program="cmd.exe" commandline="/C ${folder.test.results.html}\index.html" />
+    </if>
+  </target>
+
 </project>
