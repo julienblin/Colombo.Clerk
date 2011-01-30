@@ -107,6 +107,7 @@
     <Compile Include="BaseDbTest.cs" />
     <Compile Include="EndPointConfigTest.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandlerTest.cs" />
+    <Compile Include="Handlers\SearchAuditEntryRequestHandlerTest.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandlerTest.cs" />
   </ItemGroup>
   <ItemGroup>

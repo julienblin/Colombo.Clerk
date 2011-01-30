@@ -89,10 +89,12 @@
     <Compile Include="ClerkService.cs" />
     <Compile Include="EndPointConfig.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
+    <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />
     <Compile Include="Mappings\AuditEntryMap.cs" />
     <Compile Include="Models\AuditEntryModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
+    <Compile Include="Queries\AuditEntrySearchQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj">

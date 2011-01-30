@@ -58,6 +58,8 @@
     <Compile Include="AuditEntry.cs" />
     <Compile Include="GetAuditEntryByIdResponse.cs" />
     <Compile Include="GetAuditEntryByIdRequest.cs" />
+    <Compile Include="SearchAuditEntryRequest.cs" />
+    <Compile Include="SearchAuditEntryResponse.cs" />
     <Compile Include="WriteAuditEntryRequest.cs" />
     <Compile Include="WriteAuditEntryResponse.cs" />
   </ItemGroup>
