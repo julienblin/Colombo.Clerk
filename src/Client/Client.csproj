@@ -61,6 +61,8 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Alerts\ClerkServiceUnreachableAlert.cs" />
+    <Compile Include="ClerkFacility.cs" />
     <Compile Include="ClerkHandleInterceptor.cs" />
     <Compile Include="IClerkServiceFactory.cs" />
     <Compile Include="Impl\ClerkServiceFactory.cs" />

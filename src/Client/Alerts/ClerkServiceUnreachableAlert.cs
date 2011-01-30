@@ -24,10 +24,20 @@
 
 using Colombo.Clerk.Service;
 
-namespace Colombo.Clerk.Client
+namespace Colombo.Clerk.Client.Alerts
 {
-    public interface IClerkServiceFactory
+    public class ClerkServiceUnreachableAlert : IColomboAlert
     {
-        IClerkService CreateClerkService();
+        public ClerkServiceUnreachableAlert(AuditInfo auditInfo)
+        {
+            AuditInfo = auditInfo;
+        }
+
+        public AuditInfo AuditInfo { get; private set; }
+
+        public override string ToString()
+        {
+            return string.Format("No clerk service could be reached when trying to write {0}.", AuditInfo);
+        }
     }
 }

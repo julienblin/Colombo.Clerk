@@ -22,12 +22,24 @@
 // THE SOFTWARE.
 #endregion
 
-using Colombo.Clerk.Service;
+using System.Linq;
+using Castle.Windsor;
+using Colombo.Clerk.Client.Impl;
+using NUnit.Framework;
 
-namespace Colombo.Clerk.Client
+namespace Colombo.Clerk.Client.Tests
 {
-    public interface IClerkServiceFactory
+    [TestFixture]
+    public class ClerkFacilityTest
     {
-        IClerkService CreateClerkService();
+        [Test]
+        public void It_should_register_components()
+        {
+            var container = new WindsorContainer();
+            container.AddFacility<ClerkFacility>();
+
+            Assert.That(container.ResolveAll<IRequestHandlerHandleInterceptor>().Any(x => x is ClerkHandleInterceptor));
+            Assert.That(() => container.Resolve<IClerkServiceFactory>(), Is.TypeOf<ClerkServiceFactory>());
+        }
     }
 }

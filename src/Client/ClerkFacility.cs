@@ -22,12 +22,22 @@
 // THE SOFTWARE.
 #endregion
 
-using Colombo.Clerk.Service;
+using Castle.MicroKernel.Facilities;
+using Castle.MicroKernel.Registration;
+using Colombo.Clerk.Client.Impl;
 
 namespace Colombo.Clerk.Client
 {
-    public interface IClerkServiceFactory
+    public class ClerkFacility : AbstractFacility
     {
-        IClerkService CreateClerkService();
+        protected override void Init()
+        {
+            Kernel.Register(
+                Component.For<IRequestHandlerHandleInterceptor>()
+                    .ImplementedBy<ClerkHandleInterceptor>(),
+                Component.For<IClerkServiceFactory>()
+                    .ImplementedBy<ClerkServiceFactory>()
+            );
+        }
     }
 }
