@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Handlers;
 using Colombo.Clerk.Server.Models;
@@ -47,7 +48,11 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 ResponseSerialized = "ResponseSerialized",
                 ResponseType = "ResponseType",
                 Exception = "Exception",
-                ServerMachineName = "ServerMachineName"
+                ServerMachineName = "ServerMachineName",
+                Context = new List<ContextEntryModel>
+                {
+                    new ContextEntryModel { Key = "key1", Value = "value1"}
+                }
             };
 
             using (var tx = Session.BeginTransaction())
@@ -61,20 +66,22 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
             var response = MessageBus.Send(request);
 
-            Assert.That(() => response.Found, Is.True);
+            Assert.That(response.Found, Is.True);
 
-            Assert.That(() => response.AuditEntry.Request.CorrelationGuid, Is.EqualTo(auditEntryReference.RequestCorrelationGuid));
-            Assert.That(() => response.AuditEntry.Request.Namespace, Is.EqualTo(auditEntryReference.RequestNamespace));
-            Assert.That(() => response.AuditEntry.Request.Serialized, Is.EqualTo(auditEntryReference.RequestSerialized));
-            Assert.That(() => response.AuditEntry.Request.Type, Is.EqualTo(auditEntryReference.RequestType));
+            Assert.That(response.AuditEntry.Request.CorrelationGuid, Is.EqualTo(auditEntryReference.RequestCorrelationGuid));
+            Assert.That(response.AuditEntry.Request.Namespace, Is.EqualTo(auditEntryReference.RequestNamespace));
+            Assert.That(response.AuditEntry.Request.Serialized, Is.EqualTo(auditEntryReference.RequestSerialized));
+            Assert.That(response.AuditEntry.Request.Type, Is.EqualTo(auditEntryReference.RequestType));
 
-            Assert.That(() => response.AuditEntry.Response.CorrelationGuid, Is.EqualTo(auditEntryReference.ResponseCorrelationGuid));
-            Assert.That(() => response.AuditEntry.Response.Namespace, Is.EqualTo(auditEntryReference.ResponseNamespace));
-            Assert.That(() => response.AuditEntry.Response.Serialized, Is.EqualTo(auditEntryReference.ResponseSerialized));
-            Assert.That(() => response.AuditEntry.Response.Type, Is.EqualTo(auditEntryReference.ResponseType));
+            Assert.That(response.AuditEntry.Response.CorrelationGuid, Is.EqualTo(auditEntryReference.ResponseCorrelationGuid));
+            Assert.That(response.AuditEntry.Response.Namespace, Is.EqualTo(auditEntryReference.ResponseNamespace));
+            Assert.That(response.AuditEntry.Response.Serialized, Is.EqualTo(auditEntryReference.ResponseSerialized));
+            Assert.That(response.AuditEntry.Response.Type, Is.EqualTo(auditEntryReference.ResponseType));
 
-            Assert.That(() => response.AuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
-            Assert.That(() => response.AuditEntry.ServerMachineName, Is.EqualTo(auditEntryReference.ServerMachineName));
+            Assert.That(response.AuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
+            Assert.That(response.AuditEntry.ServerMachineName, Is.EqualTo(auditEntryReference.ServerMachineName));
+
+            Assert.That(response.AuditEntry.RequestContext["key1"], Is.EqualTo("value1"));
         }
 
         [Test]

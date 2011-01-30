@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Transactions;
 using Colombo.Clerk.Server.Models;
 using Colombo.Clerk.Service;
@@ -53,7 +54,12 @@ namespace Colombo.Clerk.Server.Tests
                                         Type = "ResponseType"
                                     },
                                     Exception = "Exception",
-                                    ServerMachineName = "ServerMachineName"
+                                    ServerMachineName = "ServerMachineName",
+                                    Context =
+                                        {
+                                            { "key1", "value1" },
+                                            { "key2", "value2" }
+                                        }
                                 };
 
             var service = new ClerkService();
@@ -67,20 +73,27 @@ namespace Colombo.Clerk.Server.Tests
 
             using (var tx = Session.BeginTransaction())
             {
-                var auditEntryModel = Session.CreateCriteria<AuditEntryModel>().UniqueResult<AuditEntryModel>();
+                var auditEntryModel = Session.QueryOver<AuditEntryModel>().Fetch(x => x.Context).Eager.List().First();
 
-                Assert.That(() => auditEntryModel.RequestCorrelationGuid, Is.EqualTo(auditInfo.Request.CorrelationGuid));
-                Assert.That(() => auditEntryModel.RequestNamespace, Is.EqualTo(auditInfo.Request.Namespace));
-                Assert.That(() => auditEntryModel.RequestSerialized, Is.EqualTo(auditInfo.Request.Serialized));
-                Assert.That(() => auditEntryModel.RequestType, Is.EqualTo(auditInfo.Request.Type));
+                Assert.That(auditEntryModel.RequestCorrelationGuid, Is.EqualTo(auditInfo.Request.CorrelationGuid));
+                Assert.That(auditEntryModel.RequestNamespace, Is.EqualTo(auditInfo.Request.Namespace));
+                Assert.That(auditEntryModel.RequestSerialized, Is.EqualTo(auditInfo.Request.Serialized));
+                Assert.That(auditEntryModel.RequestType, Is.EqualTo(auditInfo.Request.Type));
 
-                Assert.That(() => auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(auditInfo.Response.CorrelationGuid));
-                Assert.That(() => auditEntryModel.ResponseNamespace, Is.EqualTo(auditInfo.Response.Namespace));
-                Assert.That(() => auditEntryModel.ResponseSerialized, Is.EqualTo(auditInfo.Response.Serialized));
-                Assert.That(() => auditEntryModel.ResponseType, Is.EqualTo(auditInfo.Response.Type));
+                Assert.That(auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(auditInfo.Response.CorrelationGuid));
+                Assert.That(auditEntryModel.ResponseNamespace, Is.EqualTo(auditInfo.Response.Namespace));
+                Assert.That(auditEntryModel.ResponseSerialized, Is.EqualTo(auditInfo.Response.Serialized));
+                Assert.That(auditEntryModel.ResponseType, Is.EqualTo(auditInfo.Response.Type));
 
-                Assert.That(() => auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
-                Assert.That(() => auditEntryModel.ServerMachineName, Is.EqualTo(auditInfo.ServerMachineName));
+                Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
+                Assert.That(auditEntryModel.ServerMachineName, Is.EqualTo(auditInfo.ServerMachineName));
+
+                Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo("key1"));
+                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo("value1"));
+
+                Assert.That(auditEntryModel.Context[1].Key, Is.EqualTo("key2"));
+                Assert.That(auditEntryModel.Context[1].Value, Is.EqualTo("value2"));
+
                 tx.Commit();
             }
         }
@@ -110,7 +123,10 @@ namespace Colombo.Clerk.Server.Tests
                     Type = moreThan255Chars
                 },
                 Exception = moreThan255Chars,
-                ServerMachineName = moreThan255Chars
+                ServerMachineName = moreThan255Chars,
+                Context = {
+                    { moreThan255Chars, moreThan255Chars }
+                }
             };
 
             var service = new ClerkService();
@@ -124,20 +140,23 @@ namespace Colombo.Clerk.Server.Tests
 
             using (var tx = Session.BeginTransaction())
             {
-                var auditEntryModel = Session.CreateCriteria<AuditEntryModel>().UniqueResult<AuditEntryModel>();
+                var auditEntryModel = Session.QueryOver<AuditEntryModel>().Fetch(x => x.Context).Eager.List().First();
 
-                Assert.That(() => auditEntryModel.RequestCorrelationGuid, Is.EqualTo(auditInfo.Request.CorrelationGuid));
-                Assert.That(() => auditEntryModel.RequestNamespace, Is.EqualTo(strippedMoreThan255Chars));
-                Assert.That(() => auditEntryModel.RequestSerialized, Is.EqualTo(auditInfo.Request.Serialized));
-                Assert.That(() => auditEntryModel.RequestType, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.RequestCorrelationGuid, Is.EqualTo(auditInfo.Request.CorrelationGuid));
+                Assert.That(auditEntryModel.RequestNamespace, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.RequestSerialized, Is.EqualTo(auditInfo.Request.Serialized));
+                Assert.That(auditEntryModel.RequestType, Is.EqualTo(strippedMoreThan255Chars));
 
-                Assert.That(() => auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(auditInfo.Response.CorrelationGuid));
-                Assert.That(() => auditEntryModel.ResponseNamespace, Is.EqualTo(strippedMoreThan255Chars));
-                Assert.That(() => auditEntryModel.ResponseSerialized, Is.EqualTo(auditInfo.Response.Serialized));
-                Assert.That(() => auditEntryModel.ResponseType, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(auditInfo.Response.CorrelationGuid));
+                Assert.That(auditEntryModel.ResponseNamespace, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.ResponseSerialized, Is.EqualTo(auditInfo.Response.Serialized));
+                Assert.That(auditEntryModel.ResponseType, Is.EqualTo(strippedMoreThan255Chars));
 
-                Assert.That(() => auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
-                Assert.That(() => auditEntryModel.ServerMachineName, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
+                Assert.That(auditEntryModel.ServerMachineName, Is.EqualTo(strippedMoreThan255Chars));
+
+                Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo(strippedMoreThan255Chars));
                 tx.Commit();
             }
         }

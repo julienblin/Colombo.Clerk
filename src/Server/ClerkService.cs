@@ -22,7 +22,9 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Collections.Generic;
 using System.ServiceModel;
+using System.Linq;
 using Colombo.Clerk.Server.Models;
 using Colombo.Clerk.Service;
 using NHibernate;
@@ -37,6 +39,9 @@ namespace Colombo.Clerk.Server
         {
             var auditEntry = new AuditEntryModel();
             auditEntry.InjectFrom<FlatLoopValueInjection>(auditInfo);
+            auditEntry.Context = new List<ContextEntryModel>(
+                auditInfo.Context.Select(kv => new ContextEntryModel { Key = kv.Key, Value = kv.Value })
+            );
 
             StripLongStrings(auditEntry);
 
@@ -69,6 +74,15 @@ namespace Colombo.Clerk.Server
 
             if ((auditEntry.ServerMachineName != null) && (auditEntry.ServerMachineName.Length > 255))
                 auditEntry.ServerMachineName = auditEntry.ServerMachineName.Substring(0, 255);
+
+            foreach (var kv in auditEntry.Context)
+            {
+                if ((kv.Key != null) && (kv.Key.Length > 255))
+                    kv.Key = kv.Key.Substring(0, 255);
+
+                if ((kv.Value != null) && (kv.Value.Length > 255))
+                    kv.Value = kv.Value.Substring(0, 255);
+            }
         }
     }
 }

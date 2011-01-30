@@ -27,10 +27,11 @@ using FluentNHibernate.Mapping;
 
 namespace Colombo.Clerk.Server.Mappings
 {
-    public class AuditEntryMap : ClassMap<AuditEntryModel>
+    public class AuditEntryModelMap : ClassMap<AuditEntryModel>
     {
-        public AuditEntryMap()
+        public AuditEntryModelMap()
         {
+            Table(MapConstants.TablePrefix + "AuditEntry");
             Id(x => x.Id);
 
             Map(x => x.RequestNamespace);
@@ -45,6 +46,8 @@ namespace Colombo.Clerk.Server.Mappings
 
             Map(x => x.Exception).CustomSqlType("text");
             Map(x => x.ServerMachineName);
+
+            HasMany(x => x.Context).Cascade.AllDeleteOrphan();
         }
     }
 }

@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
@@ -37,6 +39,9 @@ namespace Colombo.Clerk.Server.Handlers
         {
             var auditEntryModel = new AuditEntryModel();
             auditEntryModel.InjectFrom(Request);
+            auditEntryModel.Context = new List<ContextEntryModel>(
+                Request.RequestContext.Select(kv => new ContextEntryModel { Key = kv.Key, Value = kv.Value })
+            );
 
             Session.Save(auditEntryModel);
 

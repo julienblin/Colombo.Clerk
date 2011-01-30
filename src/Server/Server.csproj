@@ -91,8 +91,11 @@
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />
-    <Compile Include="Mappings\AuditEntryMap.cs" />
+    <Compile Include="Mappings\AuditEntryModelMap.cs" />
+    <Compile Include="Mappings\ContextEntryModelMap.cs" />
+    <Compile Include="Mappings\MapConstants.cs" />
     <Compile Include="Models\AuditEntryModel.cs" />
+    <Compile Include="Models\ContextEntryModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
     <Compile Include="Queries\AuditEntrySearchQuery.cs" />
   </ItemGroup>

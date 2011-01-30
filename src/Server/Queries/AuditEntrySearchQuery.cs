@@ -31,6 +31,8 @@ namespace Colombo.Clerk.Server.Queries
     {
         public string RequestNamespaceLike { get; set; }
 
+        public string RequestContextContainsKey { get; set; }
+
         public QueryOver<AuditEntryModel, AuditEntryModel> GetQuery()
         {
             var queryOver = QueryOver.Of<AuditEntryModel>();
@@ -38,6 +40,9 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(RequestNamespaceLike))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(c => c.RequestNamespace).IsLike(RequestNamespaceLike,
                                                                                                  MatchMode.Anywhere));
+            if (!string.IsNullOrWhiteSpace(RequestContextContainsKey))
+                queryOver.JoinQueryOver<ContextEntryModel>(a => a.Context)
+                    .Where(c => c.Key == RequestContextContainsKey);
 
             return queryOver;
         }

@@ -48,6 +48,7 @@ namespace Colombo.Clerk.Server.Handlers
 
 
             var results = auditEntryQuery.GetQuery().GetExecutableQueryOver(Session)
+                .Fetch(x => x.Context).Eager
                 .Take(Request.PerPage)
                 .Skip(Request.PerPage * Request.CurrentPage)
                 .Future();
@@ -60,6 +61,9 @@ namespace Colombo.Clerk.Server.Handlers
                 {
                     var ae = new AuditEntry();
                     ae.InjectFrom<UnflatLoopValueInjection>(x);
+                    if(x.Context != null)
+                        foreach (var contextEntry in x.Context)
+                            ae.RequestContext[contextEntry.Key] = contextEntry.Value;
                     return ae;
                 })
             );

@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Collections.Generic;
+using System.Linq;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
@@ -35,13 +37,18 @@ namespace Colombo.Clerk.Server.Handlers
 
         protected override void Handle()
         {
-            var auditEntryModel = Session.Get<AuditEntryModel>(Request.Id);
+            var auditEntryModel = Session.QueryOver<AuditEntryModel>()
+                .Where(x => x.Id == Request.Id)
+                .Fetch(x => x.Context).Eager
+                .List().FirstOrDefault();
 
             if (auditEntryModel != null)
             {
                 Response.Found = true;
                 Response.AuditEntry = new AuditEntry();
                 Response.AuditEntry.InjectFrom<UnflatLoopValueInjection>(auditEntryModel);
+                foreach (var contextEntry in auditEntryModel.Context)
+                    Response.AuditEntry.RequestContext[contextEntry.Key] = contextEntry.Value;
             }
         }
     }

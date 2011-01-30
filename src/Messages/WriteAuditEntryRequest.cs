@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Colombo.Clerk.Messages
@@ -50,6 +51,16 @@ namespace Colombo.Clerk.Messages
         public virtual Guid ResponseCorrelationGuid { get; set; }
 
         public string Exception { get; set; }
+
+        private IDictionary<string, string> requestContext;
+        /// <summary>
+        /// Context of the request. Garanteed to be non-null.
+        /// </summary>
+        public virtual IDictionary<string, string> RequestContext
+        {
+            get { return requestContext ?? (requestContext = new Dictionary<string, string>()); }
+            set { requestContext = value; }
+        }
 
         [Required(AllowEmptyStrings = false)]
         [StringLength(255)]

@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Colombo.Clerk.Server.Models
 {
@@ -49,5 +50,7 @@ namespace Colombo.Clerk.Server.Models
         public virtual string Exception { get; set; }
 
         public virtual string ServerMachineName { get; set; }
+
+        public virtual IList<ContextEntryModel> Context { get; set; }
     }
 }

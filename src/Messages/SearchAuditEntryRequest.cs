@@ -36,5 +36,7 @@ namespace Colombo.Clerk.Messages
         public int PerPage { get; set; }
 
         public string RequestNamespaceLike { get; set; }
+
+        public string RequestContextContainsKey { get; set; }
     }
 }

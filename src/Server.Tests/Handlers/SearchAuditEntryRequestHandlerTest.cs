@@ -28,6 +28,7 @@ using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Handlers;
 using Colombo.Clerk.Server.Models;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Colombo.Clerk.Server.Tests.Handlers
 {
@@ -64,7 +65,12 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                                               ResponseCorrelationGuid = Guid.NewGuid(),
 
                                               Exception = "Exception",
-                                              ServerMachineName = "ServerMachineName"
+                                              ServerMachineName = "ServerMachineName",
+
+                                              Context = new List<ContextEntryModel>
+                                              {
+                                                  new ContextEntryModel { Key = "key1", Value = "value1"}
+                                              }
                                           };
             using (var tx = Session.BeginTransaction())
             {
@@ -97,6 +103,8 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
             Assert.That(firstAuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
             Assert.That(firstAuditEntry.ServerMachineName, Is.EqualTo(auditEntryReference.ServerMachineName));
+
+            Assert.That(firstAuditEntry.RequestContext["key1"], Is.EqualTo("value1"));
         }
 
         [Test]
@@ -145,7 +153,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             using (var tx = Session.BeginTransaction())
             {
 
-                auditEntryReference1 = new AuditEntryModel {RequestNamespace = "Colombo.Clerk.Foo"};
+                auditEntryReference1 = new AuditEntryModel { RequestNamespace = "Colombo.Clerk.Foo" };
                 Session.Save(auditEntryReference1);
 
                 auditEntryReference2 = new AuditEntryModel { RequestNamespace = "Colombo.Clerk" };
@@ -165,9 +173,60 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.CurrentPage, Is.EqualTo(0));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
-            Assert.That(response.Results.Select(x => x.Id), 
+            Assert.That(response.Results.Select(x => x.Id),
                 Contains.Item(auditEntryReference1.Id)
                 .And.Contains(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_RequestContextContainsKey()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel>
+                    {
+                        new ContextEntryModel { Key = "key1", Value = "value1" }
+                    }
+                };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel>
+                    {
+                        new ContextEntryModel { Key = "key2", Value = "value2" }
+                    }
+                };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel>
+                    {
+                        new ContextEntryModel { Key = "key2", Value = "value2" }
+                    }
+                };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { RequestContextContainsKey = "key2" };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
         }
     }
 }
