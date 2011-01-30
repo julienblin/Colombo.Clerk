@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<doc>
+  <assembly>
+    <name>Colombo.Host</name>
+  </assembly>
+  <members>
+    <member name="T:Colombo.Host.IWantToCreateTheContainer">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to create the <see cref="T:Castle.Windsor.IWindsorContainer" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToCreateTheContainer.CreateContainer">
+      <summary>
+            Create the <see cref="T:Castle.Windsor.IWindsorContainer" /></summary>
+    </member>
+    <member name="T:Colombo.Host.ColomboHostException">
+      <summary>
+            An exception that occured inside Colombo.Host.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.ColomboHostException.#ctor">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.ColomboHostException.#ctor(System.String)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.ColomboHostException.#ctor(System.String,System.Exception)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.ColomboHostException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+      <summary>
+            Constructor.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.ColomboHostException.ToString">
+      <summary>
+            String representation of the exception.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IAmAnEndpoint">
+      <summary>
+            Represent a component that mark an assembly as an endpoint.
+            Implement this interface inside an assembly to allow the exposition through Colombo.Host.exe.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IWantToConfigureLogging">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to configure logging.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToConfigureLogging.ConfigureLogging(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Register and configure logging infrastructure inside the <paramref name="container" />.
+            </summary>
+      <param name="container">
+      </param>
+    </member>
+    <member name="T:Colombo.Host.IWantToConfigureColombo">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to customization the registration of Colombo components
+            inside and endpoint. Could use <see cref="T:Colombo.Facilities.ColomboFacility" /> or custome manual registration
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToConfigureColombo.ConfigureColombo(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Register Colombo components inside the <paramref name="container" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IWantToRegisterMessageHandlers">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to customize the registration of the message handlers.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToRegisterMessageHandlers.RegisterMessageHandlers(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Register message handlers inside the <paramref name="container" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IWantToRegisterOtherComponents">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to register other components inside the container.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToRegisterOtherComponents.RegisterOtherComponents(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Register other components (i.e. not Colombo components or Message handlers) inside the <paramref name="container" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IWantToCreateServiceHosts">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to create <see cref="T:System.ServiceModel.ServiceHost" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToCreateServiceHosts.CreateServiceHosts(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Create the <see cref="T:System.ServiceModel.ServiceHost" />. Do not open them, they will be opened by Colombo.Host infrastructure.
+            </summary>
+    </member>
+    <member name="T:Colombo.Host.IWantToBeNotifiedWhenStartAndStop">
+      <summary>
+            Allow a <see cref="T:Colombo.Host.IAmAnEndpoint" /> component to be notified when the service starts and stop.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToBeNotifiedWhenStartAndStop.Start(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Invoked when the service starts.
+            </summary>
+    </member>
+    <member name="M:Colombo.Host.IWantToBeNotifiedWhenStartAndStop.Stop(Castle.Windsor.IWindsorContainer)">
+      <summary>
+            Invoked when the service stops.
+            </summary>
+    </member>
+    <member name="T:Castle.Facilities.Logging.LoggerImplementation">
+      <summary>
+            The supported <see cref="T:Castle.Core.Logging.ILogger" /> implementations
+            </summary>
+    </member>
+    <member name="T:Castle.Facilities.Logging.LoggerResolver">
+      <summary>
+              Custom resolver used by Windsor. It gives
+              us some contextual information that we use to set up a logging
+              before satisfying the dependency
+            </summary>
+    </member>
+    <member name="T:Castle.Facilities.Logging.LoggingFacility">
+      <summary>
+            A facility for logging support.
+            </summary>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor">
+      <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Logging.LoggingFacility" /> class.
+            </summary>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor(Castle.Facilities.Logging.LoggerImplementation)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Logging.LoggingFacility" /> class.
+            </summary>
+      <param name="loggingApi">
+            The LoggerImplementation that should be used
+            </param>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor(Castle.Facilities.Logging.LoggerImplementation,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Logging.LoggingFacility" /> class.
+            </summary>
+      <param name="loggingApi">
+            The LoggerImplementation that should be used
+            </param>
+      <param name="configFile">
+            The configuration file that should be used by the chosen LoggerImplementation
+            </param>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor(System.String,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Logging.LoggingFacility" /> class using a custom LoggerImplementation
+            </summary>
+      <param name="configFile">
+            The configuration file that should be used by the chosen LoggerImplementation
+            </param>
+      <param name="customLoggerFactory">
+            The type name of the type of the custom logger factory.
+            </param>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.#ctor(Castle.Facilities.Logging.LoggerImplementation,System.String,System.String)">
+      <summary>
+            Initializes a new instance of the <see cref="T:Castle.Facilities.Logging.LoggingFacility" /> class.
+            </summary>
+      <param name="loggingApi">
+            The LoggerImplementation that should be used
+            </param>
+      <param name="configFile">
+            The configuration file that should be used by the chosen LoggerImplementation
+            </param>
+      <param name="customLoggerFactory">
+            The type name of the type of the custom logger factory. (only used when loggingApi is set to LoggerImplementation.Custom)
+            </param>
+    </member>
+    <member name="M:Castle.Facilities.Logging.LoggingFacility.WithAppConfig">
+      <summary>
+            loads configuration from current AppDomain's config file (aka web.config/app.config)
+            </summary>
+      <returns>
+      </returns>
+    </member>
+  </members>
+</doc>
