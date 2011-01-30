@@ -143,8 +143,6 @@ namespace Colombo.Clerk.Client.Tests
             var alerter2 = mocks.StrictMock<IColomboAlerter>();
             var request = new TestRequest();
 
-            AuditInfo verifyInfo = null;
-
             With.Mocks(mocks).Expecting(() =>
             {
                 Expect.Call(factory.CreateClerkService()).Return(null);
