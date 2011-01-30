@@ -5,19 +5,17 @@ using System.Text;
 
 namespace Colombo.Clerk.Messages
 {
-    public class AuditEntryResponse : Response
+    public class AuditEntry
     {
-        public virtual bool Found { get; set; }
+        public Guid Id { get; set; }
 
-        public virtual Guid Id { get; set; }
+        public InnerInfo Request { get; set; }
 
-        public virtual InnerInfo Request { get; set; }
+        public InnerInfo Response { get; set; }
 
-        public virtual InnerInfo Response { get; set; }
+        public string Exception { get; set; }
 
-        public virtual string Exception { get; set; }
-
-        public virtual string ServerMachineName { get; set; }
+        public string ServerMachineName { get; set; }
 
         public class InnerInfo
         {

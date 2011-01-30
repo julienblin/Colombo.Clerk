@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Colombo.Clerk.Messages
 {
-    public class GetAuditEntryByIdRequest : SideEffectFreeRequest<GetAuditEntryByIdResponse>
+    public class WriteAuditEntryResponse : ValidatedResponse
     {
-        public Guid Id { get; set; }
+        public virtual Guid Id { get; set; }
     }
 }

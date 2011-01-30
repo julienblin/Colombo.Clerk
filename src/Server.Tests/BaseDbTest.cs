@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Castle.MicroKernel.Registration;
+﻿using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Colombo.Clerk.Server.Mappings;
 using Colombo.Clerk.Server.Models;
@@ -15,9 +11,9 @@ using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 
-namespace Colombo.Clerk.Server.Tests.Handlers
+namespace Colombo.Clerk.Server.Tests
 {
-    public abstract class BaseHandlerTest
+    public abstract class BaseDbTest
     {
         protected IWindsorContainer container;
         protected Configuration nhConfig;
@@ -41,22 +37,16 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             );
 
             BuildSchema();
-
-            AutoMapperConfiguration.Configure();
         }
-
-        private IMessageBus messageBus;
 
         protected IMessageBus MessageBus
         {
-            get { return messageBus ?? (messageBus = container.Resolve<IMessageBus>()); }
+            get { return container.Resolve<IMessageBus>(); }
         }
-
-        private IStubMessageBus stubMessageBus;
 
         protected IStubMessageBus StubMessageBus
         {
-            get { return stubMessageBus ?? (stubMessageBus = container.Resolve<IStubMessageBus>()); }
+            get { return container.Resolve<IStubMessageBus>(); }
         }
 
         protected ISession Session
@@ -68,7 +58,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         {
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntry>())
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntryModel>())
                 .ExposeConfiguration(cfg => nhConfig = cfg)
                 .BuildSessionFactory();
         }

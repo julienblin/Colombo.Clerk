@@ -42,6 +42,7 @@
       <HintPath>..\..\packages\Colombo.0.9.0\lib\Net40\Colombo.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
@@ -54,8 +55,11 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AuditEntryResponse.cs" />
+    <Compile Include="AuditEntry.cs" />
+    <Compile Include="GetAuditEntryByIdResponse.cs" />
     <Compile Include="GetAuditEntryByIdRequest.cs" />
+    <Compile Include="WriteAuditEntryRequest.cs" />
+    <Compile Include="WriteAuditEntryResponse.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

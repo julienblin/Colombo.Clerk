@@ -17,7 +17,7 @@ namespace Colombo.Clerk.Server
     public class EndPointConfig : IAmAnEndpoint,
                                   IWantToRegisterOtherComponents, IWantToBeNotifiedWhenStartAndStop
     {
-        public static IKernel Kernel { get; private set; }
+        public static IKernel Kernel { get; internal set; }
 
         public void RegisterOtherComponents(IWindsorContainer container)
         {
@@ -37,7 +37,6 @@ namespace Colombo.Clerk.Server
 
         public void Start(IWindsorContainer container)
         {
-            AutoMapperConfiguration.Configure();
             Kernel = container.Kernel;
         }
 
@@ -51,7 +50,7 @@ namespace Colombo.Clerk.Server
             var cfg = new NHibernate.Cfg.Configuration();
             cfg.Configure();
             return Fluently.Configure(cfg)
-                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntry>())
+                .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntryModel>())
                 .BuildSessionFactory();
         }
     }

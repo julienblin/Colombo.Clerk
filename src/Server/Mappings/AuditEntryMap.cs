@@ -7,7 +7,7 @@ using FluentNHibernate.Mapping;
 
 namespace Colombo.Clerk.Server.Mappings
 {
-    public class AuditEntryMap : ClassMap<AuditEntry>
+    public class AuditEntryMap : ClassMap<AuditEntryModel>
     {
         public AuditEntryMap()
         {
@@ -15,8 +15,16 @@ namespace Colombo.Clerk.Server.Mappings
 
             Map(x => x.RequestNamespace);
             Map(x => x.RequestType);
-            Map(x => x.RequestSerialized);
+            Map(x => x.RequestSerialized).CustomSqlType("text");
             Map(x => x.RequestCorrelationGuid);
+
+            Map(x => x.ResponseNamespace);
+            Map(x => x.ResponseType);
+            Map(x => x.ResponseSerialized).CustomSqlType("text");
+            Map(x => x.ResponseCorrelationGuid);
+
+            Map(x => x.Exception).CustomSqlType("text");
+            Map(x => x.ServerMachineName);
         }
     }
 }

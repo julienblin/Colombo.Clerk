@@ -2,24 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoMapper;
+using Omu.ValueInjecter;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
 
 namespace Colombo.Clerk.Server.Handlers
 {
-    public class GetAuditEntryByIdRequestHandler : SideEffectFreeRequestHandler<GetAuditEntryByIdRequest, AuditEntryResponse>
+    public class GetAuditEntryByIdRequestHandler : SideEffectFreeRequestHandler<GetAuditEntryByIdRequest, GetAuditEntryByIdResponse>
     {
         public ISession Session { get; set; }
 
         protected override void Handle()
         {
-            var auditEntry = Session.Get<AuditEntry>(Request.Id);
+            var auditEntryModel = Session.Get<AuditEntryModel>(Request.Id);
 
-            if (auditEntry != null)
+            if (auditEntryModel != null)
             {
-                Mapper.Map(auditEntry, Response);
+                Response.Found = true;
+                Response.AuditEntry = new AuditEntry();
+                Response.AuditEntry.InjectFrom<UnflatLoopValueInjection>(auditEntryModel);
             }
         }
     }

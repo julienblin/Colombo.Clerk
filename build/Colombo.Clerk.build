@@ -109,6 +109,8 @@ THE SOFTWARE.-->
     <copy todir="${folder.test}\bin">
       <fileset basedir="${folder.bin}\${msbuild.configuration}">
         <include name="Colombo.Clerk.Client.Tests\**"/>
+        <include name="Colombo.Clerk.Messages.Tests\**"/>
+        <include name="Colombo.Clerk.Server.Tests\**"/>
       </fileset>
     </copy>
     <property name="folder.test.results.xml" value="${folder.test}\results\xml"/>
