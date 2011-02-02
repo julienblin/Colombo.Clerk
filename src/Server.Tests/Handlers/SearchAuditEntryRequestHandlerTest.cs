@@ -144,7 +144,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         }
 
         [Test]
-        public void It_should_filter_by_RequestNamespaceLike()
+        public void It_should_filter_by_RequestNamespace()
         {
             AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
 
@@ -164,7 +164,187 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             }
 
             StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
-            var request = new SearchAuditEntryRequest { RequestNamespaceLike = "Colombo.Clerk" };
+            var request = new SearchAuditEntryRequest { RequestNamespace = "Colombo.Clerk" };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_RequestType()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { RequestType = "Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { RequestType = "Bar" };
+                Session.Save(auditEntryReference2);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { RequestType = "Bar" };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_RequestCorrelationGuid()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { RequestCorrelationGuid = Guid.NewGuid() };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { RequestCorrelationGuid = Guid.NewGuid() };
+                Session.Save(auditEntryReference2);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { RequestCorrelationGuid = auditEntryReference1.RequestCorrelationGuid };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_ResponseNamespace()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { ResponseNamespace = "Colombo.Clerk.Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { ResponseNamespace = "Colombo.Clerk" };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel { ResponseNamespace = "Bar" };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { ResponseNamespace = "Colombo.Clerk" };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_ResponseType()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { ResponseType = "Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { ResponseType = "Bar" };
+                Session.Save(auditEntryReference2);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { ResponseType = "Bar" };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_ResponseCorrelationGuid()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { ResponseCorrelationGuid = Guid.NewGuid() };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { ResponseCorrelationGuid = Guid.NewGuid() };
+                Session.Save(auditEntryReference2);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { ResponseCorrelationGuid = auditEntryReference1.ResponseCorrelationGuid };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_ExceptionContains()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { Exception = "Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { Exception = "FooBar" };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel { Exception = "Bar" };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { ExceptionContains = "Foo" };
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
@@ -174,57 +354,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.Results.Select(x => x.Id),
                 Contains.Item(auditEntryReference1.Id)
                 .And.Contains(auditEntryReference2.Id));
-        }
-
-        [Test]
-        public void It_should_filter_by_RequestContextContainsKey()
-        {
-            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
-
-            using (var tx = Session.BeginTransaction())
-            {
-
-                auditEntryReference1 = new AuditEntryModel
-                {
-                    Context = new List<ContextEntryModel>
-                    {
-                        new ContextEntryModel { Key = "key1", Value = "value1" }
-                    }
-                };
-                Session.Save(auditEntryReference1);
-
-                auditEntryReference2 = new AuditEntryModel
-                {
-                    Context = new List<ContextEntryModel>
-                    {
-                        new ContextEntryModel { Key = "key2", Value = "value2" }
-                    }
-                };
-                Session.Save(auditEntryReference2);
-
-                auditEntryReference3 = new AuditEntryModel
-                {
-                    Context = new List<ContextEntryModel>
-                    {
-                        new ContextEntryModel { Key = "key2", Value = "value2" }
-                    }
-                };
-                Session.Save(auditEntryReference3);
-
-                tx.Commit();
-            }
-
-            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
-            var request = new SearchAuditEntryRequest { RequestContextContainsKey = "key2" };
-            var response = MessageBus.Send(request);
-
-            Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
-            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
-            Assert.That(response.Results.Count, Is.EqualTo(2));
-            Assert.That(response.Results.Select(x => x.Id),
-                Contains.Item(auditEntryReference2.Id)
-                .And.Contains(auditEntryReference3.Id));
         }
     }
 }

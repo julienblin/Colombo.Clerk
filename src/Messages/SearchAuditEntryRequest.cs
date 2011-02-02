@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 #endregion
 
+using System;
+
 namespace Colombo.Clerk.Messages
 {
     public class SearchAuditEntryRequest : SideEffectFreeRequest<SearchAuditEntryResponse>
@@ -35,8 +37,18 @@ namespace Colombo.Clerk.Messages
 
         public int PerPage { get; set; }
 
-        public string RequestNamespaceLike { get; set; }
+        public string RequestNamespace { get; set; }
 
-        public string RequestContextContainsKey { get; set; }
+        public string RequestType { get; set; }
+
+        public Guid RequestCorrelationGuid { get; set; }
+
+        public string ResponseNamespace { get; set; }
+
+        public string ResponseType { get; set; }
+
+        public Guid ResponseCorrelationGuid { get; set; }
+
+        public string ExceptionContains { get; set; }
     }
 }
