@@ -11,10 +11,12 @@ namespace Colombo.Clerk.Server.Mappings
     {
         public ContextEntryModelMap()
         {
-            Table(MapConstants.TablePrefix + "Context");
+            const string tableName = MapConstants.TablePrefix + "Context";
+
+            Table(tableName);
             Id(x => x.Id);
 
-            Map(x => x.Key);
+            Map(x => x.Key).Index(string.Format("Idx_{0}_{1}", tableName, "Key"));
             Map(x => x.Value);
         }
     }

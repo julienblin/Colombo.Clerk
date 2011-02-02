@@ -51,12 +51,7 @@ namespace Colombo.Clerk.Server.Tests
                 Component.For<ISessionFactory>()
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
-                    .UsingFactoryMethod(k =>
-                                        {
-                                            var session = k.Resolve<ISessionFactory>().OpenSession();
-                                            session.FlushMode = FlushMode.Commit;
-                                            return session;
-                                        })
+                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
             );
 
             BuildSchema();

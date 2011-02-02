@@ -46,12 +46,7 @@ namespace Colombo.Clerk.Server
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
                     .LifeStyle.PerRequestHandling()
-                    .UsingFactoryMethod(k =>
-                                        {
-                                            var session = k.Resolve<ISessionFactory>().OpenSession();
-                                            session.FlushMode = FlushMode.Commit;
-                                            return session;
-                                        })
+                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
             );
         }
 

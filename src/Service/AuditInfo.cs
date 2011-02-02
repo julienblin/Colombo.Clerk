@@ -46,9 +46,6 @@ namespace Colombo.Clerk.Service
         [DataMember]
         public string Exception { get; set; }
 
-        [DataMember]
-        public string ServerMachineName { get; set; }
-
         private IDictionary<string, string> context;
         /// <summary>
         /// Context of the request. Garanteed to be non-null.
@@ -61,7 +58,7 @@ namespace Colombo.Clerk.Service
 
         public override string ToString()
         {
-            return string.Format("AuditInfo for {0}.{1} on {2}.", Request.Namespace, Request.Type, ServerMachineName);
+            return string.Format("AuditInfo for {0}.{1}", Request.Namespace, Request.Type);
         }
 
         [DataContract]

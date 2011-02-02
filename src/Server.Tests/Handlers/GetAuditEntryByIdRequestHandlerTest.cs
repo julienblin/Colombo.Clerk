@@ -48,7 +48,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 ResponseSerialized = "ResponseSerialized",
                 ResponseType = "ResponseType",
                 Exception = "Exception",
-                ServerMachineName = "ServerMachineName",
                 Context = new List<ContextEntryModel>
                 {
                     new ContextEntryModel { Key = "key1", Value = "value1"}
@@ -79,7 +78,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.AuditEntry.Response.Type, Is.EqualTo(auditEntryReference.ResponseType));
 
             Assert.That(response.AuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
-            Assert.That(response.AuditEntry.ServerMachineName, Is.EqualTo(auditEntryReference.ServerMachineName));
 
             Assert.That(response.AuditEntry.RequestContext["key1"], Is.EqualTo("value1"));
         }

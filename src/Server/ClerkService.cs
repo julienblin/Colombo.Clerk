@@ -72,9 +72,6 @@ namespace Colombo.Clerk.Server
             if ((auditEntry.ResponseType != null) && (auditEntry.ResponseType.Length > 255))
                 auditEntry.ResponseType = auditEntry.ResponseType.Substring(0, 255);
 
-            if ((auditEntry.ServerMachineName != null) && (auditEntry.ServerMachineName.Length > 255))
-                auditEntry.ServerMachineName = auditEntry.ServerMachineName.Substring(0, 255);
-
             foreach (var kv in auditEntry.Context)
             {
                 if ((kv.Key != null) && (kv.Key.Length > 255))

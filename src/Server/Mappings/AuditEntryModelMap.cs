@@ -31,21 +31,22 @@ namespace Colombo.Clerk.Server.Mappings
     {
         public AuditEntryModelMap()
         {
-            Table(MapConstants.TablePrefix + "AuditEntry");
+            const string tableName = MapConstants.TablePrefix + "AuditEntry";
+
+            Table(tableName);
             Id(x => x.Id);
 
-            Map(x => x.RequestNamespace);
-            Map(x => x.RequestType);
+            Map(x => x.RequestNamespace).Index(string.Format("Idx_{0}_{1}", tableName, "RequestNamespace"));
+            Map(x => x.RequestType).Index(string.Format("Idx_{0}_{1}", tableName, "RequestType"));
             Map(x => x.RequestSerialized).CustomSqlType("text");
             Map(x => x.RequestCorrelationGuid);
 
-            Map(x => x.ResponseNamespace);
-            Map(x => x.ResponseType);
+            Map(x => x.ResponseNamespace).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseNamespace"));
+            Map(x => x.ResponseType).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseType"));
             Map(x => x.ResponseSerialized).CustomSqlType("text");
             Map(x => x.ResponseCorrelationGuid);
 
             Map(x => x.Exception).CustomSqlType("text");
-            Map(x => x.ServerMachineName);
 
             HasMany(x => x.Context).Cascade.AllDeleteOrphan();
         }

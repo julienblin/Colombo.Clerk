@@ -65,7 +65,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                                               ResponseCorrelationGuid = Guid.NewGuid(),
 
                                               Exception = "Exception",
-                                              ServerMachineName = "ServerMachineName",
 
                                               Context = new List<ContextEntryModel>
                                               {
@@ -102,7 +101,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(firstAuditEntry.Response.CorrelationGuid, Is.EqualTo(auditEntryReference.ResponseCorrelationGuid));
 
             Assert.That(firstAuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
-            Assert.That(firstAuditEntry.ServerMachineName, Is.EqualTo(auditEntryReference.ServerMachineName));
 
             Assert.That(firstAuditEntry.RequestContext["key1"], Is.EqualTo("value1"));
         }

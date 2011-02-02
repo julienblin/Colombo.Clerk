@@ -85,8 +85,6 @@ namespace Colombo.Clerk.Client.Tests
                 Assert.That(() => verifyInfo.Response.Type, Is.EqualTo("TestResponse"));
                 Assert.That(() => verifyInfo.Response.CorrelationGuid, Is.EqualTo(response.CorrelationGuid));
                 Assert.That(() => verifyInfo.Response.Serialized, Contains.Substring("Bar"));
-
-                Assert.That(() => verifyInfo.ServerMachineName, Is.EqualTo(Environment.MachineName));
             });
         }
 
@@ -128,8 +126,6 @@ namespace Colombo.Clerk.Client.Tests
                 Assert.That(() => verifyInfo.Request.Serialized, Contains.Substring("Foo"));
 
                 Assert.That(() => verifyInfo.Exception, Contains.Substring("NotImplementedException"));
-
-                Assert.That(() => verifyInfo.ServerMachineName, Is.EqualTo(Environment.MachineName));
             });
         }
 

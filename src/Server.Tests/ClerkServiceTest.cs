@@ -54,7 +54,6 @@ namespace Colombo.Clerk.Server.Tests
                                         Type = "ResponseType"
                                     },
                                     Exception = "Exception",
-                                    ServerMachineName = "ServerMachineName",
                                     Context =
                                         {
                                             { "key1", "value1" },
@@ -86,7 +85,6 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(auditInfo.Response.Type));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
-                Assert.That(auditEntryModel.ServerMachineName, Is.EqualTo(auditInfo.ServerMachineName));
 
                 Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo("key1"));
                 Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo("value1"));
@@ -123,7 +121,6 @@ namespace Colombo.Clerk.Server.Tests
                     Type = moreThan255Chars
                 },
                 Exception = moreThan255Chars,
-                ServerMachineName = moreThan255Chars,
                 Context = {
                     { moreThan255Chars, moreThan255Chars }
                 }
@@ -153,7 +150,6 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(strippedMoreThan255Chars));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
-                Assert.That(auditEntryModel.ServerMachineName, Is.EqualTo(strippedMoreThan255Chars));
 
                 Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo(strippedMoreThan255Chars));
                 Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo(strippedMoreThan255Chars));

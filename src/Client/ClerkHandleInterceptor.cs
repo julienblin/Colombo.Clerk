@@ -86,8 +86,7 @@ namespace Colombo.Clerk.Client
                                             CorrelationGuid = nextInvocation.Request.CorrelationGuid,
                                             Serialized = Serialize(nextInvocation.Request)
                                         },
-                                    Context = nextInvocation.Request.Context,
-                                    ServerMachineName = Environment.MachineName
+                                    Context = nextInvocation.Request.Context
                                 };
 
             try

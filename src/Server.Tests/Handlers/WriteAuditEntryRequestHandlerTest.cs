@@ -75,7 +75,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(request.ResponseType));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(request.Exception));
-                Assert.That(auditEntryModel.ServerMachineName, Is.EqualTo(request.ServerMachineName));
 
                 Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo("key1"));
                 Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo("value1"));
