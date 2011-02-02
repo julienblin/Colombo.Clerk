@@ -159,6 +159,47 @@
             The measured time for the operation.
             </summary>
     </member>
+    <member name="T:Colombo.IMetaContextKeysManager">
+      <summary>
+            Represents a component that can inject <see cref="T:Colombo.MetaContextKeys" /> into the Context.
+            Allow the disabling of such functionality.
+            </summary>
+    </member>
+    <member name="P:Colombo.IMetaContextKeysManager.DoNotManageMetaContextKeys">
+      <summary>
+            Disable the management of <see cref="T:Colombo.MetaContextKeys" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.MetaContextKeys">
+      <summary>
+            Holds constants for key values that various components can use to insert meta-properties into the <see cref="P:Colombo.BaseRequest.Context" /></summary>
+      <see cref="T:Colombo.IMetaContextKeysManager" />
+    </member>
+    <member name="F:Colombo.MetaContextKeys.MetaPrefix">
+      <summary>
+            Prefix used by all the keys.
+            </summary>
+    </member>
+    <member name="F:Colombo.MetaContextKeys.SenderMachineName">
+      <summary>
+        <see cref="P:System.Environment.MachineName" /> of the sender.
+            </summary>
+    </member>
+    <member name="F:Colombo.MetaContextKeys.HandlerMachineName">
+      <summary>
+        <see cref="P:System.Environment.MachineName" /> of the handler. Could be the same as <see cref="F:Colombo.MetaContextKeys.SenderMachineName" /> if processed locally.
+            </summary>
+    </member>
+    <member name="F:Colombo.MetaContextKeys.EndpointAddressUri">
+      <summary>
+            When processed remotely, contains the address of the endpoint that received the requests.
+            </summary>
+    </member>
+    <member name="F:Colombo.MetaContextKeys.CodeOrigin">
+      <summary>
+            Indication of where the caller code used a Send method - could be a partial call stack or javascript/HTTP-REFERRER for example.
+            </summary>
+    </member>
     <member name="T:Colombo.IMessageBus">
       <summary>
             Allow the sending of messages through Colombo.
@@ -203,6 +244,16 @@
     <member name="T:Colombo.Impl.BaseMessageBus">
       <summary>
             Base class for <see cref="T:Colombo.IMessageBus" />.
+            </summary>
+    </member>
+    <member name="F:Colombo.Impl.BaseMessageBus.NumStackFrameToSkipWhenCapturingCodeOrigin">
+      <summary>
+            Number of method in stackframes that will not be captured by CodeOrigin
+            </summary>
+    </member>
+    <member name="F:Colombo.Impl.BaseMessageBus.MaxStrLengthInStackTrace">
+      <summary>
+            The stacktrace is truncated to avoid big message size.
             </summary>
     </member>
     <member name="M:Colombo.Impl.BaseMessageBus.Send(Colombo.BaseRequest)">
@@ -270,6 +321,11 @@
     <member name="P:Colombo.Impl.BaseMessageBus.MessageBusSendInterceptors">
       <summary>
             The list of <see cref="T:Colombo.IMessageBusSendInterceptor" /> to use.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.BaseMessageBus.DoNotManageMetaContextKeys">
+      <summary>
+            Disable the management of <see cref="T:Colombo.MetaContextKeys" />.
             </summary>
     </member>
     <member name="T:Colombo.IColomboInterceptor">
@@ -947,6 +1003,11 @@
             But using the <see cref="T:Colombo.TestSupport.IStubMessageBus" /> you will be able to assert certain operations.
             </summary>
     </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DoNotManageMetaContextKeys">
+      <summary>
+            Disable the management of MetaContextKeys. No value will be set in the Context if disabled.
+            </summary>
+    </member>
     <member name="T:Colombo.Facilities.LifestyleRegistrationExtensions">
       <summary>
             Static class to hold extensions method for Castle Windsor Lifestyles.
@@ -1211,6 +1272,11 @@
             Default implementation for processing requests locally.
             </summary>
     </member>
+    <member name="F:Colombo.Impl.LocalRequestProcessor.LocalMetaContextKeyEndpointAddressUri">
+      <summary>
+            Constant used for the value associated with the <see cref="F:Colombo.MetaContextKeys.EndpointAddressUri" /> when handled locally.
+            </summary>
+    </member>
     <member name="M:Colombo.Impl.LocalRequestProcessor.#ctor(Colombo.IRequestHandlerFactory)">
       <summary>
             Constructor
@@ -1235,6 +1301,11 @@
     <member name="P:Colombo.Impl.LocalRequestProcessor.RequestHandlerInterceptors">
       <summary>
             The list of <see cref="T:Colombo.IRequestHandlerHandleInterceptor" /> to use.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.LocalRequestProcessor.DoNotManageMetaContextKeys">
+      <summary>
+            Disable the management of <see cref="T:Colombo.MetaContextKeys" />.
             </summary>
     </member>
     <member name="T:Colombo.Impl.MessageBus">
@@ -2572,6 +2643,11 @@
     <member name="P:Colombo.Wcf.WcfServices.Kernel">
       <summary>
             Static <see cref="T:Castle.MicroKernel.IKernel" /> reference. - That means that when using WCF Services, only one container is allowed per AppDomain.
+            </summary>
+    </member>
+    <member name="P:Colombo.Wcf.WcfServices.DoNotManageMetaContextKeys">
+      <summary>
+            Disable the management of <see cref="T:Colombo.MetaContextKeys" /> for WCF Services.
             </summary>
     </member>
     <member name="T:Colombo.Wcf.SoapService">

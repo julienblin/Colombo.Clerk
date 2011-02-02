@@ -52,7 +52,7 @@
     <Reference Include="Colombo.Host, Version=0.9.0.11029, Culture=neutral, PublicKeyToken=e7277eb7e222131d, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <ExecutableExtension>.exe</ExecutableExtension>
-      <HintPath>..\..\packages\Colombo.Host.0.9.0\lib\Net40\Colombo.Host.exe</HintPath>
+      <HintPath>..\..\packages\Colombo.0.9.0\tools\Net40\Colombo.Host.exe</HintPath>
     </Reference>
     <Reference Include="FluentNHibernate, Version=1.1.0.0, Culture=neutral, PublicKeyToken=8aa435e3cb308880, processorArchitecture=MSIL">
       <HintPath>..\..\packages\FluentNHibernate.1.1.1.694\lib\FluentNHibernate.dll</HintPath>
