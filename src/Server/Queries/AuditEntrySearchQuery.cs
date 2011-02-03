@@ -24,6 +24,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
 using NHibernate.Criterion;
@@ -53,7 +54,9 @@ namespace Colombo.Clerk.Server.Queries
 
         public QueryOver<AuditEntryModel> GetQuery()
         {
-            var queryOver = QueryOver.Of<AuditEntryModel>();
+            AuditEntryModel auditEntryModelAlias = null;
+
+            var queryOver = QueryOver.Of(() => auditEntryModelAlias);
 
             if (!string.IsNullOrWhiteSpace(RequestNamespace))
                 queryOver.Where(x => x.RequestNamespace == RequestNamespace);
@@ -76,21 +79,24 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(ExceptionContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(ExceptionContains, MatchMode.Anywhere));
 
-            if ((ContextConditions != null) && (ContextConditions.Count > 0))
+            if ((ContextConditions != null) && (ContextConditions.Where(x => !string.IsNullOrWhiteSpace(x.Key)).Count() > 0))
             {
-                foreach (var contextCondition in ContextConditions)
+                foreach (var contextCondition in ContextConditions.Where(x => !string.IsNullOrWhiteSpace(x.Key)))
                 {
                     var localContextCondition = contextCondition;
-                    var queryContext = queryOver.JoinQueryOver<ContextEntryModel>(x => x.Context);
+                    var subQueryContext = QueryOver.Of<ContextEntryModel>();
+                    subQueryContext.Where(x => x.AuditEntryModel.Id == auditEntryModelAlias.Id);
+                    subQueryContext.Select(Projections.Id());
 
-                    if (!string.IsNullOrWhiteSpace(localContextCondition.Key))
-                        queryContext.Where(x => x.Key == localContextCondition.Key);
+                    subQueryContext.Where(x => x.Key == localContextCondition.Key);
 
                     if(!string.IsNullOrWhiteSpace(localContextCondition.ValueIs))
-                        queryContext.Where(x => x.Value == localContextCondition.ValueIs);
+                        subQueryContext.Where(x => x.Value == localContextCondition.ValueIs);
 
                     if (!string.IsNullOrWhiteSpace(localContextCondition.ValueContains))
-                        queryContext.Where(Restrictions.On<ContextEntryModel>(r => r.Value).IsLike(localContextCondition.ValueContains, MatchMode.Anywhere));
+                        subQueryContext.Where(Restrictions.On<ContextEntryModel>(r => r.Value).IsLike(localContextCondition.ValueContains, MatchMode.Anywhere));
+
+                    queryOver.WithSubquery.WhereExists(subQueryContext);
                 }
 
                 queryOver.TransformUsing(Transformers.DistinctRootEntity);

@@ -12,5 +12,7 @@ namespace Colombo.Clerk.Server.Models
         public virtual string Key { get; set; }
 
         public virtual string Value { get; set; }
+
+        public virtual AuditEntryModel AuditEntryModel { get; set; }
     }
 }
