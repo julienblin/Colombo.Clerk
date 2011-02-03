@@ -156,7 +156,7 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
 
                 Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo(strippedMoreThan255Chars));
-                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo(moreThan255Chars));
                 tx.Commit();
             }
         }

@@ -76,9 +76,6 @@ namespace Colombo.Clerk.Server
             {
                 if ((kv.Key != null) && (kv.Key.Length > 255))
                     kv.Key = kv.Key.Substring(0, 255);
-
-                if ((kv.Value != null) && (kv.Value.Length > 255))
-                    kv.Value = kv.Value.Substring(0, 255);
             }
         }
     }

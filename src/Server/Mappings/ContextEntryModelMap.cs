@@ -17,9 +17,9 @@ namespace Colombo.Clerk.Server.Mappings
             Id(x => x.Id);
 
             Map(x => x.Key).Index(string.Format("Idx_{0}_{1}", tableName, "Key"));
-            Map(x => x.Value);
+            Map(x => x.Value).CustomSqlType("text");
 
-            References(x => x.AuditEntryModel).Cascade.All();
+            References(x => x.AuditEntryModel);
         }
     }
 }
