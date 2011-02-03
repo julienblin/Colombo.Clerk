@@ -43,13 +43,21 @@ namespace Colombo.Clerk.Messages
 
         public string RequestType { get; set; }
 
-        public Guid RequestCorrelationGuid { get; set; }
+        public Guid? RequestCorrelationGuid { get; set; }
+
+        public DateTime? RequestUtcTimestampAfter { get; set; }
+
+        public DateTime? RequestUtcTimestampBefore { get; set; }
 
         public string ResponseNamespace { get; set; }
 
         public string ResponseType { get; set; }
 
-        public Guid ResponseCorrelationGuid { get; set; }
+        public Guid? ResponseCorrelationGuid { get; set; }
+
+        public DateTime? ResponseUtcTimestampAfter { get; set; }
+
+        public DateTime? ResponseUtcTimestampBefore { get; set; }
 
         public string ExceptionContains { get; set; }
 

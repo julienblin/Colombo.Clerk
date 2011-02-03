@@ -361,6 +361,150 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         }
 
         [Test]
+        public void It_should_filter_by_RequestUtcTimestamps()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2001,01,01, 01, 01, 01) };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2005, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2010, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { RequestUtcTimestampAfter = new DateTime(2003, 01, 01) };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
+
+            request = new SearchAuditEntryRequest { RequestUtcTimestampAfter = new DateTime(2006, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference3.Id));
+
+            request = new SearchAuditEntryRequest { RequestUtcTimestampBefore = new DateTime(2009, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id)
+                .And.Contains(auditEntryReference2.Id));
+
+            request = new SearchAuditEntryRequest { RequestUtcTimestampBefore = new DateTime(1999, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(0));
+
+            request = new SearchAuditEntryRequest { RequestUtcTimestampAfter = new DateTime(2004, 01, 01), RequestUtcTimestampBefore = new DateTime(2009,01,01)};
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_ResponseUtcTimestamps()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { ResponseUtcTimestamp = new DateTime(2001, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { ResponseUtcTimestamp = new DateTime(2005, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel { ResponseUtcTimestamp = new DateTime(2010, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { ResponseUtcTimestampAfter = new DateTime(2003, 01, 01) };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
+
+            request = new SearchAuditEntryRequest { ResponseUtcTimestampAfter = new DateTime(2006, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference3.Id));
+
+            request = new SearchAuditEntryRequest { ResponseUtcTimestampBefore = new DateTime(2009, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id)
+                .And.Contains(auditEntryReference2.Id));
+
+            request = new SearchAuditEntryRequest { ResponseUtcTimestampBefore = new DateTime(1999, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(0));
+
+            request = new SearchAuditEntryRequest { ResponseUtcTimestampAfter = new DateTime(2004, 01, 01), ResponseUtcTimestampBefore = new DateTime(2009, 01, 01) };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
+
+        [Test]
         public void It_should_filter_by_ContextConditions_with_one_condition()
         {
             AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;

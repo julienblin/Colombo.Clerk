@@ -40,13 +40,21 @@ namespace Colombo.Clerk.Server.Queries
 
         public string RequestType { get; set; }
 
-        public Guid RequestCorrelationGuid { get; set; }
+        public Guid? RequestCorrelationGuid { get; set; }
+
+        public DateTime? RequestUtcTimestampAfter { get; set; }
+
+        public DateTime? RequestUtcTimestampBefore { get; set; }
 
         public string ResponseNamespace { get; set; }
 
         public string ResponseType { get; set; }
 
-        public Guid ResponseCorrelationGuid { get; set; }
+        public Guid? ResponseCorrelationGuid { get; set; }
+
+        public DateTime? ResponseUtcTimestampAfter { get; set; }
+
+        public DateTime? ResponseUtcTimestampBefore { get; set; }
 
         public string ExceptionContains { get; set; }
 
@@ -64,8 +72,14 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(RequestType))
                 queryOver.Where(x => x.RequestType == RequestType);
 
-            if (RequestCorrelationGuid != Guid.Empty)
+            if (RequestCorrelationGuid.HasValue)
                 queryOver.Where(x => x.RequestCorrelationGuid == RequestCorrelationGuid);
+
+            if (RequestUtcTimestampAfter.HasValue)
+                queryOver.Where(x => x.RequestUtcTimestamp >= RequestUtcTimestampAfter);
+
+            if (RequestUtcTimestampBefore.HasValue)
+                queryOver.Where(x => x.RequestUtcTimestamp <= RequestUtcTimestampBefore);
 
             if (!string.IsNullOrWhiteSpace(ResponseNamespace))
                 queryOver.Where(x => x.ResponseNamespace == ResponseNamespace);
@@ -73,8 +87,14 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(ResponseType))
                 queryOver.Where(x => x.ResponseType == ResponseType);
 
-            if (ResponseCorrelationGuid != Guid.Empty)
+            if (ResponseCorrelationGuid.HasValue)
                 queryOver.Where(x => x.ResponseCorrelationGuid == ResponseCorrelationGuid);
+
+            if (ResponseUtcTimestampAfter.HasValue)
+                queryOver.Where(x => x.ResponseUtcTimestamp >= ResponseUtcTimestampAfter);
+
+            if (ResponseUtcTimestampBefore.HasValue)
+                queryOver.Where(x => x.ResponseUtcTimestamp <= ResponseUtcTimestampBefore);
 
             if (!string.IsNullOrWhiteSpace(ExceptionContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(ExceptionContains, MatchMode.Anywhere));
