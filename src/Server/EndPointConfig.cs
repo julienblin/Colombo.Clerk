@@ -23,6 +23,11 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
+using System.ServiceModel;
+using System.ServiceModel.Configuration;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
@@ -30,15 +35,17 @@ using Castle.Windsor;
 using Colombo.Clerk.Server.Models;
 using Colombo.Facilities;
 using Colombo.Host;
+using Colombo.Wcf;
 using FluentNHibernate.Cfg;
 using NHibernate;
-using NHibernate.Cfg;
+using Configuration = NHibernate.Cfg.Configuration;
 
 namespace Colombo.Clerk.Server
 {
     public class EndPointConfig : IAmAnEndpoint,
                                   IWantToConfigureLogging,
                                   IWantToRegisterOtherComponents,
+                                  IWantToCreateServiceHosts,
                                   IWantToBeNotifiedWhenStartAndStop
     {
         public static IKernel Kernel { get; internal set; }
@@ -59,6 +66,29 @@ namespace Colombo.Clerk.Server
             );
         }
 
+        public IEnumerable<ServiceHost> CreateServiceHosts(IWindsorContainer container)
+        {
+            foreach (var contract in from ServiceElement serviceElement in WcfConfigServicesSection.Services
+                                     where serviceElement.Endpoints.Count > 0
+                                     select serviceElement.Endpoints[0].Contract)
+            {
+                switch (contract)
+                {
+                    case "Colombo.Wcf.IColomboService":
+                        yield return new ServiceHost(typeof(ColomboService));
+                        break;
+                    case "Colombo.Wcf.ISoapService":
+                        yield return new ServiceHost(typeof(SoapService));
+                        break;
+                    case "Colombo.Clerk.Service.IClerkService":
+                        yield return new ServiceHost(typeof(ClerkService));
+                        break;
+                    default:
+                        throw new ColomboException(string.Format("Unrecognized contract {0}.", contract));
+                }
+            }
+        }
+
         public void Start(IWindsorContainer container)
         {
             Kernel = container.Kernel;
@@ -76,6 +106,23 @@ namespace Colombo.Clerk.Server
             return Fluently.Configure(cfg)
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntryModel>())
                 .BuildSessionFactory();
+        }
+
+        private ServicesSection wcfConfigServicesSection;
+
+        private ServicesSection WcfConfigServicesSection
+        {
+            get
+            {
+                if (wcfConfigServicesSection == null)
+                {
+                    var configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                    var serviceModelGroup = ServiceModelSectionGroup.GetSectionGroup(configuration);
+                    if (serviceModelGroup != null)
+                        wcfConfigServicesSection = serviceModelGroup.Services;
+                }
+                return wcfConfigServicesSection;
+            }
         }
     }
 }

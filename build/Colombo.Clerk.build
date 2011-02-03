@@ -156,7 +156,6 @@ THE SOFTWARE.-->
       <arg line="/keyfile:&quot;${project.key}&quot;" />
       <arg line="/internalize /xmldocs /targetplatform:v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Colombo.Clerk.Server.dll" />
-      <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Colombo.Clerk.Service.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Antlr3.Runtime.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\FluentNHibernate.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Iesi.Collections.dll" />
@@ -169,6 +168,7 @@ THE SOFTWARE.-->
 	<copy todir="${folder.release}\Server">
 	  <fileset basedir="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server">
 	    <include name="Colombo.Clerk.Messages.*" />
+		<include name="Colombo.Clerk.Service.*" />
 		<include name="Castle.Core.dll" />
 		<include name="Castle.Facilities.Logging.dll" />
 		<include name="Castle.Services.Logging.Log4netIntegration.dll" />
