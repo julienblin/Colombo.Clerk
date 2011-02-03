@@ -355,5 +355,103 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Contains.Item(auditEntryReference1.Id)
                 .And.Contains(auditEntryReference2.Id));
         }
+
+        [Test]
+        public void It_should_filter_by_ContextConditions_with_one_condition()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel> {
+                        new ContextEntryModel { Key = "key1", Value= "value1" },
+                        new ContextEntryModel { Key = "key2", Value= "value2" }
+                    }
+                };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel> {
+                        new ContextEntryModel { Key = "key1", Value= "value3" }
+                    }
+                };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel> {
+                        new ContextEntryModel { Key = "key3", Value= "foo" }
+                    }
+                };
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest
+            {
+                ContextConditions = new List<SearchAuditEntryRequest.ContextCondition> {
+                    new SearchAuditEntryRequest.ContextCondition { Key = "key1" }
+                }
+            };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id)
+                .And.Contains(auditEntryReference2.Id));
+
+            request = new SearchAuditEntryRequest
+            {
+                ContextConditions = new List<SearchAuditEntryRequest.ContextCondition> {
+                    new SearchAuditEntryRequest.ContextCondition { Key = "key1", ValueIs = "value1" }
+                }
+            };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id));
+
+            request = new SearchAuditEntryRequest
+            {
+                ContextConditions = new List<SearchAuditEntryRequest.ContextCondition> {
+                    new SearchAuditEntryRequest.ContextCondition { Key = "key1", ValueContains = "value" }
+                }
+            };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id)
+                .And.Contains(auditEntryReference2.Id));
+
+            request = new SearchAuditEntryRequest
+            {
+                ContextConditions = new List<SearchAuditEntryRequest.ContextCondition> {
+                    new SearchAuditEntryRequest.ContextCondition { Key = "foo", ValueIs = "bar" }
+                }
+            };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(0));
+        }
     }
 }

@@ -41,6 +41,18 @@ namespace Colombo.Clerk.Server.Handlers
         {
             var auditEntryQuery = new AuditEntrySearchQuery();
             auditEntryQuery.InjectFrom(Request);
+            if (Request.ContextConditions != null)
+            {
+                auditEntryQuery.ContextConditions = new List<AuditEntrySearchQuery.ContextCondition> (
+                    Request.ContextConditions.Select(x =>
+                    {
+                        var queryContextCondition = new AuditEntrySearchQuery.ContextCondition();
+                        queryContextCondition.InjectFrom(x);
+                        return queryContextCondition;
+                    })
+                );
+            }
+
             var query = auditEntryQuery.GetQuery();
 
             var rowCount = query.Clone().GetExecutableQueryOver(Session)
@@ -61,7 +73,7 @@ namespace Colombo.Clerk.Server.Handlers
                 {
                     var ae = new AuditEntry();
                     ae.InjectFrom<UnflatLoopValueInjection>(x);
-                    if(x.Context != null)
+                    if (x.Context != null)
                         foreach (var contextEntry in x.Context)
                             ae.RequestContext[contextEntry.Key] = contextEntry.Value;
                     return ae;

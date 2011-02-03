@@ -23,9 +23,11 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Transform;
 
 namespace Colombo.Clerk.Server.Queries
 {
@@ -46,6 +48,8 @@ namespace Colombo.Clerk.Server.Queries
         public Guid ResponseCorrelationGuid { get; set; }
 
         public string ExceptionContains { get; set; }
+
+        public IList<ContextCondition> ContextConditions { get; set; }
 
         public QueryOver<AuditEntryModel> GetQuery()
         {
@@ -72,7 +76,36 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(ExceptionContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(ExceptionContains, MatchMode.Anywhere));
 
+            if ((ContextConditions != null) && (ContextConditions.Count > 0))
+            {
+                foreach (var contextCondition in ContextConditions)
+                {
+                    var localContextCondition = contextCondition;
+                    var queryContext = queryOver.JoinQueryOver<ContextEntryModel>(x => x.Context);
+
+                    if (!string.IsNullOrWhiteSpace(localContextCondition.Key))
+                        queryContext.Where(x => x.Key == localContextCondition.Key);
+
+                    if(!string.IsNullOrWhiteSpace(localContextCondition.ValueIs))
+                        queryContext.Where(x => x.Value == localContextCondition.ValueIs);
+
+                    if (!string.IsNullOrWhiteSpace(localContextCondition.ValueContains))
+                        queryContext.Where(Restrictions.On<ContextEntryModel>(r => r.Value).IsLike(localContextCondition.ValueContains, MatchMode.Anywhere));
+                }
+
+                queryOver.TransformUsing(Transformers.DistinctRootEntity);
+            }
+
             return queryOver;
+        }
+
+        public class ContextCondition
+        {
+            public string Key { get; set; }
+
+            public string ValueIs { get; set; }
+
+            public string ValueContains { get; set; }
         }
     }
 }

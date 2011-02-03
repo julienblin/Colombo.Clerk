@@ -23,6 +23,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 
 namespace Colombo.Clerk.Messages
 {
@@ -31,6 +32,7 @@ namespace Colombo.Clerk.Messages
         public SearchAuditEntryRequest()
         {
             PerPage = 30;
+            ContextConditions = new List<ContextCondition>();
         }
 
         public int CurrentPage { get; set; }
@@ -50,5 +52,16 @@ namespace Colombo.Clerk.Messages
         public Guid ResponseCorrelationGuid { get; set; }
 
         public string ExceptionContains { get; set; }
+
+        public IList<ContextCondition> ContextConditions { get; set; }
+
+        public class ContextCondition
+        {
+            public string Key { get; set; }
+
+            public string ValueIs { get; set; }
+
+            public string ValueContains { get; set; }
+        }
     }
 }
