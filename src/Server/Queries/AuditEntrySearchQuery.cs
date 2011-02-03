@@ -24,6 +24,7 @@
 
 using System;
 using Colombo.Clerk.Server.Models;
+using NHibernate;
 using NHibernate.Criterion;
 
 namespace Colombo.Clerk.Server.Queries
@@ -46,7 +47,7 @@ namespace Colombo.Clerk.Server.Queries
 
         public string ExceptionContains { get; set; }
 
-        public QueryOver<AuditEntryModel, AuditEntryModel> GetQuery()
+        public QueryOver<AuditEntryModel> GetQuery()
         {
             var queryOver = QueryOver.Of<AuditEntryModel>();
 

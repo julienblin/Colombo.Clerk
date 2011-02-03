@@ -41,13 +41,13 @@ namespace Colombo.Clerk.Server.Handlers
         {
             var auditEntryQuery = new AuditEntrySearchQuery();
             auditEntryQuery.InjectFrom(Request);
+            var query = auditEntryQuery.GetQuery();
 
-            var rowCount = auditEntryQuery.GetQuery().GetExecutableQueryOver(Session)
+            var rowCount = query.Clone().GetExecutableQueryOver(Session)
                 .Select(Projections.RowCount())
                 .FutureValue<Int32>();
 
-
-            var results = auditEntryQuery.GetQuery().GetExecutableQueryOver(Session)
+            var results = query.Clone().GetExecutableQueryOver(Session)
                 .Fetch(x => x.Context).Eager
                 .Take(Request.PerPage)
                 .Skip(Request.PerPage * Request.CurrentPage)
