@@ -45,10 +45,12 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                                   RequestNamespace = "Requestnamespace",
                                   RequestSerialized = "RequestSerialized",
                                   RequestType = "RequestType",
+                                  RequestUtcTimestamp = DateTime.UtcNow,
                                   ResponseCorrelationGuid = Guid.NewGuid(),
                                   ResponseNamespace = "Responsenamespace",
                                   ResponseSerialized = "ResponseSerialized",
                                   ResponseType = "ResponseType",
+                                  ResponseUtcTimestamp = DateTime.UtcNow.AddDays(2),
                                   Exception = "Exception",
                                   ServerMachineName = "ServerMachineName",
                                   RequestContext =
@@ -68,11 +70,13 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Assert.That(auditEntryModel.RequestNamespace, Is.EqualTo(request.RequestNamespace));
                 Assert.That(auditEntryModel.RequestSerialized, Is.EqualTo(request.RequestSerialized));
                 Assert.That(auditEntryModel.RequestType, Is.EqualTo(request.RequestType));
+                Assert.That(auditEntryModel.RequestUtcTimestamp, Is.EqualTo(request.RequestUtcTimestamp));
 
                 Assert.That(auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(request.ResponseCorrelationGuid));
                 Assert.That(auditEntryModel.ResponseNamespace, Is.EqualTo(request.ResponseNamespace));
                 Assert.That(auditEntryModel.ResponseSerialized, Is.EqualTo(request.ResponseSerialized));
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(request.ResponseType));
+                Assert.That(auditEntryModel.ResponseUtcTimestamp, Is.EqualTo(request.ResponseUtcTimestamp));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(request.Exception));
 

@@ -58,11 +58,13 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                                               RequestType = "RequestType",
                                               RequestSerialized = "RequestSerialized",
                                               RequestCorrelationGuid = Guid.NewGuid(),
+                                              RequestUtcTimestamp = DateTime.UtcNow,
 
                                               ResponseNamespace = "ResponseNamespace",
                                               ResponseType = "ResponseType",
                                               ResponseSerialized = "ResponseSerialized",
                                               ResponseCorrelationGuid = Guid.NewGuid(),
+                                              ResponseUtcTimestamp = DateTime.UtcNow.AddDays(2),
 
                                               Exception = "Exception",
 
@@ -94,11 +96,13 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(firstAuditEntry.Request.Type, Is.EqualTo(auditEntryReference.RequestType));
             Assert.That(firstAuditEntry.Request.Serialized, Is.EqualTo(auditEntryReference.RequestSerialized));
             Assert.That(firstAuditEntry.Request.CorrelationGuid, Is.EqualTo(auditEntryReference.RequestCorrelationGuid));
+            Assert.That(firstAuditEntry.Request.UtcTimestamp, Is.EqualTo(auditEntryReference.RequestUtcTimestamp));
 
             Assert.That(firstAuditEntry.Response.Namespace, Is.EqualTo(auditEntryReference.ResponseNamespace));
             Assert.That(firstAuditEntry.Response.Type, Is.EqualTo(auditEntryReference.ResponseType));
             Assert.That(firstAuditEntry.Response.Serialized, Is.EqualTo(auditEntryReference.ResponseSerialized));
             Assert.That(firstAuditEntry.Response.CorrelationGuid, Is.EqualTo(auditEntryReference.ResponseCorrelationGuid));
+            Assert.That(firstAuditEntry.Response.UtcTimestamp, Is.EqualTo(auditEntryReference.ResponseUtcTimestamp));
 
             Assert.That(firstAuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
 

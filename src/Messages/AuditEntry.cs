@@ -41,7 +41,7 @@ namespace Colombo.Clerk.Messages
         /// <summary>
         /// Context of the request. Garanteed to be non-null.
         /// </summary>
-        public virtual IDictionary<string, string> RequestContext
+        public IDictionary<string, string> RequestContext
         {
             get { return requestContext ?? (requestContext = new Dictionary<string, string>()); }
             set { requestContext = value; }
@@ -56,6 +56,8 @@ namespace Colombo.Clerk.Messages
             public string Serialized { get; set; }
 
             public Guid CorrelationGuid { get; set; }
+
+            public DateTime UtcTimestamp { get; set; }
         }
     }
 }

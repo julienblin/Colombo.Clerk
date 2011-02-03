@@ -80,11 +80,13 @@ namespace Colombo.Clerk.Client.Tests
                 Assert.That(() => verifyInfo.Request.CorrelationGuid, Is.EqualTo(request.CorrelationGuid));
                 Assert.That(() => verifyInfo.Context, Is.EqualTo(request.Context));
                 Assert.That(() => verifyInfo.Request.Serialized, Contains.Substring("Foo"));
+                Assert.That(() => verifyInfo.Request.UtcTimestamp, Is.EqualTo(request.UtcTimestamp));
 
                 Assert.That(() => verifyInfo.Response.Namespace, Is.EqualTo("Colombo.Clerk.Client.Tests"));
                 Assert.That(() => verifyInfo.Response.Type, Is.EqualTo("TestResponse"));
                 Assert.That(() => verifyInfo.Response.CorrelationGuid, Is.EqualTo(response.CorrelationGuid));
                 Assert.That(() => verifyInfo.Response.Serialized, Contains.Substring("Bar"));
+                Assert.That(() => verifyInfo.Response.UtcTimestamp, Is.EqualTo(response.UtcTimestamp));
             });
         }
 

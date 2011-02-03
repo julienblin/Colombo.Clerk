@@ -44,14 +44,16 @@ namespace Colombo.Clerk.Server.Tests
                                         CorrelationGuid = Guid.NewGuid(),
                                         Namespace = "RequestNamespace",
                                         Serialized = "RequestSerialized",
-                                        Type = "RequestType"
+                                        Type = "RequestType",
+                                        UtcTimestamp = DateTime.UtcNow
                                     },
                                     Response = new AuditInfo.InnerInfo()
                                     {
                                         CorrelationGuid = Guid.NewGuid(),
                                         Namespace = "ResponseNamespace",
                                         Serialized = "ResponseSerialized",
-                                        Type = "ResponseType"
+                                        Type = "ResponseType",
+                                        UtcTimestamp = DateTime.UtcNow.AddDays(2)
                                     },
                                     Exception = "Exception",
                                     Context =
@@ -78,11 +80,13 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.RequestNamespace, Is.EqualTo(auditInfo.Request.Namespace));
                 Assert.That(auditEntryModel.RequestSerialized, Is.EqualTo(auditInfo.Request.Serialized));
                 Assert.That(auditEntryModel.RequestType, Is.EqualTo(auditInfo.Request.Type));
+                Assert.That(auditEntryModel.RequestUtcTimestamp, Is.EqualTo(auditInfo.Request.UtcTimestamp));
 
                 Assert.That(auditEntryModel.ResponseCorrelationGuid, Is.EqualTo(auditInfo.Response.CorrelationGuid));
                 Assert.That(auditEntryModel.ResponseNamespace, Is.EqualTo(auditInfo.Response.Namespace));
                 Assert.That(auditEntryModel.ResponseSerialized, Is.EqualTo(auditInfo.Response.Serialized));
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(auditInfo.Response.Type));
+                Assert.That(auditEntryModel.ResponseUtcTimestamp, Is.EqualTo(auditInfo.Response.UtcTimestamp));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
 

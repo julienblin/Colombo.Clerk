@@ -40,11 +40,13 @@ namespace Colombo.Clerk.Server.Mappings
             Map(x => x.RequestType).Index(string.Format("Idx_{0}_{1}", tableName, "RequestType"));
             Map(x => x.RequestSerialized).CustomSqlType("text");
             Map(x => x.RequestCorrelationGuid);
+            Map(x => x.RequestUtcTimestamp).Index(string.Format("Idx_{0}_{1}", tableName, "RequestUtcTimestamp"));
 
             Map(x => x.ResponseNamespace).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseNamespace"));
             Map(x => x.ResponseType).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseType"));
             Map(x => x.ResponseSerialized).CustomSqlType("text");
             Map(x => x.ResponseCorrelationGuid);
+            Map(x => x.ResponseUtcTimestamp).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseUtcTimestamp"));
 
             Map(x => x.Exception).CustomSqlType("text");
 

@@ -42,13 +42,17 @@ namespace Colombo.Clerk.Messages
 
         public Guid RequestCorrelationGuid { get; set; }
 
+        public DateTime RequestUtcTimestamp { get; set; }
+
         public string ResponseNamespace { get; set; }
 
         public string ResponseType { get; set; }
 
         public string ResponseSerialized { get; set; }
 
-        public virtual Guid ResponseCorrelationGuid { get; set; }
+        public Guid ResponseCorrelationGuid { get; set; }
+
+        public DateTime ResponseUtcTimestamp { get; set; }
 
         public string Exception { get; set; }
 
@@ -56,7 +60,7 @@ namespace Colombo.Clerk.Messages
         /// <summary>
         /// Context of the request. Garanteed to be non-null.
         /// </summary>
-        public virtual IDictionary<string, string> RequestContext
+        public IDictionary<string, string> RequestContext
         {
             get { return requestContext ?? (requestContext = new Dictionary<string, string>()); }
             set { requestContext = value; }

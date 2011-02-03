@@ -84,7 +84,8 @@ namespace Colombo.Clerk.Client
                                             Namespace = requestType.Namespace,
                                             Type = requestType.Name,
                                             CorrelationGuid = nextInvocation.Request.CorrelationGuid,
-                                            Serialized = Serialize(nextInvocation.Request)
+                                            Serialized = Serialize(nextInvocation.Request),
+                                            UtcTimestamp = nextInvocation.Request.UtcTimestamp
                                         },
                                     Context = nextInvocation.Request.Context
                                 };
@@ -97,6 +98,7 @@ namespace Colombo.Clerk.Client
                 auditInfo.Response.Type = responseType.Name;
                 auditInfo.Response.CorrelationGuid = nextInvocation.Response.CorrelationGuid;
                 auditInfo.Response.Serialized = Serialize(nextInvocation.Response);
+                auditInfo.Response.UtcTimestamp = nextInvocation.Response.UtcTimestamp;
             }
             catch (Exception ex)
             {

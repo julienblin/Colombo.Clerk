@@ -75,6 +75,9 @@ namespace Colombo.Clerk.Service
 
             [DataMember]
             public Guid CorrelationGuid { get; set; }
+
+            [DataMember]
+            public DateTime UtcTimestamp { get; set; }
         }
     }
 }

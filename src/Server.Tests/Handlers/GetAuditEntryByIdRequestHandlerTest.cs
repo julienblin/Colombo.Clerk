@@ -43,10 +43,12 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 RequestNamespace = "RequestNamespace",
                 RequestSerialized = "RequestSerialized",
                 RequestType = "RequestType",
+                RequestUtcTimestamp = DateTime.UtcNow,
                 ResponseCorrelationGuid = Guid.NewGuid(),
                 ResponseNamespace = "ResponseNamespace",
                 ResponseSerialized = "ResponseSerialized",
                 ResponseType = "ResponseType",
+                ResponseUtcTimestamp = DateTime.UtcNow.AddDays(2),
                 Exception = "Exception",
                 Context = new List<ContextEntryModel>
                 {
@@ -71,11 +73,13 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.AuditEntry.Request.Namespace, Is.EqualTo(auditEntryReference.RequestNamespace));
             Assert.That(response.AuditEntry.Request.Serialized, Is.EqualTo(auditEntryReference.RequestSerialized));
             Assert.That(response.AuditEntry.Request.Type, Is.EqualTo(auditEntryReference.RequestType));
+            Assert.That(response.AuditEntry.Request.UtcTimestamp, Is.EqualTo(auditEntryReference.RequestUtcTimestamp));
 
             Assert.That(response.AuditEntry.Response.CorrelationGuid, Is.EqualTo(auditEntryReference.ResponseCorrelationGuid));
             Assert.That(response.AuditEntry.Response.Namespace, Is.EqualTo(auditEntryReference.ResponseNamespace));
             Assert.That(response.AuditEntry.Response.Serialized, Is.EqualTo(auditEntryReference.ResponseSerialized));
             Assert.That(response.AuditEntry.Response.Type, Is.EqualTo(auditEntryReference.ResponseType));
+            Assert.That(response.AuditEntry.Response.UtcTimestamp, Is.EqualTo(auditEntryReference.ResponseUtcTimestamp));
 
             Assert.That(response.AuditEntry.Exception, Is.EqualTo(auditEntryReference.Exception));
 

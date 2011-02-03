@@ -39,6 +39,8 @@ namespace Colombo.Clerk.Server.Models
 
         public virtual Guid RequestCorrelationGuid { get; set; }
 
+        public virtual DateTime RequestUtcTimestamp { get; set; }
+
         public virtual string ResponseNamespace { get; set; }
 
         public virtual string ResponseType { get; set; }
@@ -46,6 +48,8 @@ namespace Colombo.Clerk.Server.Models
         public virtual string ResponseSerialized { get; set; }
 
         public virtual Guid ResponseCorrelationGuid { get; set; }
+
+        public virtual DateTime ResponseUtcTimestamp { get; set; }
 
         public virtual string Exception { get; set; }
 
