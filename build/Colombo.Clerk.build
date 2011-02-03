@@ -138,7 +138,7 @@ THE SOFTWARE.-->
     </if>
   </target>
 
-  <target name="release">
+  <target name="release" depends="build">
     <delete dir="${folder.release}" includeemptydirs="true" />
 
     <copy todir="${folder.release}">
@@ -169,6 +169,18 @@ THE SOFTWARE.-->
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Omu.ValueInjecter.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Remotion.Data.Linq.dll" />
     </exec>
+	
+	<copy todir="${folder.release}">
+	  <fileset basedir="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server">
+		<include name="Castle.Core.dll" />
+		<include name="Castle.Facilities.Logging.dll" />
+		<include name="Castle.Services.Logging.Log4netIntegration.dll" />
+		<include name="Castle.Windsor.dll" />
+		<include name="Colombo.dll" />
+		<include name="Colombo.Host.exe" />
+		<include name="log4net.dll" />
+	  </fileset>
+	</copy>
     
   </target>
 

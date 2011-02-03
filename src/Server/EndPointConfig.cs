@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 #endregion
 
+using System;
+using Castle.Facilities.Logging;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -35,9 +37,16 @@ using NHibernate.Cfg;
 namespace Colombo.Clerk.Server
 {
     public class EndPointConfig : IAmAnEndpoint,
-                                  IWantToRegisterOtherComponents, IWantToBeNotifiedWhenStartAndStop
+                                  IWantToConfigureLogging,
+                                  IWantToRegisterOtherComponents,
+                                  IWantToBeNotifiedWhenStartAndStop
     {
         public static IKernel Kernel { get; internal set; }
+
+        public void ConfigureLogging(IWindsorContainer container)
+        {
+            container.AddFacility<LoggingFacility>(f => f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config"));
+        }
 
         public void RegisterOtherComponents(IWindsorContainer container)
         {
