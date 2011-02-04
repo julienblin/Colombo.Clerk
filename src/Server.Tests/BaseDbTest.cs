@@ -29,8 +29,13 @@ using Colombo.Facilities;
 using Colombo.TestSupport;
 using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
+using Lucene.Net.Analysis;
 using NHibernate;
 using NHibernate.Cfg;
+using NHibernate.Event;
+using NHibernate.Search;
+using NHibernate.Search.Event;
+using NHibernate.Search.Store;
 using NHibernate.Tool.hbm2ddl;
 using NUnit.Framework;
 
@@ -51,7 +56,9 @@ namespace Colombo.Clerk.Server.Tests
                 Component.For<ISessionFactory>()
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
-                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
+                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession()),
+                Component.For<IFullTextSession>()
+                    .UsingFactoryMethod(k => Search.CreateFullTextSession(k.Resolve<ISession>()))
             );
 
             BuildSchema();
@@ -72,12 +79,27 @@ namespace Colombo.Clerk.Server.Tests
             get { return container.Resolve<ISession>(); }
         }
 
+        protected IFullTextSession FullTextSession
+        {
+            get { return container.Resolve<IFullTextSession>(); }
+        }
+
         protected ISessionFactory CreateSessionFactory()
         {
             return Fluently.Configure()
                 .Database(SQLiteConfiguration.Standard.InMemory().ShowSql())
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntryModel>())
-                .ExposeConfiguration(cfg => nhConfig = cfg)
+                .ExposeConfiguration(cfg =>
+                                     {
+                                         nhConfig = cfg;
+                                         cfg.SetListener(ListenerType.PostInsert, new FullTextIndexEventListener());
+                                         cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
+                                         cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
+                                         cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
+                                                         typeof(StopAnalyzer).AssemblyQualifiedName);
+                                         cfg.SetProperty("hibernate.search.default.directory_provider",
+                                                         typeof(RAMDirectoryProvider).AssemblyQualifiedName);
+                                     })
                 .BuildSessionFactory();
         }
 

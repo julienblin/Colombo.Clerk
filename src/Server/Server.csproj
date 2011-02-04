@@ -110,6 +110,7 @@
     </Compile>
     <Compile Include="ClerkService.cs" />
     <Compile Include="EndPointConfig.cs" />
+    <Compile Include="Handlers\FullTextSearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />

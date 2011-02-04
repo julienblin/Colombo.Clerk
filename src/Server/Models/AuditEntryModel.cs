@@ -43,10 +43,9 @@ namespace Colombo.Clerk.Server.Models
         [Field(Index.Tokenized)]
         public virtual string RequestSerialized { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field(Index.NoNorms)]
         public virtual Guid RequestCorrelationGuid { get; set; }
 
-        [Field(Index.Tokenized)]
         public virtual DateTime RequestUtcTimestamp { get; set; }
 
         [Field(Index.Tokenized)]
@@ -58,10 +57,9 @@ namespace Colombo.Clerk.Server.Models
         [Field(Index.Tokenized)]
         public virtual string ResponseSerialized { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field(Index.NoNorms)]
         public virtual Guid ResponseCorrelationGuid { get; set; }
 
-        [Field(Index.Tokenized)]
         public virtual DateTime ResponseUtcTimestamp { get; set; }
 
         [Field(Index.Tokenized)]

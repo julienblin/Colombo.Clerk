@@ -60,11 +60,19 @@
     <Reference Include="Iesi.Collections, Version=1.0.1.0, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net, Version=2.9.2.2, Culture=neutral, PublicKeyToken=f5940d1699e37ff1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NHibernate.Search\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="NHibernate, Version=3.0.0.2001, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHibernate.3.0.0.2001\lib\NHibernate.dll</HintPath>
     </Reference>
     <Reference Include="NHibernate.ByteCode.Castle">
       <HintPath>..\..\packages\NHibernate.3.0.0.2001\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.Search, Version=0.0.0.0, Culture=neutral, PublicKeyToken=8bda69a8c43dd4ac, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NHibernate.Search\NHibernate.Search.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\..\lib\NUnit\nunit.framework.dll</HintPath>
@@ -106,6 +114,7 @@
     <Compile Include="ClerkServiceTest.cs" />
     <Compile Include="BaseDbTest.cs" />
     <Compile Include="EndPointConfigTest.cs" />
+    <Compile Include="Handlers\FullTextSearchAuditEntryRequestHandlerTest.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandlerTest.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandlerTest.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandlerTest.cs" />
