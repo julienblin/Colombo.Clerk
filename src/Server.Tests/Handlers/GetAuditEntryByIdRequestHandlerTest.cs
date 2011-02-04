@@ -52,7 +52,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Exception = "Exception",
                 Context = new List<ContextEntryModel>
                 {
-                    new ContextEntryModel { Key = "key1", Value = "value1"}
+                    new ContextEntryModel { ContextKey = "key1", ContextValue = "value1"}
                 }
             };
 

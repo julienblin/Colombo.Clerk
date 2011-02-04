@@ -28,6 +28,7 @@ using System.Configuration;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
+using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
@@ -38,6 +39,7 @@ using Colombo.Host;
 using Colombo.Wcf;
 using FluentNHibernate.Cfg;
 using NHibernate;
+using NHibernate.Tool.hbm2ddl;
 using Configuration = NHibernate.Cfg.Configuration;
 
 namespace Colombo.Clerk.Server
@@ -92,20 +94,60 @@ namespace Colombo.Clerk.Server
         public void Start(IWindsorContainer container)
         {
             Kernel = container.Kernel;
+            try
+            {
+                container.Kernel.Resolve<ISessionFactory>();
+            }
+            catch (Exception ex)
+            {
+                try
+                {
+                    var logger = container.Resolve<ILogger>();
+                    logger.Error("Error while configuring database connection. Check the database.config file.", ex);
+                }
+                catch (ComponentNotFoundException)
+                {
+                    // Ignore Logger resolution failed.
+                }
+                throw;
+            }
         }
 
         public void Stop(IWindsorContainer container)
         {
-            
+
         }
 
         private static ISessionFactory CreateSessionFactory()
         {
-            var cfg = new Configuration();
-            cfg.Configure();
-            return Fluently.Configure(cfg)
+            var cfg = new Configuration().Configure("database.config");
+            var byteCodeType = Type.GetType("NHibernate.ByteCode.Castle.ProxyFactoryFactory");
+            if (byteCodeType == null)
+            {
+                // When not ILMerged.
+                cfg.SetProperty("proxyfactory.factory_class", "NHibernate.ByteCode.Castle.ProxyFactoryFactory, NHibernate.ByteCode.Castle");
+            }
+            else
+            {
+                // When ILMerged after release process.
+                cfg.SetProperty("proxyfactory.factory_class", "NHibernate.ByteCode.Castle.ProxyFactoryFactory");
+            }
+            var fluentConfig = Fluently.Configure(cfg)
                 .Mappings(m => m.FluentMappings.AddFromAssemblyOf<AuditEntryModel>())
-                .BuildSessionFactory();
+                .ExposeConfiguration(config =>
+                                     {
+                                         try
+                                         {
+                                             var schemaValidator = new SchemaValidator(config);
+                                             schemaValidator.Validate(); 
+                                         }
+                                         catch (HibernateException hibernateException)
+                                         {
+                                             throw new ColomboException("Error while verifying database schema. Did you create the mandatory tables correctly?", hibernateException);
+                                         }
+                                     });
+
+            return fluentConfig.BuildSessionFactory();
         }
 
         private ServicesSection wcfConfigServicesSection;

@@ -75,7 +75,7 @@ namespace Colombo.Clerk.Server.Handlers
                     ae.InjectFrom<UnflatLoopValueInjection>(x);
                     if (x.Context != null)
                         foreach (var contextEntry in x.Context)
-                            ae.RequestContext[contextEntry.Key] = contextEntry.Value;
+                            ae.RequestContext[contextEntry.ContextKey] = contextEntry.ContextValue;
                     return ae;
                 })
             );

@@ -9,9 +9,9 @@ namespace Colombo.Clerk.Server.Models
     {
         public virtual Guid Id { get; set; }
 
-        public virtual string Key { get; set; }
+        public virtual string ContextKey { get; set; }
 
-        public virtual string Value { get; set; }
+        public virtual string ContextValue { get; set; }
 
         public virtual AuditEntryModel AuditEntryModel { get; set; }
     }

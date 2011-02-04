@@ -40,7 +40,7 @@ namespace Colombo.Clerk.Server
             var auditEntry = new AuditEntryModel();
             auditEntry.InjectFrom<FlatLoopValueInjection>(auditInfo);
             auditEntry.Context = new List<ContextEntryModel>(
-                auditInfo.Context.Select(kv => new ContextEntryModel { Key = kv.Key, Value = kv.Value })
+                auditInfo.Context.Select(kv => new ContextEntryModel { ContextKey = kv.Key, ContextValue = kv.Value })
             );
 
             StripLongStrings(auditEntry);
@@ -74,8 +74,8 @@ namespace Colombo.Clerk.Server
 
             foreach (var kv in auditEntry.Context)
             {
-                if ((kv.Key != null) && (kv.Key.Length > 255))
-                    kv.Key = kv.Key.Substring(0, 255);
+                if ((kv.ContextKey != null) && (kv.ContextKey.Length > 255))
+                    kv.ContextKey = kv.ContextKey.Substring(0, 255);
             }
         }
     }

@@ -80,8 +80,8 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(request.Exception));
 
-                Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo("key1"));
-                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo("value1"));
+                Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo("key1"));
+                Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo("value1"));
 
                 tx.Commit();
             }

@@ -42,16 +42,5 @@ namespace Colombo.Clerk.Server.Tests
             Assert.That(container.Kernel.HasComponent(typeof(ISessionFactory)));
             Assert.That(container.Kernel.HasComponent(typeof(ISession)));
         }
-
-        [Test]
-        public void It_should_position_static_kernel_variable_when_start()
-        {
-            var container = new WindsorContainer();
-
-            var endPointConfig = new EndPointConfig();
-            endPointConfig.Start(container);
-
-            Assert.That(EndPointConfig.Kernel, Is.EqualTo(container.Kernel));
-        }
     }
 }

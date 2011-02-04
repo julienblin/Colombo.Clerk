@@ -70,7 +70,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                                               Context = new List<ContextEntryModel>
                                               {
-                                                  new ContextEntryModel { Key = "key1", Value = "value1"}
+                                                  new ContextEntryModel { ContextKey = "key1", ContextValue = "value1"}
                                               }
                                           };
             using (var tx = Session.BeginTransaction())
@@ -515,8 +515,8 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference1 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key1", Value= "value1" },
-                        new ContextEntryModel { Key = "key2", Value= "value2" }
+                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value1" },
+                        new ContextEntryModel { ContextKey = "key2", ContextValue= "value2" }
                     }
                 };
                 Session.Save(auditEntryReference1);
@@ -524,7 +524,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference2 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key1", Value= "value3" }
+                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value3" }
                     }
                 };
                 Session.Save(auditEntryReference2);
@@ -532,7 +532,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference3 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key3", Value= "foo" }
+                        new ContextEntryModel { ContextKey = "key3", ContextValue= "foo" }
                     }
                 };
                 Session.Save(auditEntryReference3);
@@ -613,8 +613,8 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference1 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key1", Value= "value1" },
-                        new ContextEntryModel { Key = "key2", Value= "value2" }
+                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value1" },
+                        new ContextEntryModel { ContextKey = "key2", ContextValue= "value2" }
                     }
                 };
                 Session.Save(auditEntryReference1);
@@ -622,7 +622,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference2 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key1", Value= "value3" }
+                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value3" }
                     }
                 };
                 Session.Save(auditEntryReference2);
@@ -630,7 +630,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference3 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { Key = "key3", Value= "foo" }
+                        new ContextEntryModel { ContextKey = "key3", ContextValue= "foo" }
                     }
                 };
                 Session.Save(auditEntryReference3);

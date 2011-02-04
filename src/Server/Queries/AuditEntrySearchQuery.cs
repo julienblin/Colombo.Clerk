@@ -108,13 +108,13 @@ namespace Colombo.Clerk.Server.Queries
                     subQueryContext.Where(x => x.AuditEntryModel.Id == auditEntryModelAlias.Id);
                     subQueryContext.Select(Projections.Id());
 
-                    subQueryContext.Where(x => x.Key == localContextCondition.Key);
+                    subQueryContext.Where(x => x.ContextKey == localContextCondition.Key);
 
                     if(!string.IsNullOrWhiteSpace(localContextCondition.ValueIs))
-                        subQueryContext.Where(x => x.Value == localContextCondition.ValueIs);
+                        subQueryContext.Where(x => x.ContextValue == localContextCondition.ValueIs);
 
                     if (!string.IsNullOrWhiteSpace(localContextCondition.ValueContains))
-                        subQueryContext.Where(Restrictions.On<ContextEntryModel>(r => r.Value).IsLike(localContextCondition.ValueContains, MatchMode.Anywhere));
+                        subQueryContext.Where(Restrictions.On<ContextEntryModel>(r => r.ContextValue).IsLike(localContextCondition.ValueContains, MatchMode.Anywhere));
 
                     queryOver.WithSubquery.WhereExists(subQueryContext);
                 }

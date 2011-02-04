@@ -48,7 +48,7 @@ namespace Colombo.Clerk.Server.Handlers
                 Response.AuditEntry = new AuditEntry();
                 Response.AuditEntry.InjectFrom<UnflatLoopValueInjection>(auditEntryModel);
                 foreach (var contextEntry in auditEntryModel.Context)
-                    Response.AuditEntry.RequestContext[contextEntry.Key] = contextEntry.Value;
+                    Response.AuditEntry.RequestContext[contextEntry.ContextKey] = contextEntry.ContextValue;
             }
         }
     }

@@ -90,11 +90,11 @@ namespace Colombo.Clerk.Server.Tests
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
 
-                Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo("key1"));
-                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo("value1"));
+                Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo("key1"));
+                Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo("value1"));
 
-                Assert.That(auditEntryModel.Context[1].Key, Is.EqualTo("key2"));
-                Assert.That(auditEntryModel.Context[1].Value, Is.EqualTo("value2"));
+                Assert.That(auditEntryModel.Context[1].ContextKey, Is.EqualTo("key2"));
+                Assert.That(auditEntryModel.Context[1].ContextValue, Is.EqualTo("value2"));
 
                 tx.Commit();
             }
@@ -155,8 +155,8 @@ namespace Colombo.Clerk.Server.Tests
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
 
-                Assert.That(auditEntryModel.Context[0].Key, Is.EqualTo(strippedMoreThan255Chars));
-                Assert.That(auditEntryModel.Context[0].Value, Is.EqualTo(moreThan255Chars));
+                Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo(strippedMoreThan255Chars));
+                Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo(moreThan255Chars));
                 tx.Commit();
             }
         }

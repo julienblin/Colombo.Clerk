@@ -141,7 +141,7 @@ THE SOFTWARE.-->
   <target name="release" depends="build">
     <delete dir="${folder.release}" includeemptydirs="true" />
 
-	<mkdir dir="${folder.release}\Client" />
+    <mkdir dir="${folder.release}\Client" />
     <exec program="${app.ilmerge}">
       <arg line="/out:&quot;${folder.release}\Client\Colombo.Clerk.Client.dll&quot;" />
       <arg line="/keyfile:&quot;${project.key}&quot;" />
@@ -150,11 +150,11 @@ THE SOFTWARE.-->
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Client\Colombo.Clerk.Service.dll" />
     </exec>
 
-	<mkdir dir="${folder.release}\Server" />
+    <mkdir dir="${folder.release}\Server" />
     <exec program="${app.ilmerge}">
       <arg line="/out:&quot;${folder.release}\Server\Colombo.Clerk.Server.dll&quot;" />
       <arg line="/keyfile:&quot;${project.key}&quot;" />
-      <arg line="/internalize /xmldocs /targetplatform:v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319" />
+      <arg line="/internalize:&quot;${folder.base}\build\Colombo.Clerk.Server.merge-exclude&quot; /xmldocs /targetplatform:v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Colombo.Clerk.Server.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Antlr3.Runtime.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\FluentNHibernate.dll" />
@@ -164,23 +164,24 @@ THE SOFTWARE.-->
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Omu.ValueInjecter.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server\Remotion.Data.Linq.dll" />
     </exec>
-	
-	<copy todir="${folder.release}\Server">
-	  <fileset basedir="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server">
-	    <include name="Colombo.Clerk.Messages.*" />
-		<include name="Colombo.Clerk.Service.*" />
-		<include name="Castle.Core.dll" />
-		<include name="Castle.Facilities.Logging.dll" />
-		<include name="Castle.Services.Logging.Log4netIntegration.dll" />
-		<include name="Castle.Windsor.dll" />
-		<include name="Colombo.dll" />
-		<include name="Colombo.Host.exe" />
-		<include name="log4net.dll" />
-		<include name="log4net.config" />
-		<include name="Colombo.Clerk.Server.dll.config" />
-	  </fileset>
-	</copy>
-    
+
+    <copy todir="${folder.release}\Server">
+      <fileset basedir="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Server">
+        <include name="Colombo.Clerk.Messages.*" />
+        <include name="Colombo.Clerk.Service.*" />
+        <include name="Castle.Core.dll" />
+        <include name="Castle.Facilities.Logging.dll" />
+        <include name="Castle.Services.Logging.Log4netIntegration.dll" />
+        <include name="Castle.Windsor.dll" />
+        <include name="Colombo.dll" />
+        <include name="Colombo.Host.exe" />
+        <include name="log4net.dll" />
+        <include name="log4net.config" />
+        <include name="Colombo.Clerk.Server.dll.config" />
+        <include name="database.config" />
+      </fileset>
+    </copy>
+
   </target>
 
 </project>
