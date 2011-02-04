@@ -24,35 +24,50 @@
 
 using System;
 using System.Collections.Generic;
+using NHibernate.Search.Attributes;
 
 namespace Colombo.Clerk.Server.Models
 {
+    [Indexed]
     public class AuditEntryModel
     {
+        [DocumentId]
         public virtual Guid Id { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string RequestNamespace { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string RequestType { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string RequestSerialized { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual Guid RequestCorrelationGuid { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual DateTime RequestUtcTimestamp { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string ResponseNamespace { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string ResponseType { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string ResponseSerialized { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual Guid ResponseCorrelationGuid { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual DateTime ResponseUtcTimestamp { get; set; }
 
+        [Field(Index.Tokenized)]
         public virtual string Exception { get; set; }
 
+        [IndexedEmbedded]
         public virtual IList<ContextEntryModel> Context { get; set; }
     }
 }

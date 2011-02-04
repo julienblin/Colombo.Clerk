@@ -38,7 +38,12 @@ using Colombo.Facilities;
 using Colombo.Host;
 using Colombo.Wcf;
 using FluentNHibernate.Cfg;
+using Lucene.Net.Analysis;
 using NHibernate;
+using NHibernate.Event;
+using NHibernate.Search;
+using NHibernate.Search.Event;
+using NHibernate.Search.Store;
 using NHibernate.Tool.hbm2ddl;
 using Configuration = NHibernate.Cfg.Configuration;
 
@@ -64,7 +69,10 @@ namespace Colombo.Clerk.Server
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
                     .LifeStyle.PerRequestHandling()
-                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
+                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession()),
+                Component.For<IFullTextSession>()
+                    .LifeStyle.PerRequestHandling()
+                    .UsingFactoryMethod(k => Search.CreateFullTextSession(k.Resolve<ISession>()))
             );
         }
 
@@ -94,9 +102,19 @@ namespace Colombo.Clerk.Server
         public void Start(IWindsorContainer container)
         {
             Kernel = container.Kernel;
+
+            ISession session = null;
             try
             {
-                container.Kernel.Resolve<ISessionFactory>();
+                session = container.Resolve<ISession>();
+                using(var fullTextSession = Search.CreateFullTextSession(session))
+                {
+                    foreach (var auditEntryModel in session.QueryOver<AuditEntryModel>().List())
+                    {
+                        fullTextSession.Index(auditEntryModel);
+                    }
+                }
+
             }
             catch (Exception ex)
             {
@@ -110,6 +128,11 @@ namespace Colombo.Clerk.Server
                     // Ignore Logger resolution failed.
                 }
                 throw;
+            }
+            finally
+            {
+                if (session != null)
+                    container.Release(session);
             }
         }
 
@@ -139,7 +162,15 @@ namespace Colombo.Clerk.Server
                                          try
                                          {
                                              var schemaValidator = new SchemaValidator(config);
-                                             schemaValidator.Validate(); 
+                                             schemaValidator.Validate();
+
+                                             cfg.SetListener(ListenerType.PostInsert, new FullTextIndexEventListener());
+                                             cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
+                                             cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
+                                             cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
+                                                             typeof (StopAnalyzer).AssemblyQualifiedName);
+                                             cfg.SetProperty("hibernate.search.default.directory_provider",
+                                                             typeof (RAMDirectoryProvider).AssemblyQualifiedName);
                                          }
                                          catch (HibernateException hibernateException)
                                          {
