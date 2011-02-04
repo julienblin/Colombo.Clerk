@@ -25,9 +25,11 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
+using System.Threading.Tasks;
 using Castle.Core.Logging;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel;
@@ -103,36 +105,52 @@ namespace Colombo.Clerk.Server
         {
             Kernel = container.Kernel;
 
+            try
+            {
+                container.Resolve<ISessionFactory>();
+                Task.Factory.StartNew(() => StartIndexing(container));
+            }
+            catch (Exception ex)
+            {
+                var logger = container.Resolve<ILogger>();
+                logger.Error("Error while configuring database connection. Check the database.config file.", ex);
+                container.Release(logger);
+                throw;
+            }
+        }
+
+        private static void StartIndexing(IWindsorContainer container)
+        {
+            var logger = container.Resolve<ILogger>();
             ISession session = null;
             try
             {
                 session = container.Resolve<ISession>();
-                using(var fullTextSession = Search.CreateFullTextSession(session))
+                var auditEntriesCount = session.QueryOver<AuditEntryModel>().RowCount();
+                logger.InfoFormat("Start indexing of {0} audit entries...", auditEntriesCount);
+                var stopWatch = new Stopwatch();
+                stopWatch.Start();
+                using (var fullTextSession = Search.CreateFullTextSession(session))
                 {
-                    foreach (var auditEntryModel in session.QueryOver<AuditEntryModel>().List())
+                    foreach (var auditEntryModel in session.QueryOver<AuditEntryModel>().Fetch(x => x.Context).Eager.List())
                     {
                         fullTextSession.Index(auditEntryModel);
                     }
                 }
-
+                stopWatch.Stop();
+                var ts = stopWatch.Elapsed;
+                logger.InfoFormat("Indexed {0} audit entries in {1:00}:{2:00}:{3:00}.{4:00}.", auditEntriesCount,
+                    ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
             }
             catch (Exception ex)
             {
-                try
-                {
-                    var logger = container.Resolve<ILogger>();
-                    logger.Error("Error while configuring database connection. Check the database.config file.", ex);
-                }
-                catch (ComponentNotFoundException)
-                {
-                    // Ignore Logger resolution failed.
-                }
-                throw;
+                logger.Error("Error while creating full text index.", ex);
             }
             finally
             {
                 if (session != null)
                     container.Release(session);
+                container.Release(logger);
             }
         }
 
@@ -170,7 +188,7 @@ namespace Colombo.Clerk.Server
                                              cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
                                                              typeof(StandardAnalyzer).AssemblyQualifiedName);
                                              cfg.SetProperty("hibernate.search.default.directory_provider",
-                                                             typeof (RAMDirectoryProvider).AssemblyQualifiedName);
+                                                             typeof(RAMDirectoryProvider).AssemblyQualifiedName);
                                          }
                                          catch (HibernateException hibernateException)
                                          {
