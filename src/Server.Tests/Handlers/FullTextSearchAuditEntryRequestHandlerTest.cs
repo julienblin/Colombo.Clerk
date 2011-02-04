@@ -144,7 +144,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             }
 
             StubMessageBus.TestHandler<FullTextSearchAuditEntryRequestHandler>();
-            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "Colombo" };
+            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "Colombo*" };
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
@@ -235,7 +235,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             }
 
             StubMessageBus.TestHandler<FullTextSearchAuditEntryRequestHandler>();
-            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "Colombo" };
+            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "Colombo*" };
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
@@ -339,7 +339,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         }
 
         [Test]
-        [Ignore]
         public void It_should_index_Context()
         {
             AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;

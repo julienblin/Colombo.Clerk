@@ -38,7 +38,7 @@ using Colombo.Facilities;
 using Colombo.Host;
 using Colombo.Wcf;
 using FluentNHibernate.Cfg;
-using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.Standard;
 using NHibernate;
 using NHibernate.Event;
 using NHibernate.Search;
@@ -168,7 +168,7 @@ namespace Colombo.Clerk.Server
                                              cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
                                              cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
                                              cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
-                                                             typeof (StopAnalyzer).AssemblyQualifiedName);
+                                                             typeof(StandardAnalyzer).AssemblyQualifiedName);
                                              cfg.SetProperty("hibernate.search.default.directory_provider",
                                                              typeof (RAMDirectoryProvider).AssemblyQualifiedName);
                                          }
