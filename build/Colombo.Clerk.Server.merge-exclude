@@ -1,2 +1,4 @@
 NHibernate.Cfg.MappingSchema.*
 NHibernate.ByteCode.Castle.*
+Colombo.Clerk.Service.*
+Colombo.Clerk.Messages.*
