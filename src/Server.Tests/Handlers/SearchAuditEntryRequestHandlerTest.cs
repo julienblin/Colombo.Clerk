@@ -370,6 +370,49 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         }
 
         [Test]
+        public void It_should_filter_by_HasException()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { Exception = "Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { Exception = "" };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel();
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { HasException = true };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id));
+
+            request = new SearchAuditEntryRequest { HasException = false };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
+        }
+
+        [Test]
         public void It_should_filter_by_MessageContains()
         {
             AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
@@ -400,6 +443,49 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.Results.Select(x => x.Id),
                 Contains.Item(auditEntryReference1.Id)
                 .And.Contains(auditEntryReference2.Id));
+        }
+
+        [Test]
+        public void It_should_filter_by_HasMessage()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { Message = "Foo" };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { Message = "" };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel();
+                Session.Save(auditEntryReference3);
+
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<SearchAuditEntryRequestHandler>();
+            var request = new SearchAuditEntryRequest { HasMessage = true };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id));
+
+            request = new SearchAuditEntryRequest { HasMessage = false };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
         }
 
         [Test]

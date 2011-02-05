@@ -61,7 +61,11 @@ namespace Colombo.Clerk.Messages
 
         public string ExceptionContains { get; set; }
 
+        public bool? HasException { get; set; }
+
         public string MessageContains { get; set; }
+
+        public bool? HasMessage { get; set; }
 
         public IList<ContextCondition> ContextConditions { get; set; }
 

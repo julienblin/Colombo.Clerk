@@ -58,7 +58,11 @@ namespace Colombo.Clerk.Server.Queries
 
         public string ExceptionContains { get; set; }
 
+        public bool? HasException { get; set; }
+
         public string MessageContains { get; set; }
+
+        public bool? HasMessage { get; set; }
 
         public IList<ContextCondition> ContextConditions { get; set; }
 
@@ -101,6 +105,22 @@ namespace Colombo.Clerk.Server.Queries
             if (!string.IsNullOrWhiteSpace(ExceptionContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(ExceptionContains, MatchMode.Anywhere));
 
+            if (HasException.HasValue)
+            {
+                if (HasException.Value)
+                    queryOver.Where(x => (!(x.Exception == null || x.Exception == "")));
+                else
+                    queryOver.Where(x => (x.Exception == null || x.Exception == ""));
+            }
+
+            if (HasMessage.HasValue)
+            {
+                if (HasMessage.Value)
+                    queryOver.Where(x => (!(x.Message == null || x.Message == "")));
+                else
+                    queryOver.Where(x => (x.Message == null || x.Message == ""));
+            }
+
             if (!string.IsNullOrWhiteSpace(MessageContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Message).IsLike(MessageContains, MatchMode.Anywhere));
 
@@ -115,7 +135,7 @@ namespace Colombo.Clerk.Server.Queries
 
                     subQueryContext.Where(x => x.ContextKey == localContextCondition.Key);
 
-                    if(!string.IsNullOrWhiteSpace(localContextCondition.ValueIs))
+                    if (!string.IsNullOrWhiteSpace(localContextCondition.ValueIs))
                         subQueryContext.Where(x => x.ContextValue == localContextCondition.ValueIs);
 
                     if (!string.IsNullOrWhiteSpace(localContextCondition.ValueContains))
