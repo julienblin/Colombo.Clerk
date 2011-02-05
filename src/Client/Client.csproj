@@ -47,6 +47,9 @@
     <Reference Include="Colombo">
       <HintPath>..\..\packages\Colombo.0.9.0\lib\Net40\Colombo.dll</HintPath>
     </Reference>
+    <Reference Include="NVelocity">
+      <HintPath>..\..\lib\NVelocity\NVelocity.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -64,6 +67,7 @@
     <Compile Include="Alerts\ClerkServiceUnreachableAlert.cs" />
     <Compile Include="ClerkFacility.cs" />
     <Compile Include="ClerkHandleInterceptor.cs" />
+    <Compile Include="ClerkMessageAttribute.cs" />
     <Compile Include="IClerkServiceFactory.cs" />
     <Compile Include="Impl\ClerkServiceFactory.cs" />
   </ItemGroup>

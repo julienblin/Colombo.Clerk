@@ -77,11 +77,23 @@
     </Compile>
     <Compile Include="ClerkFacilityTest.cs" />
     <Compile Include="ClerkHandleInterceptorTest.cs" />
+    <Compile Include="ClerkMessageAttributeTest.cs" />
     <Compile Include="Impl\ClerkServiceFactoryTest.cs" />
+    <Compile Include="TestsResourceClerkMessage.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestsResourceClerkMessage.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestsResourceClerkMessage.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>TestsResourceClerkMessage.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
