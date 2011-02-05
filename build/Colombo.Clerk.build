@@ -155,6 +155,7 @@ THE SOFTWARE.-->
       <arg line="/internalize /xmldocs /targetplatform:v4,C:\WINDOWS\Microsoft.NET\Framework\v4.0.30319" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Client\Colombo.Clerk.Client.dll" />
       <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Client\Colombo.Clerk.Service.dll" />
+	  <arg value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Client\NVelocity.dll" />
     </exec>
 
     <mkdir dir="${folder.release}\Server" />
