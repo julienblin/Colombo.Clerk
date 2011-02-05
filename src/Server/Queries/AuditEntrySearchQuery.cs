@@ -58,6 +58,8 @@ namespace Colombo.Clerk.Server.Queries
 
         public string ExceptionContains { get; set; }
 
+        public string MessageContains { get; set; }
+
         public IList<ContextCondition> ContextConditions { get; set; }
 
         public QueryOver<AuditEntryModel> GetQuery()
@@ -98,6 +100,9 @@ namespace Colombo.Clerk.Server.Queries
 
             if (!string.IsNullOrWhiteSpace(ExceptionContains))
                 queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(ExceptionContains, MatchMode.Anywhere));
+
+            if (!string.IsNullOrWhiteSpace(MessageContains))
+                queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Message).IsLike(MessageContains, MatchMode.Anywhere));
 
             if ((ContextConditions != null) && (ContextConditions.Where(x => !string.IsNullOrWhiteSpace(x.Key)).Count() > 0))
             {
