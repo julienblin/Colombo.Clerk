@@ -27,6 +27,7 @@ using System.Linq;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
 using NHibernate;
+using NHibernate.Transform;
 using Omu.ValueInjecter;
 
 namespace Colombo.Clerk.Server.Handlers
@@ -40,6 +41,7 @@ namespace Colombo.Clerk.Server.Handlers
             var auditEntryModel = Session.QueryOver<AuditEntryModel>()
                 .Where(x => x.Id == Request.Id)
                 .Fetch(x => x.Context).Eager
+                .TransformUsing(Transformers.DistinctRootEntity)
                 .List().FirstOrDefault();
 
             if (auditEntryModel != null)

@@ -118,8 +118,6 @@ namespace Colombo.Clerk.Server.Queries
 
                     queryOver.WithSubquery.WhereExists(subQueryContext);
                 }
-
-                queryOver.TransformUsing(Transformers.DistinctRootEntity);
             }
 
             return queryOver;

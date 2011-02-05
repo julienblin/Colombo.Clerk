@@ -26,9 +26,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Colombo.Clerk.Messages;
+using Colombo.Clerk.Server.Models;
 using Colombo.Clerk.Server.Queries;
 using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Transform;
 using Omu.ValueInjecter;
 
 namespace Colombo.Clerk.Server.Handlers
@@ -59,10 +61,15 @@ namespace Colombo.Clerk.Server.Handlers
                 .Select(Projections.RowCount())
                 .FutureValue<Int32>();
 
-            var results = query.Clone().GetExecutableQueryOver(Session)
-                .Fetch(x => x.Context).Eager
+            var detachedResultQueryForPaging = query.Clone()
                 .Take(Request.PerPage)
                 .Skip(Request.PerPage * Request.CurrentPage)
+                .Select(Projections.Id());
+
+            var results = Session.QueryOver<AuditEntryModel>()
+                .WithSubquery.WhereProperty(x => x.Id).In(detachedResultQueryForPaging)
+                .TransformUsing(Transformers.DistinctRootEntity)
+                .Fetch(x => x.Context).Eager
                 .Future();
 
             Response.CurrentPage = Request.CurrentPage;
@@ -75,7 +82,8 @@ namespace Colombo.Clerk.Server.Handlers
                     ae.InjectFrom<UnflatLoopValueInjection>(x);
                     if (x.Context != null)
                         foreach (var contextEntry in x.Context)
-                            ae.RequestContext[contextEntry.ContextKey] = contextEntry.ContextValue;
+                            if (contextEntry.ContextKey != null)
+                                ae.RequestContext[contextEntry.ContextKey] = contextEntry.ContextValue;
                     return ae;
                 })
             );
