@@ -121,6 +121,8 @@
     <Compile Include="Models\ContextEntryModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
     <Compile Include="Queries\AuditEntrySearchQuery.cs" />
+    <Compile Include="Services\IFullTextIndexer.cs" />
+    <Compile Include="Services\Impl\DefaultFullTextIndexer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj">

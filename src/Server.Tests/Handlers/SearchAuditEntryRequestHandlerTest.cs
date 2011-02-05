@@ -116,7 +116,14 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             {
                 for (var i = 0; i < 50; i++)
                 {
-                    var auditEntryReference = new AuditEntryModel();
+                    var auditEntryReference = new AuditEntryModel
+                                                  {
+                                                      Context = new List<ContextEntryModel>
+                                                                    {
+                                                                        new ContextEntryModel { ContextKey = "foo", ContextValue = "bar" },
+                                                                        new ContextEntryModel { ContextKey = "key", ContextValue = "value" }
+                                                                    }
+                                                  };
                     Session.Save(auditEntryReference);
                 }
                 tx.Commit();

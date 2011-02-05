@@ -60,7 +60,6 @@ namespace Colombo.Clerk.Server.Handlers
                 .FutureValue<Int32>();
 
             var results = query.Clone().GetExecutableQueryOver(Session)
-                .Fetch(x => x.Context).Eager
                 .Take(Request.PerPage)
                 .Skip(Request.PerPage * Request.CurrentPage)
                 .Future();

@@ -26,6 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Configuration;
@@ -36,6 +37,8 @@ using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Colombo.Clerk.Server.Models;
+using Colombo.Clerk.Server.Services;
+using Colombo.Clerk.Server.Services.Impl;
 using Colombo.Facilities;
 using Colombo.Host;
 using Colombo.Wcf;
@@ -47,7 +50,6 @@ using NHibernate.Search;
 using NHibernate.Search.Event;
 using NHibernate.Search.Store;
 using NHibernate.Tool.hbm2ddl;
-using NHibernate.Transform;
 using Configuration = NHibernate.Cfg.Configuration;
 
 namespace Colombo.Clerk.Server
@@ -60,9 +62,26 @@ namespace Colombo.Clerk.Server
     {
         public static IKernel Kernel { get; internal set; }
 
+        public const string FullTextSearchIndexDirectoryAppSettingsKey = @"FullTextSearchIndexDirectory";
+
+        public static string FullTextSearchIndexDirectory { get; private set; }
+
+        private bool mustReindex = false;
+
+        private ILogger logger = NullLogger.Instance;
+        /// <summary>
+        /// Logger.
+        /// </summary>
+        public ILogger Logger
+        {
+            get { return logger; }
+            set { logger = value; }
+        }
+
         public void ConfigureLogging(IWindsorContainer container)
         {
             container.AddFacility<LoggingFacility>(f => f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config"));
+            Logger = container.Resolve<ILogger>();
         }
 
         public void RegisterOtherComponents(IWindsorContainer container)
@@ -72,11 +91,42 @@ namespace Colombo.Clerk.Server
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
                     .LifeStyle.PerRequestHandling()
-                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession()),
-                Component.For<IFullTextSession>()
-                    .LifeStyle.PerRequestHandling()
-                    .UsingFactoryMethod(k => Search.CreateFullTextSession(k.Resolve<ISession>()))
+                    .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
             );
+
+            FullTextSearchIndexDirectory = ConfigurationManager.AppSettings[FullTextSearchIndexDirectoryAppSettingsKey];
+            if (FullTextSearchIndexDirectory != null)
+            {
+                FullTextSearchIndexDirectory = FullTextSearchIndexDirectory.Replace("~",
+                                                                                    AppDomain.CurrentDomain.
+                                                                                        BaseDirectory);
+                Logger.InfoFormat("Full text search enabled using directory {0} to store index.", FullTextSearchIndexDirectory);
+                container.Register(
+                    Component.For<IFullTextSession>()
+                        .LifeStyle.PerRequestHandling()
+                        .UsingFactoryMethod(k => Search.CreateFullTextSession(k.Resolve<ISession>())),
+                    Component.For<IFullTextIndexer>()
+                        .LifeStyle.Transient
+                        .ImplementedBy<DefaultFullTextIndexer>()
+                );
+
+                var indexDirInfo = new DirectoryInfo(FullTextSearchIndexDirectory);
+                if (!indexDirInfo.Exists || ((indexDirInfo.GetFiles().Count() + indexDirInfo.GetDirectories().Count()) == 0))
+                {
+                    mustReindex = true;
+                }
+                else
+                {
+                    logger.InfoFormat("Directory {0} exists and is not empty. No initial indexing will be executed. To force a re-index, delete everything inside the index directory and restart the server.",
+                        FullTextSearchIndexDirectory);
+                }
+            }
+            else
+            {
+                Logger.InfoFormat("Full text search disabled. Add an appSetting with key=\"{0}\" and value=\"<a writable directory to store index>\" in {1}.dll.config to enable full text search.",
+                    FullTextSearchIndexDirectoryAppSettingsKey,
+                    typeof(EndPointConfig).Assembly.GetName().Name);
+            }
         }
 
         public IEnumerable<ServiceHost> CreateServiceHosts(IWindsorContainer container)
@@ -109,69 +159,17 @@ namespace Colombo.Clerk.Server
             try
             {
                 container.Resolve<ISessionFactory>();
-                Task.Factory.StartNew(() => StartIndexing(container));
-            }
-            catch (Exception ex)
-            {
-                var logger = container.Resolve<ILogger>();
-                logger.Error("Error while configuring database connection. Check the database.config file.", ex);
-                container.Release(logger);
-                throw;
-            }
-        }
 
-        private static void StartIndexing(IWindsorContainer container)
-        {
-            var logger = container.Resolve<ILogger>();
-            ISession session = null;
-            try
-            {
-                session = container.Resolve<ISession>();
-                var auditEntriesCount = session.QueryOver<AuditEntryModel>().RowCount();
-                logger.InfoFormat("Start indexing of {0} audit entries...", auditEntriesCount);
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
-                using (var fullTextSession = Search.CreateFullTextSession(session))
+                if (container.Kernel.HasComponent(typeof(IFullTextIndexer)))
                 {
-                    var currentPage = 0;
-                    const int pageSize = 100;
-                    var auditEntries = session.QueryOver<AuditEntryModel>()
-                                        .Fetch(x => x.Context).Eager
-                                        .TransformUsing(Transformers.DistinctRootEntity)
-                                        .Take(pageSize)
-                                        .Skip(currentPage * pageSize)
-                                        .List();
-                    while (auditEntries.Count > 0)
-                    {
-                        foreach (var auditEntryModel in auditEntries)
-                        {
-                            fullTextSession.Index(auditEntryModel);
-                        }
-                        var percentDone = (((currentPage * pageSize) + auditEntries.Count) / Convert.ToDouble(auditEntriesCount)) * 100.0;
-                        logger.InfoFormat("Indexed {0}%", Convert.ToInt32(percentDone));
-                        ++currentPage;
-                        auditEntries = session.QueryOver<AuditEntryModel>()
-                                        .Fetch(x => x.Context).Eager
-                                        .TransformUsing(Transformers.DistinctRootEntity)
-                                        .Take(pageSize)
-                                        .Skip(currentPage * pageSize)
-                                        .List();
-                    }
+                    if (mustReindex)
+                        Task.Factory.StartNew(() => container.Resolve<IFullTextIndexer>().IndexAuditEntryModels());
                 }
-                stopWatch.Stop();
-                var ts = stopWatch.Elapsed;
-                logger.InfoFormat("Indexed {0} audit entries in {1:00}:{2:00}:{3:00}.{4:00}. Average time per entry: {5}ms.", auditEntriesCount,
-                    ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10, auditEntriesCount / stopWatch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
-                logger.Error("Error while creating full text index.", ex);
-            }
-            finally
-            {
-                if (session != null)
-                    container.Release(session);
-                container.Release(logger);
+                Logger.Error("Error while configuring database connection. Check the database.config file.", ex);
+                throw;
             }
         }
 
@@ -203,15 +201,17 @@ namespace Colombo.Clerk.Server
                                              var schemaValidator = new SchemaValidator(config);
                                              schemaValidator.Validate();
 
-                                             cfg.SetListener(ListenerType.PostInsert, new FullTextIndexEventListener());
-                                             cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
-                                             cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
-                                             cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
-                                                             typeof(SimpleAnalyzer).AssemblyQualifiedName);
-                                             cfg.SetProperty("hibernate.search.default.directory_provider",
-                                                             typeof(FSDirectoryProvider).AssemblyQualifiedName);
-                                             cfg.SetProperty("hibernate.search.default.indexBase",
-                                                             @"D:\Lucene");
+                                             if (FullTextSearchIndexDirectory != null)
+                                             {
+                                                 cfg.SetListener(ListenerType.PostInsert, new FullTextIndexEventListener());
+                                                 cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
+                                                 cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
+                                                 cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
+                                                                 typeof(SimpleAnalyzer).AssemblyQualifiedName);
+                                                 cfg.SetProperty("hibernate.search.default.directory_provider",
+                                                                 typeof(FSDirectoryProvider).AssemblyQualifiedName);
+                                                 cfg.SetProperty("hibernate.search.default.indexBase", FullTextSearchIndexDirectory);
+                                             }
                                          }
                                          catch (HibernateException hibernateException)
                                          {
