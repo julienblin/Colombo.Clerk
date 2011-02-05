@@ -33,6 +33,7 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
+using Colombo.Clerk.Server.Interceptors;
 using Colombo.Clerk.Server.Models;
 using Colombo.Facilities;
 using Colombo.Host;
@@ -46,7 +47,7 @@ namespace Colombo.Clerk.Server
 {
     public class EndPointConfig : IAmAnEndpoint,
                                   IWantToConfigureLogging,
-                                  IWantToRegisterOtherComponents,
+                                  IWantToConfigureColombo,
                                   IWantToCreateServiceHosts,
                                   IWantToBeNotifiedWhenStartAndStop
     {
@@ -57,15 +58,20 @@ namespace Colombo.Clerk.Server
             container.AddFacility<LoggingFacility>(f => f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config"));
         }
 
-        public void RegisterOtherComponents(IWindsorContainer container)
+        public void ConfigureColombo(IWindsorContainer container)
         {
             container.Register(
+                Component.For<IRequestHandlerHandleInterceptor>()
+                    .ImplementedBy<InternalAuditRequestHandlerInterceptor>(),
+
                 Component.For<ISessionFactory>()
                     .UsingFactoryMethod(CreateSessionFactory),
                 Component.For<ISession>()
                     .LifeStyle.PerRequestHandling()
                     .UsingFactoryMethod(k => k.Resolve<ISessionFactory>().OpenSession())
             );
+
+            container.AddFacility<ColomboFacility>();
         }
 
         public IEnumerable<ServiceHost> CreateServiceHosts(IWindsorContainer container)

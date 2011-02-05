@@ -85,6 +85,7 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="Microsoft.CSharp" />
@@ -107,6 +108,7 @@
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />
+    <Compile Include="Interceptors\InternalAuditRequestHandlerInterceptor.cs" />
     <Compile Include="Mappings\AuditEntryModelMap.cs" />
     <Compile Include="Mappings\ContextEntryModelMap.cs" />
     <Compile Include="Mappings\MapConstants.cs" />
