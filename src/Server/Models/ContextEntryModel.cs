@@ -12,10 +12,10 @@ namespace Colombo.Clerk.Server.Models
         [DocumentId]
         public virtual Guid Id { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string ContextKey { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string ContextValue { get; set; }
 
         public virtual AuditEntryModel AuditEntryModel { get; set; }

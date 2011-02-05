@@ -40,13 +40,14 @@ using Colombo.Facilities;
 using Colombo.Host;
 using Colombo.Wcf;
 using FluentNHibernate.Cfg;
-using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Analysis;
 using NHibernate;
 using NHibernate.Event;
 using NHibernate.Search;
 using NHibernate.Search.Event;
 using NHibernate.Search.Store;
 using NHibernate.Tool.hbm2ddl;
+using NHibernate.Transform;
 using Configuration = NHibernate.Cfg.Configuration;
 
 namespace Colombo.Clerk.Server
@@ -132,15 +133,35 @@ namespace Colombo.Clerk.Server
                 stopWatch.Start();
                 using (var fullTextSession = Search.CreateFullTextSession(session))
                 {
-                    foreach (var auditEntryModel in session.QueryOver<AuditEntryModel>().Fetch(x => x.Context).Eager.List())
+                    var currentPage = 0;
+                    const int pageSize = 100;
+                    var auditEntries = session.QueryOver<AuditEntryModel>()
+                                        .Fetch(x => x.Context).Eager
+                                        .TransformUsing(Transformers.DistinctRootEntity)
+                                        .Take(pageSize)
+                                        .Skip(currentPage * pageSize)
+                                        .List();
+                    while (auditEntries.Count > 0)
                     {
-                        fullTextSession.Index(auditEntryModel);
+                        foreach (var auditEntryModel in auditEntries)
+                        {
+                            fullTextSession.Index(auditEntryModel);
+                        }
+                        var percentDone = (((currentPage * pageSize) + auditEntries.Count) / Convert.ToDouble(auditEntriesCount)) * 100.0;
+                        logger.InfoFormat("Indexed {0}%", Convert.ToInt32(percentDone));
+                        ++currentPage;
+                        auditEntries = session.QueryOver<AuditEntryModel>()
+                                        .Fetch(x => x.Context).Eager
+                                        .TransformUsing(Transformers.DistinctRootEntity)
+                                        .Take(pageSize)
+                                        .Skip(currentPage * pageSize)
+                                        .List();
                     }
                 }
                 stopWatch.Stop();
                 var ts = stopWatch.Elapsed;
-                logger.InfoFormat("Indexed {0} audit entries in {1:00}:{2:00}:{3:00}.{4:00}.", auditEntriesCount,
-                    ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
+                logger.InfoFormat("Indexed {0} audit entries in {1:00}:{2:00}:{3:00}.{4:00}. Average time per entry: {5}ms.", auditEntriesCount,
+                    ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10, auditEntriesCount / stopWatch.ElapsedMilliseconds);
             }
             catch (Exception ex)
             {
@@ -186,9 +207,11 @@ namespace Colombo.Clerk.Server
                                              cfg.SetListener(ListenerType.PostUpdate, new FullTextIndexEventListener());
                                              cfg.SetListener(ListenerType.PostDelete, new FullTextIndexEventListener());
                                              cfg.SetProperty(NHibernate.Search.Environment.AnalyzerClass,
-                                                             typeof(StandardAnalyzer).AssemblyQualifiedName);
+                                                             typeof(SimpleAnalyzer).AssemblyQualifiedName);
                                              cfg.SetProperty("hibernate.search.default.directory_provider",
-                                                             typeof(RAMDirectoryProvider).AssemblyQualifiedName);
+                                                             typeof(FSDirectoryProvider).AssemblyQualifiedName);
+                                             cfg.SetProperty("hibernate.search.default.indexBase",
+                                                             @"D:\Lucene");
                                          }
                                          catch (HibernateException hibernateException)
                                          {

@@ -34,35 +34,35 @@ namespace Colombo.Clerk.Server.Models
         [DocumentId]
         public virtual Guid Id { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string RequestNamespace { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string RequestType { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string RequestSerialized { get; set; }
 
-        [Field(Index.NoNorms)]
+        [Field]
         public virtual Guid RequestCorrelationGuid { get; set; }
 
         public virtual DateTime RequestUtcTimestamp { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string ResponseNamespace { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string ResponseType { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string ResponseSerialized { get; set; }
 
-        [Field(Index.NoNorms)]
+        [Field]
         public virtual Guid ResponseCorrelationGuid { get; set; }
 
         public virtual DateTime ResponseUtcTimestamp { get; set; }
 
-        [Field(Index.Tokenized)]
+        [Field]
         public virtual string Exception { get; set; }
 
         [IndexedEmbedded]

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
-using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Analysis;
 using Lucene.Net.QueryParsers;
 using NHibernate.Search;
 using Omu.ValueInjecter;
@@ -56,7 +56,7 @@ namespace Colombo.Clerk.Server.Handlers
                         "Context.ContextKey",
                         "Context.ContextValue",
                     },
-                new StandardAnalyzer(Lucene.Net.Util.Version.LUCENE_29)
+                new SimpleAnalyzer()
             );
         }
     }

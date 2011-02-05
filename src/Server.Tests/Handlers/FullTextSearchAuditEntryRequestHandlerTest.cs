@@ -358,7 +358,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 auditEntryReference2 = new AuditEntryModel
                 {
                     Context = new List<ContextEntryModel> {
-                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value3" }
+                        new ContextEntryModel { ContextKey = "key1", ContextValue= "value1" }
                     }
                 };
                 Session.Save(auditEntryReference2);
@@ -375,7 +375,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             }
 
             StubMessageBus.TestHandler<FullTextSearchAuditEntryRequestHandler>();
-            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "key1" };
+            var request = new FullTextSearchAuditEntryRequest { SearchQuery = "value1" };
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
