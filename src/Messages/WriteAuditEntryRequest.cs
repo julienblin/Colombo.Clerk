@@ -44,8 +44,10 @@ namespace Colombo.Clerk.Messages
 
         public DateTime RequestUtcTimestamp { get; set; }
 
+        [StringLength(255)]
         public string ResponseNamespace { get; set; }
 
+        [StringLength(255)]
         public string ResponseType { get; set; }
 
         public string ResponseSerialized { get; set; }
@@ -55,6 +57,9 @@ namespace Colombo.Clerk.Messages
         public DateTime ResponseUtcTimestamp { get; set; }
 
         public string Exception { get; set; }
+
+        [StringLength(2000)]
+        public string Message { get; set; }
 
         private IDictionary<string, string> requestContext;
         /// <summary>

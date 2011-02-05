@@ -46,6 +46,9 @@ namespace Colombo.Clerk.Service
         [DataMember]
         public string Exception { get; set; }
 
+        [DataMember]
+        public string Message { get; set; }
+
         private IDictionary<string, string> context;
         /// <summary>
         /// Context of the request. Garanteed to be non-null.

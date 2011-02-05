@@ -37,6 +37,8 @@ namespace Colombo.Clerk.Messages
 
         public string Exception { get; set; }
 
+        public string Message { get; set; }
+
         private IDictionary<string, string> requestContext;
         /// <summary>
         /// Context of the request. Garanteed to be non-null.

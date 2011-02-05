@@ -52,6 +52,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                                   ResponseType = "ResponseType",
                                   ResponseUtcTimestamp = DateTime.UtcNow.AddDays(2),
                                   Exception = "Exception",
+                                  Message = "Message",
                                   ServerMachineName = "ServerMachineName",
                                   RequestContext =
                                       {
@@ -79,6 +80,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Assert.That(auditEntryModel.ResponseUtcTimestamp, Is.EqualTo(request.ResponseUtcTimestamp));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(request.Exception));
+                Assert.That(auditEntryModel.Message, Is.EqualTo(request.Message));
 
                 Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo("key1"));
                 Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo("value1"));

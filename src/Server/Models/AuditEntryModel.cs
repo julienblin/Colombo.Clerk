@@ -53,6 +53,8 @@ namespace Colombo.Clerk.Server.Models
 
         public virtual string Exception { get; set; }
 
+        public virtual string Message { get; set; }
+
         public virtual IList<ContextEntryModel> Context { get; set; }
     }
 }

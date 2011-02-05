@@ -72,6 +72,9 @@ namespace Colombo.Clerk.Server
             if ((auditEntry.ResponseType != null) && (auditEntry.ResponseType.Length > 255))
                 auditEntry.ResponseType = auditEntry.ResponseType.Substring(0, 255);
 
+            if ((auditEntry.Message != null) && (auditEntry.Message.Length > 2000))
+                auditEntry.Message = auditEntry.Message.Substring(0, 2000);
+
             foreach (var kv in auditEntry.Context)
             {
                 if ((kv.ContextKey != null) && (kv.ContextKey.Length > 255))

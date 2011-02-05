@@ -36,19 +36,20 @@ namespace Colombo.Clerk.Server.Mappings
             Table(tableName);
             Id(x => x.Id);
 
-            Map(x => x.RequestNamespace).Index(string.Format("Idx_{0}_{1}", tableName, "RequestNamespace"));
-            Map(x => x.RequestType).Index(string.Format("Idx_{0}_{1}", tableName, "RequestType"));
+            Map(x => x.RequestNamespace).Length(255).Index(string.Format("Idx_{0}_{1}", tableName, "RequestNamespace"));
+            Map(x => x.RequestType).Length(255).Index(string.Format("Idx_{0}_{1}", tableName, "RequestType"));
             Map(x => x.RequestSerialized).CustomSqlType("text");
             Map(x => x.RequestCorrelationGuid);
             Map(x => x.RequestUtcTimestamp).Index(string.Format("Idx_{0}_{1}", tableName, "RequestUtcTimestamp"));
 
-            Map(x => x.ResponseNamespace).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseNamespace"));
-            Map(x => x.ResponseType).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseType"));
+            Map(x => x.ResponseNamespace).Length(255).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseNamespace"));
+            Map(x => x.ResponseType).Length(255).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseType"));
             Map(x => x.ResponseSerialized).CustomSqlType("text");
-            Map(x => x.ResponseCorrelationGuid);
+            Map(x => x.ResponseCorrelationGuid).Length(255);
             Map(x => x.ResponseUtcTimestamp).Index(string.Format("Idx_{0}_{1}", tableName, "ResponseUtcTimestamp"));
 
             Map(x => x.Exception).CustomSqlType("text");
+            Map(x => x.Message).Length(2000);
 
             HasMany(x => x.Context).Cascade.AllDeleteOrphan();
         }

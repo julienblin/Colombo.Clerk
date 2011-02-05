@@ -56,6 +56,7 @@ namespace Colombo.Clerk.Server.Tests
                                         UtcTimestamp = DateTime.UtcNow.AddDays(2)
                                     },
                                     Exception = "Exception",
+                                    Message = "Message",
                                     Context =
                                         {
                                             { "key1", "value1" },
@@ -89,6 +90,7 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.ResponseUtcTimestamp, Is.EqualTo(auditInfo.Response.UtcTimestamp));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
+                Assert.That(auditEntryModel.Message, Is.EqualTo(auditInfo.Message));
 
                 Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo("key1"));
                 Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo("value1"));
@@ -104,9 +106,12 @@ namespace Colombo.Clerk.Server.Tests
         public void It_should_strip_strings_if_too_large_where_needed()
         {
             var moreThan255Chars = new string('a', 300);
+            var moreThan2000Chars = new string('a', 3000);
             Assert.That(() => moreThan255Chars.Length, Is.AtLeast(256));
+            Assert.That(() => moreThan2000Chars.Length, Is.AtLeast(2001));
             var strippedMoreThan255Chars = moreThan255Chars.Substring(0, 255);
-            Assert.That(() => strippedMoreThan255Chars.Length, Is.AtMost(255));
+            var strippedMoreThan2000Chars = moreThan2000Chars.Substring(0, 2000);
+            Assert.That(() => strippedMoreThan2000Chars.Length, Is.AtMost(2000));
 
             var auditInfo = new AuditInfo
             {
@@ -125,6 +130,7 @@ namespace Colombo.Clerk.Server.Tests
                     Type = moreThan255Chars
                 },
                 Exception = moreThan255Chars,
+                Message = moreThan2000Chars,
                 Context = {
                     { moreThan255Chars, moreThan255Chars }
                 }
@@ -154,6 +160,7 @@ namespace Colombo.Clerk.Server.Tests
                 Assert.That(auditEntryModel.ResponseType, Is.EqualTo(strippedMoreThan255Chars));
 
                 Assert.That(auditEntryModel.Exception, Is.EqualTo(auditInfo.Exception));
+                Assert.That(auditEntryModel.Message, Is.EqualTo(strippedMoreThan2000Chars));
 
                 Assert.That(auditEntryModel.Context[0].ContextKey, Is.EqualTo(strippedMoreThan255Chars));
                 Assert.That(auditEntryModel.Context[0].ContextValue, Is.EqualTo(moreThan255Chars));
