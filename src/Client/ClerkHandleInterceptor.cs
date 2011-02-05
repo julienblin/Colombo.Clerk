@@ -25,6 +25,7 @@
 using System;
 using System.Diagnostics.Contracts;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading.Tasks;
@@ -99,6 +100,11 @@ namespace Colombo.Clerk.Client
                 auditInfo.Response.CorrelationGuid = nextInvocation.Response.CorrelationGuid;
                 auditInfo.Response.Serialized = Serialize(nextInvocation.Response);
                 auditInfo.Response.UtcTimestamp = nextInvocation.Response.UtcTimestamp;
+
+                var clerkMessageAttribute = (ClerkMessageAttribute)requestType.GetCustomAttributes(typeof (ClerkMessageAttribute), false).FirstOrDefault();
+                if (clerkMessageAttribute != null)
+                    auditInfo.Message = clerkMessageAttribute.GetRealMessage(nextInvocation.Request,
+                                                                             nextInvocation.Response);
             }
             catch (Exception ex)
             {

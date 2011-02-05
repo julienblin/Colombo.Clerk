@@ -72,6 +72,14 @@ namespace Colombo.Clerk.Client.Tests
             Assert.That(msg.GetRealMessage(null, null), Is.Null);
         }
 
+        [Test]
+        public void It_should_not_throw_if_interpolation_is_incorrect()
+        {
+            var msg = new ClerkMessageAttribute("$request.Name");
+
+            Assert.That(msg.GetRealMessage(null, null), Is.EqualTo("$request.Name"));
+        }
+
         public class TestResponse : Response
         {
             public string Name { get; set; }

@@ -162,6 +162,40 @@ namespace Colombo.Clerk.Client.Tests
             });
         }
 
+        [Test]
+        public void It_should_write_message_if_attribute_ClerkMessage()
+        {
+            var mocks = new MockRepository();
+            var factory = mocks.StrictMock<IClerkServiceFactory>();
+            var service = mocks.StrictMock<IClerkService>();
+            var invocation = mocks.StrictMock<IColomboRequestHandleInvocation>();
+            var request = new TestRequestWithMessage { Name = "Foo", Context = { { "TenantId", "Something" } } };
+            var response = new TestResponse { Message = "Bar" };
+
+            AuditInfo verifyInfo = null;
+
+            With.Mocks(mocks).Expecting(() =>
+            {
+                Expect.Call(factory.CreateClerkService()).Return(service);
+
+                SetupResult.For(invocation.Request).Return(request).Repeat.AtLeastOnce();
+                SetupResult.For(invocation.Response).Return(response).Repeat.AtLeastOnce();
+                invocation.Proceed();
+
+                service.Write(null);
+                LastCall.IgnoreArguments().Do(new WriteDelegate(ai => verifyInfo = ai));
+            }).Verify(() =>
+            {
+                var interceptor = new ClerkHandleInterceptor(factory);
+                interceptor.Intercept(invocation);
+                Thread.Sleep(200);
+
+                Assert.That(verifyInfo, Is.Not.Null);
+
+                Assert.That(verifyInfo.Message, Is.EqualTo("Foo requested message Bar."));
+            });
+        }
+
         public delegate void WriteDelegate(AuditInfo auditInfo);
 
         public class TestResponse : Response
@@ -170,6 +204,12 @@ namespace Colombo.Clerk.Client.Tests
         }
 
         public class TestRequest : Request<TestResponse>
+        {
+            public string Name { get; set; }
+        }
+
+        [ClerkMessage("$request.Name requested message $response.Message.")]
+        public class TestRequestWithMessage : Request<TestResponse>
         {
             public string Name { get; set; }
         }
