@@ -26,6 +26,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.Facilities.Logging;
+using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
 using Colombo.Clerk.Web.Infra;
@@ -57,11 +58,18 @@ namespace Colombo.Clerk.Web
 
         private static void BootstrapContainer()
         {
-            container = new WindsorContainer()
-                .Install(FromAssembly.This());
+            container = new WindsorContainer().Install(FromAssembly.This());
 
-            container.AddFacility<LoggingFacility>(f => f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config"));
-            container.AddFacility<ColomboFacility>(f => f.ClientOnly());
+            container.AddFacility<LoggingFacility>(f =>
+            {
+                f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config");
+            });
+
+            container.AddFacility<ColomboFacility>(f =>
+            {
+                f.ClientOnly();
+                f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
+            });
 
             var controllerFactory = new WindsorControllerFactory(container.Kernel);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
