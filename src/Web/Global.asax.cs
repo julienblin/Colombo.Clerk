@@ -1,7 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using BoC.Web.Mvc.PrecompiledViews;
 using Castle.Facilities.Logging;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
@@ -46,8 +45,6 @@ namespace Colombo.Clerk.Web
 
         protected void Application_Start()
         {
-            ApplicationPartRegistry.Register(typeof(MvcApplication).Assembly);
-
             AreaRegistration.RegisterAllAreas();
 
             RegisterGlobalFilters(GlobalFilters.Filters);
