@@ -54,6 +54,7 @@ THE SOFTWARE.-->
   <!-- EXTERNAL TOOLS -->
   <property name="app.msbuild" value="${framework::get-tool-path('msbuild.exe')}" />
   <property name="app.sn" value="${framework::get-tool-path('sn.exe')}" />
+  <property name="app.aspnet.compiler" value="${framework::get-tool-path('aspnet_compiler.exe')}" />
   <property name="app.git" value="C:\Program Files\Git\bin\git" />
   <property name="app.nunit.console" value="${folder.base}\lib\NUnit\nunit-console.exe" />
   <property name="app.ilmerge" value="${folder.base}\lib\ILMerge\ILMerge.exe" />
@@ -101,6 +102,26 @@ THE SOFTWARE.-->
       <arg value="/verbosity:normal" />
       <arg value="/nologo" />
     </exec>
+
+    <property name="folder.precompiledweb" value="${folder.bin}\${msbuild.configuration}\Colombo.Clerk.Web"/>
+    
+    <exec program="${app.aspnet.compiler}">
+      <arg line="-p &quot;${folder.src}\Web&quot;" />
+      <arg line="-v /" />
+      <arg value="-f" />
+      <arg value="${folder.precompiledweb}" />
+    </exec>
+
+    <delete dir="${folder.precompiledweb}\obj" includeemptydirs="true" />
+    <delete dir="${folder.precompiledweb}\Controllers" includeemptydirs="true" />
+    <delete dir="${folder.precompiledweb}\Infra" includeemptydirs="true" />
+    <delete>
+      <fileset basedir="${folder.precompiledweb}">
+        <include name="*.csproj" />
+        <include name="*.user" />
+        <include name="packages.config" />
+      </fileset>
+    </delete>
 
   </target>
 
