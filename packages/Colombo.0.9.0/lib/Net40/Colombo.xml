@@ -4,36 +4,6 @@
     <name>Colombo</name>
   </assembly>
   <members>
-    <member name="T:Colombo.BaseMessage">
-      <summary>
-            Base class for all the Colombo messages.
-            </summary>
-    </member>
-    <member name="M:Colombo.BaseMessage.ToString">
-      <summary>
-            A standard message representation : {GetType} | {CorrelationGuid} | {UtcTimestamp}
-            </summary>
-    </member>
-    <member name="P:Colombo.BaseMessage.CorrelationGuid">
-      <summary>
-            Represents an identifier that could relate several messages together.
-            </summary>
-    </member>
-    <member name="P:Colombo.BaseMessage.UtcTimestamp">
-      <summary>
-            Timestamp for the creation of the message, expressed as UTC.
-            </summary>
-    </member>
-    <member name="T:Colombo.Response">
-      <summary>
-            Base class for responses.
-            </summary>
-    </member>
-    <member name="T:Colombo.ACKResponse">
-      <summary>
-            Represent a simple acknowledgement response.
-            </summary>
-    </member>
     <member name="T:Colombo.IColomboAlert">
       <summary>
             Represents an alert that can be emitted during various checks performed by Colombo.
@@ -159,6 +129,67 @@
             The measured time for the operation.
             </summary>
     </member>
+    <member name="T:Colombo.ColomboStats">
+      <summary>
+            Statistics information about the current running Colombo instance.
+            </summary>
+    </member>
+    <member name="P:Colombo.ColomboStats.Uptime">
+      <summary>
+            Uptime.
+            </summary>
+    </member>
+    <member name="P:Colombo.ColomboStats.NumRequestsHandled">
+      <summary>
+            Number of requests handled by the local processor.
+            </summary>
+    </member>
+    <member name="P:Colombo.ColomboStats.NumErrors">
+      <summary>
+            Number of errors (Exception) that occured when handling requests.
+            </summary>
+    </member>
+    <member name="P:Colombo.ColomboStats.AverageTimePerRequestHandled">
+      <summary>
+            Average time spent per request handled by the local processor.
+            </summary>
+    </member>
+    <member name="P:Colombo.ColomboStats.ErrorRate">
+      <summary>
+            The percentage of errors / requests handled.
+            </summary>
+    </member>
+    <member name="T:Colombo.IColomboStatCollector">
+      <summary>
+            Component that collects and gives statistics.
+            </summary>
+      <see cref="T:Colombo.ColomboStats" />
+    </member>
+    <member name="M:Colombo.IColomboStatCollector.GetStats">
+      <summary>
+            Get the current statistics.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.IColomboStatCollector.IncrementRequestsHandled(System.Int32,System.TimeSpan)">
+      <summary>
+            Increments the count for requests handled. Thread-safe.
+            </summary>
+      <param name="numRequests">Number of requests to increment.</param>
+      <param name="timeSpent">Time spent to handle all the requests.</param>
+    </member>
+    <member name="M:Colombo.IColomboStatCollector.IncrementErrors(System.Int32)">
+      <summary>
+            Increments the count for errors (Exceptions) in handled requests. Thread-safe.
+            </summary>
+      <param name="numErrors">Number of errors to increment.</param>
+    </member>
+    <member name="P:Colombo.IColomboStatCollector.StatsAvailable">
+      <summary>
+        <c>true</c> is statistics are availabe, <c>false</c> if not.
+            </summary>
+    </member>
     <member name="T:Colombo.IMetaContextKeysManager">
       <summary>
             Represents a component that can inject <see cref="T:Colombo.MetaContextKeys" /> into the Context.
@@ -168,6 +199,324 @@
     <member name="P:Colombo.IMetaContextKeysManager.DoNotManageMetaContextKeys">
       <summary>
             Disable the management of <see cref="T:Colombo.MetaContextKeys" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.Impl.InMemoryStatCollector">
+      <summary>
+            Implementation of <see cref="T:Colombo.IColomboStatCollector" /> that keeps stats in memory.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.InMemoryStatCollector.GetStats">
+      <summary>
+            Get the current statistics.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.Impl.InMemoryStatCollector.IncrementRequestsHandled(System.Int32,System.TimeSpan)">
+      <summary>
+            Increments the count for requests handled. Thread-safe.
+            </summary>
+      <param name="numRequests">Number of requests to increment.</param>
+      <param name="timeSpent">Time spent to handle all the requests.</param>
+    </member>
+    <member name="M:Colombo.Impl.InMemoryStatCollector.IncrementErrors(System.Int32)">
+      <summary>
+            Increments the count for errors (Exceptions) in handled requests. Thread-safe.
+            </summary>
+      <param name="numErrors">Number of errors to increment.</param>
+    </member>
+    <member name="P:Colombo.Impl.InMemoryStatCollector.StatsAvailable">
+      <summary>
+        <c>true</c>
+      </summary>
+    </member>
+    <member name="T:Colombo.Impl.NullStatCollector">
+      <summary>
+            Implementation of <see cref="T:Colombo.IColomboStatCollector" /> that doesn't do anything. - Use it as default implementation.
+            </summary>
+    </member>
+    <member name="F:Colombo.Impl.NullStatCollector.Instance">
+      <summary>
+             Singleton instance.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.NullStatCollector.GetStats">
+      <summary>
+            return null.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.NullStatCollector.IncrementRequestsHandled(System.Int32,System.TimeSpan)">
+      <summary>
+            Do nothing.
+            </summary>
+    </member>
+    <member name="M:Colombo.Impl.NullStatCollector.IncrementErrors(System.Int32)">
+      <summary>
+            Do nothing.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.NullStatCollector.StatsAvailable">
+      <summary>
+        <c>false</c>
+      </summary>
+    </member>
+    <member name="T:Colombo.BaseMessage">
+      <summary>
+            Base class for all the Colombo messages.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseMessage.ToString">
+      <summary>
+            A standard message representation : {GetType} | {CorrelationGuid} | {UtcTimestamp}
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseMessage.CorrelationGuid">
+      <summary>
+            Represents an identifier that could relate several messages together.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseMessage.UtcTimestamp">
+      <summary>
+            Timestamp for the creation of the message, expressed as UTC.
+            </summary>
+    </member>
+    <member name="T:Colombo.ICacheable">
+      <summary>
+            Represents an item that can return a cache key.
+            </summary>
+    </member>
+    <member name="M:Colombo.ICacheable.GetCacheKey">
+      <summary>
+            Returns a cache key.
+            </summary>
+    </member>
+    <member name="T:Colombo.BaseRequest">
+      <summary>
+            Base class for requests - non generic version.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetGroupName">
+      <summary>
+            Get the name of the group that this request belongs to.
+            </summary>
+      <remarks>
+            Defaults to the name of the assembly.
+            </remarks>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetResponseType">
+      <summary>
+            Get the System.Type of the response associated with this request.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.BaseRequest.CreateResponse">
+      <summary>
+            Create a Response object that is related to the current request.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.ToString">
+      <summary>
+        <see cref="M:Colombo.BaseMessage.ToString" />. Adds Context information.
+            </summary>
+    </member>
+    <member name="M:Colombo.BaseRequest.GetCacheKey">
+      <summary>
+            Returns the key that is meant to be used when put in a cache.
+            The default implementation throws an exception, this means you must explicitly override it in Request classes.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseRequest.Context">
+      <summary>
+            Context of the request. Garanteed to be non-null.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseRequest.IsSideEffectFree">
+      <summary>
+        <c>true</c> is this request is side-effect free, <c>false</c> otherwise.
+            </summary>
+    </member>
+    <member name="T:Colombo.BaseSideEffectFreeRequest">
+      <summary>
+            Base class for side effect-free requests - non generic version.
+            </summary>
+    </member>
+    <member name="P:Colombo.BaseSideEffectFreeRequest.IsSideEffectFree">
+      <summary>
+        <c>true</c>.
+            </summary>
+    </member>
+    <member name="T:Colombo.SideEffectFreeRequest`1">
+      <summary>
+            Base class for requests that are side-effect free, meaning they don't impact the state of the server.
+            Use this base class to enable parallelism.
+            </summary>
+      <typeparam name="TResponse">
+      </typeparam>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequest`1.GetResponseType">
+      <summary>
+            Get the System.Type of the response associated with this request.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:Colombo.Messages.GetStatsRequest">
+      <summary>
+            Request that returns statistics for the Colombo server.
+            </summary>
+    </member>
+    <member name="T:Colombo.IRequestHandler">
+      <summary>
+            Represent a component that handles requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandler.Handle(Colombo.BaseRequest)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.IRequestHandler.GetRequestType">
+      <summary>
+            Get the type of request that this request handler handles.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.IRequestHandler.GetResponseType">
+      <summary>
+            Get the type of response that this request handler produces.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="T:Colombo.ISideEffectFreeRequestHandler`2">
+      <summary>
+            Interface used to defined request handlers for side effect-free requests.
+            You may prefer to use the abstract SideEffectFreeRequestHandler class instead.
+            </summary>
+    </member>
+    <member name="M:Colombo.ISideEffectFreeRequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="T:Colombo.SideEffectFreeRequestHandler`2">
+      <summary>
+            Use this base class to create request handlers for side effect-free requests.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(Colombo.BaseRequest)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(`0)">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.CreateRequest``1">
+      <summary>
+            Create a new request to be used inside this request handler.
+            The CorrelationGuid and the Context are copied.
+            </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetRequestType">
+      <summary>
+            Get the type of request that this request handler handles.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetResponseType">
+      <summary>
+            Get the type of response that this request handler produces.
+            </summary>
+      <returns>
+      </returns>
+    </member>
+    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Request">
+      <summary>
+            Incoming request.
+            </summary>
+    </member>
+    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Response">
+      <summary>
+            Outgoing response. It will be created before Handle() and the CorrelationGuid will be set.
+            </summary>
+    </member>
+    <member name="T:Colombo.Messages.GetStatsRequestHandler">
+      <summary>
+            Handler for <see cref="T:Colombo.Messages.GetStatsRequest" />.
+            </summary>
+    </member>
+    <member name="M:Colombo.Messages.GetStatsRequestHandler.Handle">
+      <summary>
+            Handles the request.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsRequestHandler.StatCollector">
+      <summary>
+            Stats collector.
+            </summary>
+    </member>
+    <member name="T:Colombo.Response">
+      <summary>
+            Base class for responses.
+            </summary>
+    </member>
+    <member name="T:Colombo.Messages.GetStatsResponse">
+      <summary>
+            Gives statistics information.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.StatsAvailable">
+      <summary>
+        <c>true</c> is statistics are availabe, <c>false</c> if not.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.Uptime">
+      <summary>
+            Uptime.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.NumRequestsHandled">
+      <summary>
+            Number of requests handled by the local processor.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.NumErrors">
+      <summary>
+            Number of errors (Exception) that occured when handling requests.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.AverageTimePerRequestHandled">
+      <summary>
+            Average time spent per request handled by the local processor.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.ErrorRate">
+      <summary>
+            The percentage of errors / requests handled.
+            </summary>
+    </member>
+    <member name="P:Colombo.Messages.GetStatsResponse.Assemblies">
+      <summary>
+            List of loaded assemblies and their version number.
+            </summary>
+    </member>
+    <member name="T:Colombo.Messages.HealthCheckResponse">
+      <summary>
+            Response associated with <see cref="T:Colombo.Messages.HealthCheckRequest" />.
             </summary>
     </member>
     <member name="T:Colombo.MetaContextKeys">
@@ -410,74 +759,6 @@
     <member name="P:Colombo.Interceptors.ExceptionsSendInterceptor.InterceptionPriority">
       <summary>
             High
-            </summary>
-    </member>
-    <member name="T:Colombo.ICacheable">
-      <summary>
-            Represents an item that can return a cache key.
-            </summary>
-    </member>
-    <member name="M:Colombo.ICacheable.GetCacheKey">
-      <summary>
-            Returns a cache key.
-            </summary>
-    </member>
-    <member name="T:Colombo.BaseRequest">
-      <summary>
-            Base class for requests - non generic version.
-            </summary>
-    </member>
-    <member name="M:Colombo.BaseRequest.GetGroupName">
-      <summary>
-            Get the name of the group that this request belongs to.
-            </summary>
-      <remarks>
-            Defaults to the name of the assembly.
-            </remarks>
-      <returns>
-      </returns>
-    </member>
-    <member name="M:Colombo.BaseRequest.GetResponseType">
-      <summary>
-            Get the System.Type of the response associated with this request.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="M:Colombo.BaseRequest.CreateResponse">
-      <summary>
-            Create a Response object that is related to the current request.
-            </summary>
-    </member>
-    <member name="M:Colombo.BaseRequest.ToString">
-      <summary>
-        <see cref="M:Colombo.BaseMessage.ToString" />. Adds Context information.
-            </summary>
-    </member>
-    <member name="M:Colombo.BaseRequest.GetCacheKey">
-      <summary>
-            Returns the key that is meant to be used when put in a cache.
-            The default implementation throws an exception, this means you must explicitly override it in Request classes.
-            </summary>
-    </member>
-    <member name="P:Colombo.BaseRequest.Context">
-      <summary>
-            Context of the request. Garanteed to be non-null.
-            </summary>
-    </member>
-    <member name="P:Colombo.BaseRequest.IsSideEffectFree">
-      <summary>
-        <c>true</c> is this request is side-effect free, <c>false</c> otherwise.
-            </summary>
-    </member>
-    <member name="T:Colombo.BaseSideEffectFreeRequest">
-      <summary>
-            Base class for side effect-free requests - non generic version.
-            </summary>
-    </member>
-    <member name="P:Colombo.BaseSideEffectFreeRequest.IsSideEffectFree">
-      <summary>
-        <c>true</c>.
             </summary>
     </member>
     <member name="T:Colombo.CacheSegmentAttribute">
@@ -760,41 +1041,6 @@
             Called when an alert has been raised.
             </summary>
     </member>
-    <member name="T:Colombo.IRequestHandler">
-      <summary>
-            Represent a component that handles requests.
-            </summary>
-    </member>
-    <member name="M:Colombo.IRequestHandler.Handle(Colombo.BaseRequest)">
-      <summary>
-            Handles the request.
-            </summary>
-    </member>
-    <member name="M:Colombo.IRequestHandler.GetRequestType">
-      <summary>
-            Get the type of request that this request handler handles.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="M:Colombo.IRequestHandler.GetResponseType">
-      <summary>
-            Get the type of response that this request handler produces.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="T:Colombo.ISideEffectFreeRequestHandler`2">
-      <summary>
-            Interface used to defined request handlers for side effect-free requests.
-            You may prefer to use the abstract SideEffectFreeRequestHandler class instead.
-            </summary>
-    </member>
-    <member name="M:Colombo.ISideEffectFreeRequestHandler`2.Handle(`0)">
-      <summary>
-            Handles the request.
-            </summary>
-    </member>
     <member name="T:Colombo.IRequestHandler`2">
       <summary>
             Interface used to defined request handlers for requests.
@@ -1008,6 +1254,13 @@
             Disable the management of MetaContextKeys. No value will be set in the Context if disabled.
             </summary>
     </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.StatefulMessageBusLifestyle(System.Type)">
+      <summary>
+            Allow the customization of the <see cref="T:Castle.MicroKernel.ILifestyleManager" /> associated with the <see cref="T:Colombo.IStatefulMessageBus" />.
+            Default value is Transient.
+            </summary>
+      <param name="lifestyleManagerType">The type of <see cref="T:Castle.MicroKernel.ILifestyleManager" /> to associate with the <see cref="T:Colombo.IStatefulMessageBus" />.</param>
+    </member>
     <member name="T:Colombo.Facilities.LifestyleRegistrationExtensions">
       <summary>
             Static class to hold extensions method for Castle Windsor Lifestyles.
@@ -1040,82 +1293,17 @@
             Release the component instance based on the lifestyle semantic.
             </summary>
     </member>
-    <member name="T:Colombo.SideEffectFreeRequest`1">
-      <summary>
-            Base class for requests that are side-effect free, meaning they don't impact the state of the server.
-            Use this base class to enable parallelism.
-            </summary>
-      <typeparam name="TResponse">
-      </typeparam>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequest`1.GetResponseType">
-      <summary>
-            Get the System.Type of the response associated with this request.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="T:Colombo.HealthCheck.HealthCheckRequest">
+    <member name="T:Colombo.Messages.HealthCheckRequest">
       <summary>
             Request that can be send to a Colombo server, and for which a response will indicate that this server is up and running.
             </summary>
     </member>
-    <member name="T:Colombo.SideEffectFreeRequestHandler`2">
+    <member name="T:Colombo.Messages.HealthCheckRequestHandler">
       <summary>
-            Use this base class to create request handlers for side effect-free requests.
+            Handler for <see cref="T:Colombo.Messages.HealthCheckRequest" />. Merely do anything than respond.
             </summary>
     </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(Colombo.BaseRequest)">
-      <summary>
-            Handles the request.
-            </summary>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle(`0)">
-      <summary>
-            Handles the request.
-            </summary>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.Handle">
-      <summary>
-            Handles the request.
-            </summary>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.CreateRequest``1">
-      <summary>
-            Create a new request to be used inside this request handler.
-            The CorrelationGuid and the Context are copied.
-            </summary>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetRequestType">
-      <summary>
-            Get the type of request that this request handler handles.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetResponseType">
-      <summary>
-            Get the type of response that this request handler produces.
-            </summary>
-      <returns>
-      </returns>
-    </member>
-    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Request">
-      <summary>
-            Incoming request.
-            </summary>
-    </member>
-    <member name="P:Colombo.SideEffectFreeRequestHandler`2.Response">
-      <summary>
-            Outgoing response. It will be created before Handle() and the CorrelationGuid will be set.
-            </summary>
-    </member>
-    <member name="T:Colombo.HealthCheck.HealthCheckRequestHandler">
-      <summary>
-            Handler for <see cref="T:Colombo.HealthCheck.HealthCheckRequest" />. Merely do anything than respond.
-            </summary>
-    </member>
-    <member name="M:Colombo.HealthCheck.HealthCheckRequestHandler.Handle">
+    <member name="M:Colombo.Messages.HealthCheckRequestHandler.Handle">
       <summary>
             Handles the request.
             </summary>
@@ -1296,6 +1484,11 @@
     <member name="P:Colombo.Impl.LocalRequestProcessor.Logger">
       <summary>
             Logger.
+            </summary>
+    </member>
+    <member name="P:Colombo.Impl.LocalRequestProcessor.StatCollector">
+      <summary>
+            Stats collector.
             </summary>
     </member>
     <member name="P:Colombo.Impl.LocalRequestProcessor.RequestHandlerInterceptors">
@@ -1925,29 +2118,6 @@
     <member name="P:Colombo.SLAAttribute.Allowed">
       <summary>
             Allowed time.
-            </summary>
-    </member>
-    <member name="T:Colombo.ChooseWhenRequestContextContainsAttribute">
-      <summary>
-            Apply to a request handler to allow specialization of the request handler based on request.Context values.
-            </summary>
-    </member>
-    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.#ctor(System.String)">
-      <summary>
-            Apply to a request handler to allow specialization of the request handler based on Context values.
-            </summary>
-      <param name="key">Name of the key which, when not null, will make this request handler chosen.</param>
-    </member>
-    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.#ctor(System.String,System.String)">
-      <summary>
-            Apply to a request handler to allow specialization of the request handler based on Context values.
-            </summary>
-      <param name="key">Name of the key which, when the value is equal to <paramref name="value" />, will make this request handler chosen.</param>
-      <param name="value">Value associated with the key in request context.</param>
-    </member>
-    <member name="M:Colombo.ChooseWhenRequestContextContainsAttribute.IsChoosen(Colombo.BaseRequest)">
-      <summary>
-            Determine if the request handler should be chosen.
             </summary>
     </member>
     <member name="T:Colombo.TestSupport.BaseExpectation">

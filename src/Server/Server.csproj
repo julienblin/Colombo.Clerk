@@ -106,6 +106,7 @@
     <Compile Include="ClerkService.cs" />
     <Compile Include="EndPointConfig.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
+    <Compile Include="Handlers\GetDistinctValuesRequestHandler.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />
     <Compile Include="Interceptors\InternalAuditRequestHandlerInterceptor.cs" />
