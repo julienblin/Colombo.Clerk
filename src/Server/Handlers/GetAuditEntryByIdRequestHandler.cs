@@ -33,11 +33,16 @@ namespace Colombo.Clerk.Server.Handlers
 {
     public class GetAuditEntryByIdRequestHandler : SideEffectFreeRequestHandler<GetAuditEntryByIdRequest, GetAuditEntryByIdResponse>
     {
-        public ISession Session { get; set; }
+        private readonly ISession session;
+
+        public GetAuditEntryByIdRequestHandler(ISession session)
+        {
+            this.session = session;
+        }
 
         protected override void Handle()
         {
-            var auditEntryModel = Session.QueryOver<AuditEntryModel>()
+            var auditEntryModel = session.QueryOver<AuditEntryModel>()
                 .Where(x => x.Id == Request.Id)
                 .Fetch(x => x.Context).Eager
                 .TransformUsing(Transformers.DistinctRootEntity)

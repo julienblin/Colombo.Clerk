@@ -34,7 +34,12 @@ namespace Colombo.Clerk.Server.Handlers
 {
     public class GetDistinctValuesRequestHandler : SideEffectFreeRequestHandler<GetDistinctValuesRequest, GetDistinctValuesResponse>
     {
-        public ISession Session { get; set; }
+        private readonly ISession session;
+
+        public GetDistinctValuesRequestHandler(ISession session)
+        {
+            this.session = session;
+        }
 
         protected override void Handle()
         {
@@ -61,7 +66,7 @@ namespace Colombo.Clerk.Server.Handlers
                         break;
                 }
 
-                var query = Session.QueryOver<AuditEntryModel>()
+                var query = session.QueryOver<AuditEntryModel>()
                                 .Select(Projections.Distinct(Projections.Property(expression)))
                                 .OrderBy(expression).Asc;
 
@@ -69,7 +74,7 @@ namespace Colombo.Clerk.Server.Handlers
             }
             else
             {
-                var query = Session.QueryOver<ContextEntryModel>()
+                var query = session.QueryOver<ContextEntryModel>()
                                 .Select(Projections.Distinct(Projections.Property<ContextEntryModel>(x => x.ContextKey)))
                                 .OrderBy(x => x.ContextKey).Asc;
 

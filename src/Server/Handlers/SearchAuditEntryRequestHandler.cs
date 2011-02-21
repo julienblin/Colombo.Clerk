@@ -37,7 +37,12 @@ namespace Colombo.Clerk.Server.Handlers
 {
     public class SearchAuditEntryRequestHandler : SideEffectFreeRequestHandler<SearchAuditEntryRequest, SearchAuditEntryResponse>
     {
-        public ISession Session { get; set; }
+        private readonly ISession session;
+
+        public SearchAuditEntryRequestHandler(ISession session)
+        {
+            this.session = session;
+        }
 
         protected override void Handle()
         {
@@ -45,7 +50,7 @@ namespace Colombo.Clerk.Server.Handlers
             auditEntryQuery.InjectFrom(Request);
             if (Request.ContextConditions != null)
             {
-                auditEntryQuery.ContextConditions = new List<AuditEntrySearchQuery.ContextCondition> (
+                auditEntryQuery.ContextConditions = new List<AuditEntrySearchQuery.ContextCondition>(
                     Request.ContextConditions.Select(x =>
                     {
                         var queryContextCondition = new AuditEntrySearchQuery.ContextCondition();
@@ -57,7 +62,7 @@ namespace Colombo.Clerk.Server.Handlers
 
             var query = auditEntryQuery.GetQuery();
 
-            var rowCount = query.Clone().GetExecutableQueryOver(Session)
+            var rowCount = query.Clone().GetExecutableQueryOver(session)
                 .Select(Projections.RowCount())
                 .FutureValue<Int32>();
 
@@ -66,7 +71,7 @@ namespace Colombo.Clerk.Server.Handlers
                 .Skip(Request.PerPage * Request.CurrentPage)
                 .Select(Projections.Id());
 
-            var results = Session.QueryOver<AuditEntryModel>()
+            var results = session.QueryOver<AuditEntryModel>()
                 .WithSubquery.WhereProperty(x => x.Id).In(detachedResultQueryForPaging)
                 .TransformUsing(Transformers.DistinctRootEntity)
                 .Fetch(x => x.Context).Eager

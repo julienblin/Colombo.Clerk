@@ -33,7 +33,12 @@ namespace Colombo.Clerk.Server.Handlers
 {
     public class WriteAuditEntryRequestHandler : RequestHandler<WriteAuditEntryRequest, WriteAuditEntryResponse>
     {
-        public ISession Session { get; set; }
+        private readonly ISession session;
+
+        public WriteAuditEntryRequestHandler(ISession session)
+        {
+            this.session = session;
+        }
 
         protected override void Handle()
         {
@@ -43,7 +48,7 @@ namespace Colombo.Clerk.Server.Handlers
                 Request.RequestContext.Select(kv => new ContextEntryModel { ContextKey = kv.Key, ContextValue = kv.Value })
             );
 
-            Session.Save(auditEntryModel);
+            session.Save(auditEntryModel);
 
             Response.Id = auditEntryModel.Id;
         }
