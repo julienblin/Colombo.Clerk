@@ -106,6 +106,7 @@
     <Compile Include="Infra\WindsorControllerFactory.cs" />
     <Compile Include="Services\IIdentityService.cs" />
     <Compile Include="Services\Impl\DefaultIdentityService.cs" />
+    <Compile Include="Tests\FakeSends.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\JS\html5.js" />

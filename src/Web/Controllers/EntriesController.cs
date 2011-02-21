@@ -8,8 +8,9 @@ namespace Colombo.Clerk.Web.Controllers
 {
     public class EntriesController : ApplicationController
     {
-        public ActionResult Index()
+        public ActionResult Index(string serverName = null)
         {
+            ViewData["serverName"] = serverName;
             return View();
         }
     }

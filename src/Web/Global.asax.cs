@@ -22,6 +22,8 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Collections.Generic;
+using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -29,8 +31,11 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Colombo.Clerk.Messages;
 using Colombo.Clerk.Web.Infra;
+using Colombo.Clerk.Web.Tests;
 using Colombo.Facilities;
+using Colombo.TestSupport;
 
 namespace Colombo.Clerk.Web
 {
@@ -49,6 +54,12 @@ namespace Colombo.Clerk.Web
             routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
 
             routes.MapRoute(
+                "Entries",
+                "Entries/{serverName}",
+                new { controller = "Entries", action = "Index", serverName = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 "Default", // Route name
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
@@ -56,7 +67,7 @@ namespace Colombo.Clerk.Web
 
         }
 
-        private static void BootstrapContainer()
+        private void BootstrapContainer()
         {
             container = new WindsorContainer().Install(FromAssembly.This());
 
@@ -69,7 +80,12 @@ namespace Colombo.Clerk.Web
             {
                 f.ClientOnly();
                 f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
+                if (UseFakeSends)
+                    f.TestSupportMode();
             });
+
+            if (UseFakeSends)
+                container.Resolve<IStubMessageBus>().ConfigureFakeSends();
 
             var controllerFactory = new WindsorControllerFactory(container.Kernel);
             ControllerBuilder.Current.SetControllerFactory(controllerFactory);
@@ -88,6 +104,15 @@ namespace Colombo.Clerk.Web
         protected void Application_End()
         {
             container.Dispose();
+        }
+
+        public bool UseFakeSends
+        {
+            get
+            {
+                return ConfigurationManager.AppSettings["FakeSend"] != null &&
+                       ConfigurationManager.AppSettings["FakeSend"].Equals("true");
+            }
         }
     }
 }
