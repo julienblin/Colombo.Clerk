@@ -26,9 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Colombo.Clerk.Server.Models;
-using NHibernate;
 using NHibernate.Criterion;
-using NHibernate.Transform;
 
 namespace Colombo.Clerk.Server.Queries
 {

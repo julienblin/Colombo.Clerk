@@ -23,8 +23,8 @@
 #endregion
 
 using System.Collections.Generic;
-using System.ServiceModel;
 using System.Linq;
+using System.ServiceModel;
 using Colombo.Clerk.Server.Models;
 using Colombo.Clerk.Service;
 using NHibernate;

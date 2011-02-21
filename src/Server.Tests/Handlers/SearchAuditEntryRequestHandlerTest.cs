@@ -23,12 +23,12 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Handlers;
 using Colombo.Clerk.Server.Models;
 using NUnit.Framework;
-using System.Collections.Generic;
 
 namespace Colombo.Clerk.Server.Tests.Handlers
 {

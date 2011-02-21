@@ -22,18 +22,24 @@
 // THE SOFTWARE.
 #endregion
 
-using System;
+using System.Collections.Generic;
 
-namespace Colombo.Clerk.Server.Models
+namespace Colombo.Clerk.Messages
 {
-    public class ContextEntryModel
+    public class GetStatsByServerResponse : Response
     {
-        public virtual Guid Id { get; set; }
+        public GetStatsByServerResponse()
+        {
+            ServerStats = new Dictionary<string, ServerStats>();
+        }
 
-        public virtual string ContextKey { get; set; }
+        public virtual IDictionary<string, ServerStats> ServerStats { get; set; }
+    }
 
-        public virtual string ContextValue { get; set; }
+    public class ServerStats
+    {
+        public int NumRequestsSent { get; set; }
 
-        public virtual AuditEntryModel AuditEntryModel { get; set; }
+        public int NumRequestsHandled { get; set; }
     }
 }

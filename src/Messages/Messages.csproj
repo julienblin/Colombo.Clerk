@@ -60,6 +60,8 @@
     <Compile Include="GetAuditEntryByIdRequest.cs" />
     <Compile Include="GetDistinctValuesRequest.cs" />
     <Compile Include="GetDistinctValuesResponse.cs" />
+    <Compile Include="GetStatsByServerRequest.cs" />
+    <Compile Include="GetStatsByServerResponse.cs" />
     <Compile Include="SearchAuditEntryRequest.cs" />
     <Compile Include="SearchAuditEntryResponse.cs" />
     <Compile Include="WriteAuditEntryRequest.cs" />

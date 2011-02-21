@@ -72,6 +72,9 @@
     <Reference Include="Remotion.Data.Linq, Version=1.13.41.2, Culture=neutral, PublicKeyToken=cab60358ab4081ea, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NHibernate.3.0.0.2001\lib\Remotion.Data.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="Rhino.Mocks">
+      <HintPath>..\..\lib\Rhino.Mocks\Rhino.Mocks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -107,8 +110,10 @@
     <Compile Include="BaseDbTest.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandlerTest.cs" />
     <Compile Include="Handlers\GetDistinctValuesRequestHandlerTest.cs" />
+    <Compile Include="Handlers\GetStatsByServerRequestHandlerTest.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandlerTest.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandlerTest.cs" />
+    <Compile Include="Services\Impl\SystemClockTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

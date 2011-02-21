@@ -23,17 +23,24 @@
 #endregion
 
 using System;
+using Colombo.Clerk.Server.Services.Impl;
+using NUnit.Framework;
 
-namespace Colombo.Clerk.Server.Models
+namespace Colombo.Clerk.Server.Tests.Services.Impl
 {
-    public class ContextEntryModel
+    [TestFixture]
+    public class SystemClockTest
     {
-        public virtual Guid Id { get; set; }
+        [Test]
+        public void It_should_return_UtcNow_from_system_clock()
+        {
+            var clock = new SystemClock();
 
-        public virtual string ContextKey { get; set; }
+            var utcNow = DateTime.UtcNow;
+            var result = clock.UtcNow;
 
-        public virtual string ContextValue { get; set; }
-
-        public virtual AuditEntryModel AuditEntryModel { get; set; }
+            Assert.That(result >= utcNow);
+            Assert.That(result < utcNow.AddMilliseconds(200));
+        }
     }
 }
