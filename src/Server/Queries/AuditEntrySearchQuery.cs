@@ -30,7 +30,7 @@ using NHibernate.Criterion;
 
 namespace Colombo.Clerk.Server.Queries
 {
-    public class AuditEntrySearchQuery
+    public class AuditEntrySearchQuery : IQuery<AuditEntryModel>
     {
         public string RequestNamespace { get; set; }
 
