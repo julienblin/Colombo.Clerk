@@ -47,7 +47,7 @@ namespace Colombo.Clerk.Server.Handlers
 
         protected override void Handle()
         {
-            var distinctMachineNames = GetDistinctMachineNames();
+            var distinctMachineNames = session.GetExecQuery<DistinctMachineNamesQuery, ContextEntryModel>().List<string>();
             var futureServerStats = GetServerStats(distinctMachineNames, clock.UtcNow.Subtract(Request.Since));
 
             foreach (var distinctMachineName in distinctMachineNames)
@@ -88,15 +88,6 @@ namespace Colombo.Clerk.Server.Handlers
                 result[machineName].Add(queryHandled.GetQuery().GetExecutableQueryOver(session).Select(Projections.RowCount()).FutureValue<Int32>());
             }
             return result;
-        }
-
-        private IEnumerable<string> GetDistinctMachineNames()
-        {
-            var query = session.QueryOver<ContextEntryModel>()
-                            .Where(x => (x.ContextKey == MetaContextKeys.SenderMachineName) || (x.ContextKey == MetaContextKeys.HandlerMachineName))
-                            .Select(Projections.Distinct(Projections.Property<ContextEntryModel>(x => x.ContextValue)))
-                            .OrderBy(x => x.ContextValue).Asc;
-            return query.List<string>();
         }
     }
 }

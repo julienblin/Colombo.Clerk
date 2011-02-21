@@ -24,9 +24,11 @@
 
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Linq.Expressions;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Server.Models;
+using Colombo.Clerk.Server.Queries;
 using NHibernate;
 using NHibernate.Criterion;
 
@@ -34,6 +36,12 @@ namespace Colombo.Clerk.Server.Handlers
 {
     public class GetDistinctValuesRequestHandler : SideEffectFreeRequestHandler<GetDistinctValuesRequest, GetDistinctValuesResponse>
     {
+        private static readonly GetDistinctValueType[] QueryContextEntryModelValueTypes = new[]
+        {
+            GetDistinctValueType.ContextKey,
+            GetDistinctValueType.MachineNames
+        };
+
         private readonly ISession session;
 
         public GetDistinctValuesRequestHandler(ISession session)
@@ -43,7 +51,7 @@ namespace Colombo.Clerk.Server.Handlers
 
         protected override void Handle()
         {
-            if (Request.ValueType != GetDistinctValueType.ContextKey)
+            if (!QueryContextEntryModelValueTypes.Any(x => x == Request.ValueType))
             {
                 Expression<Func<AuditEntryModel, object>> expression = null;
 
@@ -74,9 +82,21 @@ namespace Colombo.Clerk.Server.Handlers
             }
             else
             {
-                var query = session.QueryOver<ContextEntryModel>()
+                IQueryOver<ContextEntryModel> query = null;
+                switch (Request.ValueType)
+                {
+                    case GetDistinctValueType.ContextKey:
+                        query = session.QueryOver<ContextEntryModel>()
                                 .Select(Projections.Distinct(Projections.Property<ContextEntryModel>(x => x.ContextKey)))
                                 .OrderBy(x => x.ContextKey).Asc;
+                        break;
+                    case GetDistinctValueType.MachineNames:
+                        query = session.GetExecQuery<DistinctMachineNamesQuery, ContextEntryModel>();
+                        break;
+                    default:
+                        Debug.Assert(false);
+                        break;
+                }
 
                 Response.Values = query.List<string>();
             }

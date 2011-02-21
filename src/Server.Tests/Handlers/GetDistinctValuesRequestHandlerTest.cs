@@ -174,5 +174,47 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             Assert.That(response.Values, Contains.Item("key2"));
             Assert.That(response.Values, Contains.Item("key3"));
         }
+
+        [Test]
+        public void It_should_return_MachineNames()
+        {
+            const string machineName1 = @"MachineName1";
+            const string machineName2 = @"MachineName2";
+            const string machineName3 = @"MachineName3";
+
+            StubMessageBus.TestHandler<GetDistinctValuesRequestHandler>();
+
+            var request = new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.Values, Is.Empty);
+
+            using (var tx = Session.BeginTransaction())
+            {
+                Session.Save(new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel> {
+                        new ContextEntryModel { ContextKey = MetaContextKeys.HandlerMachineName, ContextValue= machineName1 },
+                        new ContextEntryModel { ContextKey = MetaContextKeys.SenderMachineName, ContextValue= machineName2 }
+                    }
+                });
+                Session.Save(new AuditEntryModel
+                {
+                    Context = new List<ContextEntryModel> {
+                        new ContextEntryModel { ContextKey = MetaContextKeys.HandlerMachineName, ContextValue= machineName2 },
+                        new ContextEntryModel { ContextKey = MetaContextKeys.SenderMachineName, ContextValue= machineName3 }
+                    }
+                });
+
+                tx.Commit();
+            }
+
+            request = new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames };
+            response = MessageBus.Send(request);
+            Assert.That(response.Values.Count(), Is.EqualTo(3));
+            Assert.That(response.Values, Contains.Item(machineName1));
+            Assert.That(response.Values, Contains.Item(machineName2));
+            Assert.That(response.Values, Contains.Item(machineName3));
+        }
     }
 }

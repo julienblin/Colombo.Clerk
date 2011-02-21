@@ -22,20 +22,12 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Colombo.Clerk.Messages
-{
-    public class GetDistinctValuesRequest : SideEffectFreeRequest<GetDistinctValuesResponse>
-    {
-        public GetDistinctValueType ValueType { get; set; }
-    }
+using NHibernate.Criterion;
 
-    public enum GetDistinctValueType
+namespace Colombo.Clerk.Server.Queries
+{
+    public interface IQuery<T>
     {
-        RequestNamespace,
-        RequestType,
-        ResponseNamespace,
-        ResponseType,
-        ContextKey,
-        MachineNames
+        QueryOver<T> GetQuery();
     }
 }

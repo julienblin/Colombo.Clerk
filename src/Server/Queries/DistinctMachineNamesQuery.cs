@@ -22,20 +22,19 @@
 // THE SOFTWARE.
 #endregion
 
-namespace Colombo.Clerk.Messages
-{
-    public class GetDistinctValuesRequest : SideEffectFreeRequest<GetDistinctValuesResponse>
-    {
-        public GetDistinctValueType ValueType { get; set; }
-    }
+using Colombo.Clerk.Server.Models;
+using NHibernate.Criterion;
 
-    public enum GetDistinctValueType
+namespace Colombo.Clerk.Server.Queries
+{
+    public class DistinctMachineNamesQuery : IQuery<ContextEntryModel>
     {
-        RequestNamespace,
-        RequestType,
-        ResponseNamespace,
-        ResponseType,
-        ContextKey,
-        MachineNames
+        public QueryOver<ContextEntryModel> GetQuery()
+        {
+            return QueryOver.Of<ContextEntryModel>()
+                        .Where(x => (x.ContextKey == MetaContextKeys.SenderMachineName) || (x.ContextKey == MetaContextKeys.HandlerMachineName))
+                        .Select(Projections.Distinct(Projections.Property<ContextEntryModel>(x => x.ContextValue)))
+                        .OrderBy(x => x.ContextValue).Asc;
+        }
     }
 }
