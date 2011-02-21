@@ -39,13 +39,14 @@ namespace Colombo.Clerk.Web.Infra
 
         public override void ReleaseController(IController controller)
         {
-            kernel.ReleaseComponent(controller);
+            if(controller != null)
+                kernel.ReleaseComponent(controller);
         }
 
         public override IController CreateController(RequestContext requestContext, string controllerName)
         {
             var controllerComponentName = controllerName + "Controller";
-            return kernel.Resolve<IController>(controllerComponentName);
+            return kernel.HasComponent(controllerComponentName) ? kernel.Resolve<IController>(controllerComponentName) : null;
         }
     }
 }

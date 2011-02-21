@@ -94,14 +94,22 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Controllers\ApplicationController.cs" />
+    <Compile Include="Controllers\EntriesController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MainMenuHelper.cs" />
     <Compile Include="Infra\ControllersInstaller.cs" />
+    <Compile Include="Infra\ServicesInstaller.cs" />
     <Compile Include="Infra\WindsorControllerFactory.cs" />
+    <Compile Include="Services\IIdentityService.cs" />
+    <Compile Include="Services\Impl\DefaultIdentityService.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\JS\html5.js" />
+    <Content Include="Content\JS\IE8.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\CSS\Clerk.css" />
     <Content Include="Web.config" />
@@ -112,7 +120,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Content\Img\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj">
       <Project>{E0E4A445-1218-47A2-BFFB-31A1D7AB552E}</Project>
@@ -126,7 +136,10 @@
     <Content Include="log4net.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Entries\Index.cshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

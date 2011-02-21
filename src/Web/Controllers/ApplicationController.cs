@@ -23,11 +23,21 @@
 #endregion
 
 using System.Web.Mvc;
+using Colombo.Clerk.Web.Services;
 
 namespace Colombo.Clerk.Web.Controllers
 {
     public abstract class ApplicationController : Controller
     {
         public IStatefulMessageBus MessageBus { get; set; }
+
+        public IIdentityService IdentityService { get; set; }
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var currentIdentity = IdentityService.GetCurrentIdentity().Identity;
+            ViewData["Username"] = currentIdentity.IsAuthenticated ? currentIdentity.Name : "Anonymous";
+            base.OnActionExecuting(filterContext);
+        }
     }
 }
