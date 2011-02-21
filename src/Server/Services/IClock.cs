@@ -24,16 +24,10 @@
 
 using System;
 
-namespace Colombo.Clerk.Server.Models
+namespace Colombo.Clerk.Server.Services
 {
-    public class ContextEntryModel
+    public interface IClock
     {
-        public virtual Guid Id { get; set; }
-
-        public virtual string ContextKey { get; set; }
-
-        public virtual string ContextValue { get; set; }
-
-        public virtual AuditEntryModel AuditEntryModel { get; set; }
+        DateTime UtcNow { get; }
     }
 }

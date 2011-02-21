@@ -38,7 +38,7 @@ namespace Colombo.Clerk.Server.Tests
 {
     public abstract class BaseDbTest
     {
-        protected IWindsorContainer container;
+        private IWindsorContainer container;
         protected Configuration nhConfig;
 
         [SetUp]
@@ -55,6 +55,11 @@ namespace Colombo.Clerk.Server.Tests
             );
 
             BuildSchema();
+        }
+
+        protected IWindsorContainer Container
+        {
+            get { return container; }
         }
 
         protected IMessageBus MessageBus

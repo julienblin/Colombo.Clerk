@@ -35,6 +35,8 @@ using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Colombo.Clerk.Server.Interceptors;
 using Colombo.Clerk.Server.Models;
+using Colombo.Clerk.Server.Services;
+using Colombo.Clerk.Server.Services.Impl;
 using Colombo.Facilities;
 using Colombo.Host;
 using Colombo.Wcf;
@@ -48,6 +50,7 @@ namespace Colombo.Clerk.Server
     public class EndPointConfig : IAmAnEndpoint,
                                   IWantToConfigureLogging,
                                   IWantToConfigureColombo,
+                                  IWantToRegisterOtherComponents,
                                   IWantToCreateServiceHosts,
                                   IWantToBeNotifiedWhenStartAndStop
     {
@@ -72,6 +75,13 @@ namespace Colombo.Clerk.Server
             );
 
             container.AddFacility<ColomboFacility>();
+        }
+
+        public void RegisterOtherComponents(IWindsorContainer container)
+        {
+            container.Register(
+                Component.For<IClock>().ImplementedBy<SystemClock>()
+            );
         }
 
         public IEnumerable<ServiceHost> CreateServiceHosts(IWindsorContainer container)

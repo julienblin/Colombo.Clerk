@@ -65,7 +65,7 @@ namespace Colombo.Clerk.Server.Tests
                                 };
 
             var service = new ClerkService();
-            EndPointConfig.Kernel = container.Kernel;
+            EndPointConfig.Kernel = Container.Kernel;
 
             using (var scope = new TransactionScope())
             {
@@ -137,7 +137,7 @@ namespace Colombo.Clerk.Server.Tests
             };
 
             var service = new ClerkService();
-            EndPointConfig.Kernel = container.Kernel;
+            EndPointConfig.Kernel = Container.Kernel;
 
             using (var scope = new TransactionScope())
             {

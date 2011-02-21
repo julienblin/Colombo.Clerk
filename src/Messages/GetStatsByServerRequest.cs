@@ -23,17 +23,36 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace Colombo.Clerk.Server.Models
+namespace Colombo.Clerk.Messages
 {
-    public class ContextEntryModel
+    public class GetStatsByServerRequest : SideEffectFreeRequest<GetStatsByServerResponse>, IValidatableObject
     {
-        public virtual Guid Id { get; set; }
+        public GetStatsByServerRequest()
+        {
+            Since = TimeSpan.FromDays(1);
+        }
 
-        public virtual string ContextKey { get; set; }
+        /// <summary>
+        /// No more than 31 days is allowed.
+        /// </summary>
+        public TimeSpan Since { get; set; }
 
-        public virtual string ContextValue { get; set; }
-
-        public virtual AuditEntryModel AuditEntryModel { get; set; }
+        /// <summary>
+        /// Determines whether the specified object is valid.
+        /// </summary>
+        /// <returns>
+        /// A collection that holds failed-validation information.
+        /// </returns>
+        /// <param name="validationContext">The validation context.</param>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            if (Since > TimeSpan.FromDays(31))
+            {
+                yield return new ValidationResult("Since cannot be more than 31 days.");
+            }
+        }
     }
 }

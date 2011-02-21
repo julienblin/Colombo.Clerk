@@ -83,6 +83,7 @@
       <HintPath>..\..\packages\NHibernate.3.0.0.2001\lib\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -107,6 +108,7 @@
     <Compile Include="EndPointConfig.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\GetDistinctValuesRequestHandler.cs" />
+    <Compile Include="Handlers\GetStatsByServerRequestHandler.cs" />
     <Compile Include="Handlers\SearchAuditEntryRequestHandler.cs" />
     <Compile Include="Handlers\WriteAuditEntryRequestHandler.cs" />
     <Compile Include="Interceptors\InternalAuditRequestHandlerInterceptor.cs" />
@@ -117,6 +119,8 @@
     <Compile Include="Models\ContextEntryModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
     <Compile Include="Queries\AuditEntrySearchQuery.cs" />
+    <Compile Include="Services\IClock.cs" />
+    <Compile Include="Services\Impl\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Messages\Messages.csproj">
