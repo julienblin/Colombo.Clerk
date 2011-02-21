@@ -23,6 +23,7 @@
 #endregion
 
 using System.Web.Mvc;
+using Colombo.Clerk.Messages;
 using Colombo.Clerk.Web.Services;
 
 namespace Colombo.Clerk.Web.Controllers
@@ -37,6 +38,9 @@ namespace Colombo.Clerk.Web.Controllers
         {
             var currentIdentity = IdentityService.GetCurrentIdentity().Identity;
             ViewData["Username"] = currentIdentity.IsAuthenticated ? currentIdentity.Name : "Anonymous";
+
+            ViewData["MachineNames"] = MessageBus.FutureSend(new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames });
+
             base.OnActionExecuting(filterContext);
         }
     }

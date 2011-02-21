@@ -25,6 +25,17 @@
 				<ul class="sf-menu">
 					@Html.MainMenuLink("Dashboard")
                     @Html.MainMenuLink("Entries")
+                    <li>
+						<a href="styles.html">Styles</a>
+						<ul>
+                            @foreach (var machineName in ViewData["MachineNames"].Values)
+                            {
+                                <li>
+                                    <a href="#">@machineName</a>
+							    </li>
+                            }
+						</ul>
+					</li>
 				</ul>
 			</nav>
         </div>
