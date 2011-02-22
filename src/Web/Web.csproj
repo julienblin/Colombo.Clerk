@@ -109,6 +109,7 @@
     <Compile Include="Tests\FakeSends.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Colombo.svc" />
     <Content Include="Content\JS\html5.js" />
     <Content Include="Content\JS\IE8.js" />
     <Content Include="Global.asax" />

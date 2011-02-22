@@ -2,3 +2,16 @@
     ViewBag.Title = "Dashboard";
 }
 
+@section BottomJavascript {
+    $.ajax({
+        url: '@Url.Content("~/Colombo.svc/GetStatsByServer")',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (data, status, xhr) {
+            
+        },
+        error: function (xhr, status, error) {
+            
+        }
+    });
+}

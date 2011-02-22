@@ -16,6 +16,16 @@ namespace Colombo.Clerk.Web.Tests
             {
                 response.Values = new List<string> { "server1", "server2" };
             });
+
+            stubMessageBus.ExpectSend<GetStatsByServerRequest, GetStatsByServerResponse>().Reply(
+            (request, response) =>
+            {
+                response.ServerStats = new Dictionary<string, ServerStats>
+                {
+                    { "server1", new ServerStats { NumRequestsSent = 20, NumRequestsHandled = 30 } },
+                    { "server2", new ServerStats { NumRequestsSent = 0, NumRequestsHandled = 150 } }
+                };
+            });
         }
     }
 }

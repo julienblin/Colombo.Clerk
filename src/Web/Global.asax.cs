@@ -36,6 +36,7 @@ using Colombo.Clerk.Web.Infra;
 using Colombo.Clerk.Web.Tests;
 using Colombo.Facilities;
 using Colombo.TestSupport;
+using Colombo.Wcf;
 
 namespace Colombo.Clerk.Web
 {
@@ -99,6 +100,7 @@ namespace Colombo.Clerk.Web
             RegisterRoutes(RouteTable.Routes);
 
             BootstrapContainer();
+            ConfigureClientRestService();
         }
 
         protected void Application_End()
@@ -113,6 +115,11 @@ namespace Colombo.Clerk.Web
                 return ConfigurationManager.AppSettings["FakeSend"] != null &&
                        ConfigurationManager.AppSettings["FakeSend"].Equals("true");
             }
+        }
+
+        private void ConfigureClientRestService()
+        {
+            ClientRestService.RegisterRequest<GetStatsByServerRequest>();
         }
     }
 }
