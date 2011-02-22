@@ -2,12 +2,6 @@
     ViewBag.Title = "Dashboard";
 }
 
-<script id="serverStatsTemplate" type="text/x-jquery-tmpl">
-    <ul>
-    {{each ServerStats}}
-        <li>${$value.Key} - ${$value.Value.NumRequestsHandled}</li>
-    {{/each}}
-    </ul>
-</script>
-
-<div id="serverStats" data-remote="true" data-url="@Url.Content("~/Colombo.svc/GetStatsByServer")" data-template="serverStatsTemplate"></div>
+<section class="column width8">    <div class="colgroup leading">                <script id="serverStatsTemplate" type="text/x-jquery-tmpl">
+            <div class="column width8">                <h4>Servers</h4>                <hr/>                <table class="no-style full">                    <thead>                        <tr>                            <th>Server name</th>                            <th class="ta-right">Number of requests sent</th>                            <th class="ta-right">Number of requests handled</th>                        </tr>                    </thead>                    <tbody>                        {{each ServerStats}}                            <tr>                                <td><a href="@Url.RouteUrl("Entries")/${$value.Key}">${$value.Key}</a></td>                                <td class="ta-right">${$value.Value.NumRequestsSent}</td>                                <td class="ta-right">${$value.Value.NumRequestsHandled}</td>                            </tr>                        {{/each}}                    </tbody>                </table>            </div>
+        </script>        <div id="serverStats" data-url="@Url.Content("~/Colombo.svc/GetStatsByServer")"></div>    </div></section>
