@@ -68,7 +68,7 @@ namespace Colombo.Clerk.Server.Handlers
 
             var detachedResultQueryForPaging = query.Clone()
                 .Take(Request.PerPage)
-                .Skip(Request.PerPage * Request.CurrentPage)
+                .Skip(Request.PerPage * (Request.CurrentPage - 1))
                 .Select(Projections.Id());
 
             var results = session.QueryOver<AuditEntryModel>()
@@ -77,9 +77,8 @@ namespace Colombo.Clerk.Server.Handlers
                 .Fetch(x => x.Context).Eager
                 .Future();
 
-            Response.CurrentPage = Request.CurrentPage;
-            Response.PerPage = Request.PerPage;
-            Response.TotalEntries = rowCount.Value;
+            SetPaginationInfo(rowCount.Value);
+
             Response.Results = new List<AuditEntry>(
                 results.Select(x =>
                 {
