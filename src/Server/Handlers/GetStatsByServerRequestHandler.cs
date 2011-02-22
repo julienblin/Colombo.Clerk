@@ -83,9 +83,11 @@ namespace Colombo.Clerk.Server.Handlers
                     RequestUtcTimestampAfter = since
                 };
 
-                result[machineName] = new List<IFutureValue<int>>();
-                result[machineName].Add(querySent.GetQuery().GetExecutableQueryOver(session).Select(Projections.RowCount()).FutureValue<Int32>());
-                result[machineName].Add(queryHandled.GetQuery().GetExecutableQueryOver(session).Select(Projections.RowCount()).FutureValue<Int32>());
+                result[machineName] = new List<IFutureValue<int>>
+                {
+                    session.GetExecQuery(querySent).Select(Projections.RowCount()).FutureValue<int>(),
+                    session.GetExecQuery(queryHandled).Select(Projections.RowCount()).FutureValue<int>()
+                };
             }
             return result;
         }
