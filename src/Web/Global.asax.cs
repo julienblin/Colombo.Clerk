@@ -31,6 +31,7 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Combres;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Web.Infra;
 using Colombo.Clerk.Web.Tests;
@@ -51,6 +52,7 @@ namespace Colombo.Clerk.Web
 
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.AddCombresRoute("Combres");
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("{*favicon}", new { favicon = @"(.*/)?favicon.ico(/.*)?" });
 

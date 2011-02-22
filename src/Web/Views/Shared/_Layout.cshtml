@@ -1,20 +1,19 @@
-﻿@using Colombo.Clerk.Messages
+﻿@using Combres.Mvc
+@using Colombo.Clerk.Messages
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <title>Clerk - @ViewBag.Title</title>
-    <link href="@Url.Content("~/Content/CSS/Clerk.css")" rel="stylesheet" type="text/css" />
-    <script src="@Url.Content("~/Content/JS/jquery-1.4.4.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Content/JS/jquery.tmpl.min.js")" type="text/javascript"></script>
-    <script src="@Url.Content("~/Content/JS/Clerk.js")" type="text/javascript"></script>
+    @Url.CombresLink("ClerkCss")
+    @Url.CombresLink("ClerkJs")
     <!--[if IE]>
         <link rel="stylesheet" type="text/css" media="all" href="css/ie.css"/>
         <script src="@Url.Content("~/Content/JS/html5.js")"></script>
     <![endif]-->
     <!--[if lt IE 8]>
-        <script src="js/IE8.js"></script>
+        <script src="@Url.Content("~/Content/JS/IE8.js")"></script>
     <![endif]-->
 </head>
 <body>
