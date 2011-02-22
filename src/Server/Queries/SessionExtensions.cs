@@ -23,21 +23,45 @@
 #endregion
 
 using NHibernate;
+using NHibernate.Criterion;
 
 namespace Colombo.Clerk.Server.Queries
 {
     public static class SessionExtensions
     {
-        public static IQueryOver<TModelType> GetExecQuery<TModelType>(this ISession session, IQuery<TModelType> query)
+        public static IQueryOver<TModelType, TModelType> GetExecQuery<TModelType>(this ISession session, IQuery<TModelType> query)
         {
             return query.GetQuery().GetExecutableQueryOver(session);
         }
 
-        public static IQueryOver<TModelType> GetExecQuery<TQueryType, TModelType>(this ISession session)
+        public static IQueryOver<TModelType, TModelType> GetExecQuery<TQueryType, TModelType>(this ISession session)
             where TQueryType : IQuery<TModelType>, new()
         {
             var query = new TQueryType();
             return GetExecQuery(session, query);
         }
+
+        public static PaginationResult<TModelType> PaginateQuery<TModelType>(this ISession session, IQuery<TModelType> query, IPaginationInfo paginationInfo)
+        {
+            var result = new PaginationResult<TModelType>();
+
+            var nhQuery = query.GetQuery();
+            result.RowCount = nhQuery.Clone().GetExecutableQueryOver(session)
+                .Select(Projections.RowCount())
+                .FutureValue<int>();
+
+            result.PaginatedQuery = nhQuery.Clone()
+                .Take(paginationInfo.PerPage)
+                .Skip(paginationInfo.PerPage*(paginationInfo.CurrentPage - 1));
+
+            return result;
+        }
+    }
+
+    public class PaginationResult<TModelType>
+    {
+        public IFutureValue<int> RowCount { get; set; }
+
+        public QueryOver<TModelType, TModelType> PaginatedQuery { get; set; }
     }
 }

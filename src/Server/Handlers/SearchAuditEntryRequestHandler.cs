@@ -60,26 +60,16 @@ namespace Colombo.Clerk.Server.Handlers
                 );
             }
 
-            var query = auditEntryQuery.GetQuery();
-
-            var rowCount = query.Clone().GetExecutableQueryOver(session)
-                .Select(Projections.RowCount())
-                .FutureValue<Int32>();
-
-            var detachedResultQueryForPaging = query.Clone()
-                .Take(Request.PerPage)
-                .Skip(Request.PerPage * Request.CurrentPage)
-                .Select(Projections.Id());
+            var paginationResult = session.PaginateQuery(auditEntryQuery, Request);
 
             var results = session.QueryOver<AuditEntryModel>()
-                .WithSubquery.WhereProperty(x => x.Id).In(detachedResultQueryForPaging)
+                .WithSubquery.WhereProperty(x => x.Id).In(paginationResult.PaginatedQuery.Select(Projections.Id()))
                 .TransformUsing(Transformers.DistinctRootEntity)
                 .Fetch(x => x.Context).Eager
                 .Future();
 
-            Response.CurrentPage = Request.CurrentPage;
-            Response.PerPage = Request.PerPage;
-            Response.TotalEntries = rowCount.Value;
+            SetPaginationInfo(paginationResult.RowCount.Value);
+
             Response.Results = new List<AuditEntry>(
                 results.Select(x =>
                 {

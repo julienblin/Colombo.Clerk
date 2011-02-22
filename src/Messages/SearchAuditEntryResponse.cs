@@ -26,18 +26,12 @@ using System.Collections.Generic;
 
 namespace Colombo.Clerk.Messages
 {
-    public class SearchAuditEntryResponse : Response
+    public class SearchAuditEntryResponse : PaginatedResponse
     {
         public SearchAuditEntryResponse()
         {
             Results = new List<AuditEntry>();
         }
-
-        public virtual int TotalEntries { get; set; }
-
-        public virtual int CurrentPage { get; set; }
-
-        public virtual int PerPage { get; set; }
 
         public virtual IList<AuditEntry> Results { get; set; }
     }

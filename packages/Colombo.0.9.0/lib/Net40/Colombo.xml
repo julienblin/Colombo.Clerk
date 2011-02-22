@@ -261,6 +261,21 @@
         <c>false</c>
       </summary>
     </member>
+    <member name="T:Colombo.IPaginationInfo">
+      <summary>
+            Represents information for pagination.
+            Meant to be used through <see cref="T:Colombo.PaginatedResponse" /> and <see cref="T:Colombo.PaginatedRequest`1" /></summary>
+    </member>
+    <member name="P:Colombo.IPaginationInfo.CurrentPage">
+      <summary>
+            Current page number, starts at 1 (and not 0).
+            </summary>
+    </member>
+    <member name="P:Colombo.IPaginationInfo.PerPage">
+      <summary>
+            Number of entries per page.
+            </summary>
+    </member>
     <member name="T:Colombo.BaseMessage">
       <summary>
             Base class for all the Colombo messages.
@@ -354,8 +369,6 @@
             Base class for requests that are side-effect free, meaning they don't impact the state of the server.
             Use this base class to enable parallelism.
             </summary>
-      <typeparam name="TResponse">
-      </typeparam>
     </member>
     <member name="M:Colombo.SideEffectFreeRequest`1.GetResponseType">
       <summary>
@@ -429,6 +442,14 @@
             Create a new request to be used inside this request handler.
             The CorrelationGuid and the Context are copied.
             </summary>
+    </member>
+    <member name="M:Colombo.SideEffectFreeRequestHandler`2.SetPaginationInfo(System.Int32)">
+      <summary>
+            Set pagination information to <see cref="P:Colombo.SideEffectFreeRequestHandler`2.Response" /> based on Request and <paramref name="totalEntries" />.
+            Compute Response.TotalPages based on Response.PerPage value.
+            Response.PerPage must be &gt; 0.
+            </summary>
+      <exception cref="T:Colombo.ColomboException">If Response.PerPage &lt;= 0.</exception>
     </member>
     <member name="M:Colombo.SideEffectFreeRequestHandler`2.GetRequestType">
       <summary>
@@ -759,6 +780,65 @@
     <member name="P:Colombo.Interceptors.ExceptionsSendInterceptor.InterceptionPriority">
       <summary>
             High
+            </summary>
+    </member>
+    <member name="T:Colombo.PaginatedRequest">
+      <summary>
+            Static class to allow setting the PerPage default value.
+            </summary>
+    </member>
+    <member name="F:Colombo.PaginatedRequest.DefaultPerPageValueIfNotSet">
+      <summary>
+            Default value for <see cref="P:Colombo.PaginatedRequest.DefaultPerPageValue" />.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedRequest.DefaultPerPageValue">
+      <summary>
+            Default PaginatedRequest.PerPage value.
+            Default to 30 if not set.
+            </summary>
+    </member>
+    <member name="T:Colombo.PaginatedRequest`1">
+      <summary>
+            Base class for requests that are side-effect free and paginated.
+            Associated reponses must be <see cref="T:Colombo.PaginatedResponse" />.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedRequest`1.CurrentPage">
+      <summary>
+            Current page number, starts at 1 (and not 0).
+            Defaults to 1.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedRequest`1.PerPage">
+      <summary>
+            Number of entries per page.
+            Default to <see cref="P:Colombo.PaginatedRequest.DefaultPerPageValue" />.
+            </summary>
+    </member>
+    <member name="T:Colombo.PaginatedResponse">
+      <summary>
+            Base class for responses that are paginated.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedResponse.CurrentPage">
+      <summary>
+            Current page number, starts at 1 (and not 0).
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedResponse.PerPage">
+      <summary>
+            Number of entries per page.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedResponse.TotalEntries">
+      <summary>
+            Total number of entries without pagination.
+            </summary>
+    </member>
+    <member name="P:Colombo.PaginatedResponse.TotalPages">
+      <summary>
+            Total number of pages.
             </summary>
     </member>
     <member name="T:Colombo.CacheSegmentAttribute">

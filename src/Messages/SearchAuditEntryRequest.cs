@@ -27,17 +27,12 @@ using System.Collections.Generic;
 
 namespace Colombo.Clerk.Messages
 {
-    public class SearchAuditEntryRequest : SideEffectFreeRequest<SearchAuditEntryResponse>
+    public class SearchAuditEntryRequest : PaginatedRequest<SearchAuditEntryResponse>
     {
         public SearchAuditEntryRequest()
         {
-            PerPage = 30;
             ContextConditions = new List<ContextCondition>();
         }
-
-        public int CurrentPage { get; set; }
-
-        public int PerPage { get; set; }
 
         public string RequestNamespace { get; set; }
 

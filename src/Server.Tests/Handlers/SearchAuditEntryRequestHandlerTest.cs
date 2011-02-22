@@ -44,8 +44,9 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(0));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.TotalPages, Is.EqualTo(0));
             Assert.That(response.Results.Count, Is.EqualTo(0));
         }
 
@@ -86,7 +87,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
 
@@ -137,21 +138,24 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var request = new SearchAuditEntryRequest { PerPage = 10 };
             var response = MessageBus.Send(request);
             Assert.That(response.TotalEntries, Is.EqualTo(50));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
-            Assert.That(response.PerPage, Is.EqualTo(10));
-            Assert.That(response.Results.Count, Is.EqualTo(10));
-
-            request = new SearchAuditEntryRequest { CurrentPage = 1, PerPage = 10 };
-            response = MessageBus.Send(request);
-            Assert.That(response.TotalEntries, Is.EqualTo(50));
+            Assert.That(response.TotalPages, Is.EqualTo(5));
             Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(10));
             Assert.That(response.Results.Count, Is.EqualTo(10));
 
-            request = new SearchAuditEntryRequest { CurrentPage = 5, PerPage = 10 };
+            request = new SearchAuditEntryRequest { CurrentPage = 2, PerPage = 10 };
             response = MessageBus.Send(request);
             Assert.That(response.TotalEntries, Is.EqualTo(50));
-            Assert.That(response.CurrentPage, Is.EqualTo(5));
+            Assert.That(response.TotalPages, Is.EqualTo(5));
+            Assert.That(response.CurrentPage, Is.EqualTo(2));
+            Assert.That(response.PerPage, Is.EqualTo(10));
+            Assert.That(response.Results.Count, Is.EqualTo(10));
+
+            request = new SearchAuditEntryRequest { CurrentPage = 6, PerPage = 10 };
+            response = MessageBus.Send(request);
+            Assert.That(response.TotalEntries, Is.EqualTo(50));
+            Assert.That(response.TotalPages, Is.EqualTo(5));
+            Assert.That(response.CurrentPage, Is.EqualTo(6));
             Assert.That(response.PerPage, Is.EqualTo(10));
             Assert.That(response.Results.Count, Is.EqualTo(0));
         }
@@ -181,7 +185,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -210,7 +214,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -239,7 +243,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -271,7 +275,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -300,7 +304,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -329,7 +333,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -361,7 +365,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -394,7 +398,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -404,7 +408,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -437,7 +441,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -470,7 +474,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -480,7 +484,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -513,7 +517,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -524,7 +528,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -534,7 +538,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -545,7 +549,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(0));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(0));
 
@@ -553,7 +557,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -585,7 +589,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -596,7 +600,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -606,7 +610,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -617,7 +621,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(0));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(0));
 
@@ -625,7 +629,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -678,7 +682,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -694,7 +698,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -709,7 +713,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(2));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(2));
             Assert.That(response.Results.Select(x => x.Id),
@@ -725,7 +729,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(0));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(0));
         }
@@ -777,7 +781,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -793,7 +797,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(1));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(1));
             Assert.That(response.Results.Select(x => x.Id),
@@ -809,7 +813,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             response = MessageBus.Send(request);
 
             Assert.That(response.TotalEntries, Is.EqualTo(0));
-            Assert.That(response.CurrentPage, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
             Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
             Assert.That(response.Results.Count, Is.EqualTo(0));
         }
