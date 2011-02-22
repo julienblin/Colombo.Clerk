@@ -32,13 +32,15 @@ namespace Colombo.Clerk.Web.Controllers
     {
         public IStatefulMessageBus MessageBus { get; set; }
 
+        public IConfigService ConfigService { get; set; }
+
         public IIdentityService IdentityService { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
             var currentIdentity = IdentityService.GetCurrentIdentity().Identity;
+            ViewData["ClerkServer"] = ConfigService.ClerkServer;
             ViewData["Username"] = currentIdentity.IsAuthenticated ? currentIdentity.Name : "Anonymous";
-
             ViewData["MachineNames"] = MessageBus.FutureSend(new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames });
 
             base.OnActionExecuting(filterContext);

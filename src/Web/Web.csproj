@@ -125,7 +125,9 @@
     <Compile Include="Infra\ControllersInstaller.cs" />
     <Compile Include="Infra\ServicesInstaller.cs" />
     <Compile Include="Infra\WindsorControllerFactory.cs" />
+    <Compile Include="Services\IConfigService.cs" />
     <Compile Include="Services\IIdentityService.cs" />
+    <Compile Include="Services\Impl\DefaultConfigService.cs" />
     <Compile Include="Services\Impl\DefaultIdentityService.cs" />
     <Compile Include="Tests\FakeSends.cs" />
   </ItemGroup>
