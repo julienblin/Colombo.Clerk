@@ -110,8 +110,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Colombo.svc" />
+    <Content Include="Content\JS\Clerk.js" />
     <Content Include="Content\JS\html5.js" />
     <Content Include="Content\JS\IE8.js" />
+    <Content Include="Content\JS\jquery.tmpl.min.js" />
     <Content Include="Global.asax" />
     <Content Include="Content\CSS\Clerk.css" />
     <Content Include="Web.config" />

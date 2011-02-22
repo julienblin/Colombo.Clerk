@@ -2,16 +2,12 @@
     ViewBag.Title = "Dashboard";
 }
 
-@section BottomJavascript {
-    $.ajax({
-        url: '@Url.Content("~/Colombo.svc/GetStatsByServer")',
-        type: 'GET',
-        contentType: 'application/json',
-        success: function (data, status, xhr) {
-            
-        },
-        error: function (xhr, status, error) {
-            
-        }
-    });
-}
+<script id="serverStatsTemplate" type="text/x-jquery-tmpl">
+    <ul>
+    {{each ServerStats}}
+        <li>${$value.Key} - ${$value.Value.NumRequestsHandled}</li>
+    {{/each}}
+    </ul>
+</script>
+
+<div id="serverStats" data-remote="true" data-url="@Url.Content("~/Colombo.svc/GetStatsByServer")" data-template="serverStatsTemplate"></div>
