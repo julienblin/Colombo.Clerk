@@ -38,9 +38,8 @@ namespace Colombo.Clerk.Web.Controllers
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            var currentIdentity = IdentityService.GetCurrentIdentity().Identity;
             ViewData["ClerkServer"] = ConfigService.ClerkServer;
-            ViewData["Username"] = currentIdentity.IsAuthenticated ? currentIdentity.Name : "Anonymous";
+            ViewData["Identity"] = IdentityService.GetCurrentIdentity().Identity;
             ViewData["MachineNames"] = MessageBus.FutureSend(new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames });
 
             base.OnActionExecuting(filterContext);

@@ -31,6 +31,7 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Colombo.Clerk.Web.Services;
 using Combres;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Web.Infra;
@@ -73,25 +74,34 @@ namespace Colombo.Clerk.Web
         private void BootstrapContainer()
         {
             container = new WindsorContainer().Install(FromAssembly.This());
-
-            container.AddFacility<LoggingFacility>(f =>
+            IConfigService configService = null;
+            try
             {
-                f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config");
-            });
+                configService = container.Resolve<IConfigService>();
+                container.AddFacility<LoggingFacility>(f =>
+                {
+                    f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config");
+                });
 
-            container.AddFacility<ColomboFacility>(f =>
+                container.AddFacility<ColomboFacility>(f =>
+                {
+                    f.ClientOnly();
+                    f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
+                    if (configService.FakeSend)
+                        f.TestSupportMode();
+                });
+
+                if (configService.FakeSend)
+                    container.Resolve<IStubMessageBus>().ConfigureFakeSends();
+
+                var controllerFactory = new WindsorControllerFactory(container.Kernel);
+                ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+            }
+            finally
             {
-                f.ClientOnly();
-                f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
-                if (UseFakeSends)
-                    f.TestSupportMode();
-            });
-
-            if (UseFakeSends)
-                container.Resolve<IStubMessageBus>().ConfigureFakeSends();
-
-            var controllerFactory = new WindsorControllerFactory(container.Kernel);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+                if (configService != null)
+                    container.Release(configService);
+            }
         }
 
         protected void Application_Start()
@@ -108,15 +118,6 @@ namespace Colombo.Clerk.Web
         protected void Application_End()
         {
             container.Dispose();
-        }
-
-        public bool UseFakeSends
-        {
-            get
-            {
-                return ConfigurationManager.AppSettings["FakeSend"] != null &&
-                       ConfigurationManager.AppSettings["FakeSend"].Equals("true");
-            }
         }
 
         private void ConfigureClientRestService()

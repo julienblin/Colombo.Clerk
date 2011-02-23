@@ -792,6 +792,10 @@ header#top aside a{
 	color:#FFC806;
 	text-decoration:none;
 }
+#topnav span.high {
+	color:#FFC806;
+	text-decoration:none;
+}
 #topnav a:hover, header#top aside a:hover,
 #topnav a:focus, header#top aside a:focus,
 #topnav a:active, header#top aside a:active {

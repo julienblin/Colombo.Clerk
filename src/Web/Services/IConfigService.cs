@@ -9,6 +9,8 @@ namespace Colombo.Clerk.Web.Services
     {
         string Environment { get; }
 
+        bool FakeSend { get; }
+
         string ClerkServer { get; }
     }
 }

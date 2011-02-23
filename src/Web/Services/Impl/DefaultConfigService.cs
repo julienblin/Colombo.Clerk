@@ -9,16 +9,33 @@ namespace Colombo.Clerk.Web.Services.Impl
 {
     public class DefaultConfigService : IConfigService
     {
-        public string Environment { get; private set; }
+        public const string DefaultEnvironment = @"Production";
+
+        public string Environment
+        {
+            get { return ConfigurationManager.AppSettings["Environment"] ?? DefaultEnvironment; }
+        }
+
+        public bool FakeSend
+        {
+            get { return Environment.Equals("DevStation", StringComparison.InvariantCultureIgnoreCase); }
+        }
 
         public string ClerkServer
         {
             get
             {
-                var channelEndPointElement = GetChannelEndpointElement("Colombo.Clerk.Messages");
-                if (channelEndPointElement == null) return "Not configured";
+                if (FakeSend)
+                {
+                    return "FakeSend";
+                }
+                else
+                {
+                    var channelEndPointElement = GetChannelEndpointElement("Colombo.Clerk.Messages");
+                    if (channelEndPointElement == null) return "Not configured";
 
-                return channelEndPointElement.Address.ToString();
+                    return channelEndPointElement.Address.ToString();
+                }
             }
         }
 

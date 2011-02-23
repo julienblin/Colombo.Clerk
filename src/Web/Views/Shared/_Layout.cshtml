@@ -1,4 +1,5 @@
-﻿@using Combres.Mvc
+﻿@using System.Security.Principal
+@using Combres.Mvc
 @using Colombo.Clerk.Messages
 
 <!DOCTYPE html>
@@ -21,9 +22,14 @@
 		<div class="wrapper">
             <div id="title">Clerk</div>
             <div id="topnav">
-			    <a href="#"><img class="avatar" src="@Url.Content("~/Content/Img/user_32.png")" alt="" /></a>
-			    Logged in as <b>@ViewData["Username"]</b><br />
-                <small>@ViewData["ClerkServer"]</small>
+                @if (((IIdentity)ViewData["Identity"]).IsAuthenticated) {
+                    <img class="avatar" src="@Url.Content("~/Content/Img/user_32.png")" alt="" />
+			        @:Logged in as <b>@((IIdentity)ViewData["Identity"]).Name</b>
+                } else {
+                    <b>Unauthenticated</b>
+                }
+                <br />
+                <small><span class="high">@ViewData["ClerkServer"]</span></small>
 		    </div>
             <nav id="menu">
 				<ul class="sf-menu">
