@@ -31,6 +31,7 @@ using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
 using Castle.Windsor.Installer;
+using Colombo.Clerk.Web.Environments;
 using Colombo.Clerk.Web.Services;
 using Combres;
 using Colombo.Clerk.Messages;
@@ -71,39 +72,6 @@ namespace Colombo.Clerk.Web
 
         }
 
-        private void BootstrapContainer()
-        {
-            container = new WindsorContainer().Install(FromAssembly.This());
-            IConfigService configService = null;
-            try
-            {
-                configService = container.Resolve<IConfigService>();
-                container.AddFacility<LoggingFacility>(f =>
-                {
-                    f.LogUsing(LoggerImplementation.Log4net).WithConfig("log4net.config");
-                });
-
-                container.AddFacility<ColomboFacility>(f =>
-                {
-                    f.ClientOnly();
-                    f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
-                    if (configService.FakeSend)
-                        f.TestSupportMode();
-                });
-
-                if (configService.FakeSend)
-                    container.Resolve<IStubMessageBus>().ConfigureFakeSends();
-
-                var controllerFactory = new WindsorControllerFactory(container.Kernel);
-                ControllerBuilder.Current.SetControllerFactory(controllerFactory);
-            }
-            finally
-            {
-                if (configService != null)
-                    container.Release(configService);
-            }
-        }
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
@@ -111,7 +79,9 @@ namespace Colombo.Clerk.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            BootstrapContainer();
+            container = new WindsorContainer().Install(FromAssembly.This());
+            container.Resolve<IEnvironment>().BootstrapContainer(container);
+
             ConfigureClientRestService();
         }
 
@@ -120,7 +90,7 @@ namespace Colombo.Clerk.Web
             container.Dispose();
         }
 
-        private void ConfigureClientRestService()
+        private static void ConfigureClientRestService()
         {
             ClientRestService.RegisterRequest<GetStatsByServerRequest>();
         }

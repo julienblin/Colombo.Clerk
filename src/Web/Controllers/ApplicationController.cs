@@ -24,6 +24,7 @@
 
 using System.Web.Mvc;
 using Colombo.Clerk.Messages;
+using Colombo.Clerk.Web.Environments;
 using Colombo.Clerk.Web.Services;
 
 namespace Colombo.Clerk.Web.Controllers
@@ -32,13 +33,13 @@ namespace Colombo.Clerk.Web.Controllers
     {
         public IStatefulMessageBus MessageBus { get; set; }
 
-        public IConfigService ConfigService { get; set; }
+        public IEnvironment Environment { get; set; }
 
         public IIdentityService IdentityService { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            ViewData["ClerkServer"] = ConfigService.ClerkServer;
+            ViewData["ClerkServer"] = Environment.ClerkServer;
             ViewData["Identity"] = IdentityService.GetCurrentIdentity().Identity;
             ViewData["MachineNames"] = MessageBus.FutureSend(new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames });
 
