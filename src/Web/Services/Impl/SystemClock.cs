@@ -22,27 +22,15 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Web.Mvc;
-using Colombo.Clerk.Messages;
-using Colombo.Clerk.Web.Services;
+using System;
 
-namespace Colombo.Clerk.Web.Controllers
+namespace Colombo.Clerk.Web.Services.Impl
 {
-    public class DashboardController : ApplicationController
+    public class SystemClock : IClock
     {
-        private readonly IClock clock;
-
-        public DashboardController(IClock clock)
+        public DateTime UtcNow
         {
-            this.clock = clock;
-        }
-
-        public ActionResult Index(SearchAuditEntryRequest search)
-        {
-            ViewData["Request"] = search;
-            ViewData["Response"] = MessageBus.FutureSend(search);
-
-            return View();
+            get { return DateTime.UtcNow; }
         }
     }
 }

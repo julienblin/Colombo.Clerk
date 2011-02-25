@@ -47,6 +47,15 @@ namespace Colombo.Clerk.Web.Tests
                     { "server2", new ServerStats { NumRequestsSent = 0, NumRequestsHandled = 150 } }
                 };
             });
+
+            stubMessageBus.ExpectSend<SearchAuditEntryRequest, SearchAuditEntryResponse>().Reply(
+            (request, response) =>
+            {
+                response.CurrentPage = request.CurrentPage;
+                response.PerPage = request.PerPage;
+                response.TotalEntries = 0;
+                response.TotalPages = 0;
+            });
         }
     }
 }
