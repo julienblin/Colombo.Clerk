@@ -15,11 +15,6 @@ namespace Colombo.Clerk.Web.Environments
             get { return GetType().Name; }
         }
 
-        public virtual string ClerkServer
-        {
-            get { return "TODO"; }
-        }
-
         public abstract void BootstrapContainer(IWindsorContainer container);
     }
 }

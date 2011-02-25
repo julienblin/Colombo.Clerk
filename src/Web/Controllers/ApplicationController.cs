@@ -26,6 +26,7 @@ using System.Web.Mvc;
 using Colombo.Clerk.Messages;
 using Colombo.Clerk.Web.Environments;
 using Colombo.Clerk.Web.Services;
+using Colombo.Wcf;
 
 namespace Colombo.Clerk.Web.Controllers
 {
@@ -33,15 +34,16 @@ namespace Colombo.Clerk.Web.Controllers
     {
         public IStatefulMessageBus MessageBus { get; set; }
 
-        public IEnvironment Environment { get; set; }
-
         public IIdentityService IdentityService { get; set; }
+
+        public IColomboServiceFactory ColomboServiceFactory { get; set; }
 
         protected override void OnActionExecuting(ActionExecutingContext filterContext)
         {
-            ViewData["ClerkServer"] = Environment.ClerkServer;
             ViewData["Identity"] = IdentityService.GetCurrentIdentity().Identity;
-            ViewData["MachineNames"] = MessageBus.FutureSend(new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames });
+            var getDistinctValuesRequest = new GetDistinctValuesRequest { ValueType = GetDistinctValueType.MachineNames };
+            ViewData["MachineNames"] = MessageBus.FutureSend(getDistinctValuesRequest);
+            ViewData["ClerkServer"] = ColomboServiceFactory != null ? ColomboServiceFactory.GetAddressForRequestGroup(getDistinctValuesRequest.GetGroupName()) : "Unknown";
 
             base.OnActionExecuting(filterContext);
         }

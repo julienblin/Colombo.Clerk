@@ -10,8 +10,6 @@ namespace Colombo.Clerk.Web.Environments
     {
         string Name { get; }
 
-        string ClerkServer { get; }
-
         void BootstrapContainer(IWindsorContainer container);
     }
 }
