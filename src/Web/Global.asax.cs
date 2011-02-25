@@ -22,24 +22,14 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Collections.Generic;
-using System.Configuration;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Castle.Facilities.Logging;
-using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
-using Castle.Windsor.Installer;
-using Colombo.Clerk.Web.Environments;
-using Colombo.Clerk.Web.Services;
-using Combres;
 using Colombo.Clerk.Messages;
-using Colombo.Clerk.Web.Infra;
-using Colombo.Clerk.Web.Tests;
-using Colombo.Facilities;
-using Colombo.TestSupport;
+using Colombo.Clerk.Web.Environments;
 using Colombo.Wcf;
+using Combres;
 
 namespace Colombo.Clerk.Web
 {
@@ -79,7 +69,7 @@ namespace Colombo.Clerk.Web
             RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
 
-            container = new WindsorContainer().Install(FromAssembly.This());
+            container = new WindsorContainer().Install(new EnvironmentsInstaller());
             container.Resolve<IEnvironment>().BootstrapContainer(container);
 
             ConfigureClientRestService();

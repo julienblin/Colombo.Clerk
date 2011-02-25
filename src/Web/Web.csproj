@@ -120,7 +120,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Environments\BaseEnvironment.cs" />
     <Compile Include="Environments\Impl\DevStation.cs" />
-    <Compile Include="Infra\EnvironmentsInstaller.cs" />
+    <Compile Include="Environments\EnvironmentsInstaller.cs" />
     <Compile Include="Environments\IEnvironment.cs" />
     <Compile Include="Environments\Impl\Production.cs" />
     <Compile Include="Global.asax.cs">

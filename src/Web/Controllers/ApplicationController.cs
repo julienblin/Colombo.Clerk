@@ -24,7 +24,6 @@
 
 using System.Web.Mvc;
 using Colombo.Clerk.Messages;
-using Colombo.Clerk.Web.Environments;
 using Colombo.Clerk.Web.Services;
 using Colombo.Wcf;
 

@@ -22,14 +22,36 @@
 // THE SOFTWARE.
 #endregion
 
+using System;
+using System.Configuration;
+using System.Linq;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
 namespace Colombo.Clerk.Web.Environments
 {
-    public interface IEnvironment
+    public class EnvironmentsInstaller : IWindsorInstaller
     {
-        string Name { get; }
+        public void Install(IWindsorContainer container, IConfigurationStore store)
+        {
+            var currentEnvironment = ConfigurationManager.AppSettings["Environment"] ??
+                                     BaseEnvironment.DefaultEnvironmnent;
 
-        void BootstrapContainer(IWindsorContainer container);
+            var envType = GetType().Assembly.GetTypes()
+                .Where(
+                    t =>
+                    (t.GetInterface(typeof(IEnvironment).Name) != null) &&
+                    (t.Name.Equals(currentEnvironment, StringComparison.InvariantCultureIgnoreCase)) &&
+                    !t.IsAbstract &&
+                    !t.IsInterface
+                 )
+                .FirstOrDefault();
+
+            if(envType == null)
+                throw new Exception(string.Format("Unknown environment {0}.", currentEnvironment));
+
+            container.Register(Component.For<IEnvironment>().ImplementedBy(envType));
+        }
     }
 }
