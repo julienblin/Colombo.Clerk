@@ -40,6 +40,16 @@ namespace Colombo.Clerk.Web.Environments
 
         public abstract void BootstrapContainer(IWindsorContainer container);
 
+        public virtual void RegisterGlobalFilters(GlobalFilterCollection filters)
+        {
+            
+        }
+
+        public virtual void OnApplicationStart()
+        {
+            
+        }
+
         protected virtual void RunInstallers(IWindsorContainer container)
         {
             container.Install(new ControllersInstaller());

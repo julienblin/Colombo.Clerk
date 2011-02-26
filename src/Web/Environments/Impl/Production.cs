@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Web.Mvc;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
@@ -46,6 +47,11 @@ namespace Colombo.Clerk.Web.Environments.Impl
 
             RunInstallers(container);
             RegisterControllerFactory(container);
+        }
+
+        public override void RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection filters)
+        {
+            filters.Add(new HandleErrorAttribute());
         }
     }
 }

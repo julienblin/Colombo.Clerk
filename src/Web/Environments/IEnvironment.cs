@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Web.Mvc;
 using Castle.Windsor;
 
 namespace Colombo.Clerk.Web.Environments
@@ -31,5 +32,9 @@ namespace Colombo.Clerk.Web.Environments
         string Name { get; }
 
         void BootstrapContainer(IWindsorContainer container);
+
+        void RegisterGlobalFilters(GlobalFilterCollection filters);
+
+        void OnApplicationStart();
     }
 }

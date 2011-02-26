@@ -37,11 +37,6 @@ namespace Colombo.Clerk.Web
     {
         private static IWindsorContainer container;
 
-        public static void RegisterGlobalFilters(GlobalFilterCollection filters)
-        {
-            filters.Add(new HandleErrorAttribute());
-        }
-
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.AddCombresRoute("Combres");
@@ -59,30 +54,30 @@ namespace Colombo.Clerk.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new { controller = "Home", action = "Index", id = UrlParameter.Optional } // Parameter defaults
             );
+        }
 
+        private static void ConfigureClientRestService()
+        {
+            ClientRestService.RegisterRequest<GetStatsByServerRequest>();
         }
 
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
 
-            RegisterGlobalFilters(GlobalFilters.Filters);
             RegisterRoutes(RouteTable.Routes);
+            ConfigureClientRestService();
 
             container = new WindsorContainer().Install(new EnvironmentsInstaller());
-            container.Resolve<IEnvironment>().BootstrapContainer(container);
-
-            ConfigureClientRestService();
+            var env = container.Resolve<IEnvironment>();
+            env.BootstrapContainer(container);
+            env.RegisterGlobalFilters(GlobalFilters.Filters);
+            env.OnApplicationStart();
         }
 
         protected void Application_End()
         {
             container.Dispose();
-        }
-
-        private static void ConfigureClientRestService()
-        {
-            ClientRestService.RegisterRequest<GetStatsByServerRequest>();
         }
     }
 }
