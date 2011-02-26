@@ -1251,6 +1251,11 @@
             Only register the components needed to act as a client, which means no message handling can happen locally.
             </summary>
     </member>
+    <member name="M:Colombo.Facilities.ColomboFacility.DisableSendingThroughWcf(System.Boolean)">
+      <summary>
+            Disable the send operations using WCF.
+            </summary>
+    </member>
     <member name="M:Colombo.Facilities.ColomboFacility.MaxAllowedNumberOfSendForStatefulMessageBus(System.Int32)">
       <summary>
             Number of Send operations allowed in <see cref="T:Colombo.IStatefulMessageBus" />.
