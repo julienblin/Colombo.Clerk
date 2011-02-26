@@ -134,7 +134,9 @@
     <Compile Include="Services\IIdentityService.cs" />
     <Compile Include="Services\Impl\DefaultIdentityService.cs" />
     <Compile Include="Services\Impl\SystemClock.cs" />
-    <Compile Include="Tests\FakeSends.cs" />
+    <Compile Include="StubHandlers\GetDistinctValuesRequestHandler.cs" />
+    <Compile Include="StubHandlers\GetStatsByServerRequestHandler.cs" />
+    <Compile Include="StubHandlers\SearchAuditEntryRequestHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="combres.config" />
