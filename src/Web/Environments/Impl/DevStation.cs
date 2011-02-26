@@ -22,11 +22,9 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Web.Mvc;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
-using Colombo.Clerk.Web.Infra;
 using Colombo.Clerk.Web.Tests;
 using Colombo.Facilities;
 using Colombo.TestSupport;
@@ -44,16 +42,14 @@ namespace Colombo.Clerk.Web.Environments.Impl
 
             container.AddFacility<ColomboFacility>(f =>
             {
-                f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
                 f.TestSupportMode();
+                f.StatefulMessageBusLifestyle(typeof(PerWebRequestLifestyleManager));
             });
 
             RunInstallers(container);
+            RegisterControllerFactory(container);
 
             container.Resolve<IStubMessageBus>().ConfigureFakeSends();
-
-            var controllerFactory = new WindsorControllerFactory(container.Kernel);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
         }
     }
 }

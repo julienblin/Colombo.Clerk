@@ -127,9 +127,9 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MainMenuHelper.cs" />
-    <Compile Include="Infra\ControllersInstaller.cs" />
-    <Compile Include="Infra\ServicesInstaller.cs" />
-    <Compile Include="Infra\WindsorControllerFactory.cs" />
+    <Compile Include="Controllers\ControllersInstaller.cs" />
+    <Compile Include="Services\ServicesInstaller.cs" />
+    <Compile Include="Controllers\WindsorControllerFactory.cs" />
     <Compile Include="Services\IClock.cs" />
     <Compile Include="Services\IIdentityService.cs" />
     <Compile Include="Services\Impl\DefaultIdentityService.cs" />

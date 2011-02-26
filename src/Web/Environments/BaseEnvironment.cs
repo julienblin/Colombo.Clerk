@@ -22,8 +22,10 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Web.Mvc;
 using Castle.Windsor;
-using Colombo.Clerk.Web.Infra;
+using Colombo.Clerk.Web.Controllers;
+using Colombo.Clerk.Web.Services;
 
 namespace Colombo.Clerk.Web.Environments
 {
@@ -42,6 +44,11 @@ namespace Colombo.Clerk.Web.Environments
         {
             container.Install(new ControllersInstaller());
             container.Install(new ServicesInstaller());
+        }
+
+        protected virtual void RegisterControllerFactory(IWindsorContainer container)
+        {
+            ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(container));
         }
     }
 }

@@ -22,31 +22,21 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Web.Mvc;
-using System.Web.Routing;
-using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
+using Castle.MicroKernel.SubSystems.Configuration;
+using Castle.Windsor;
 
-namespace Colombo.Clerk.Web.Infra
+namespace Colombo.Clerk.Web.Services
 {
-    public class WindsorControllerFactory : DefaultControllerFactory
+    public class ServicesInstaller : IWindsorInstaller
     {
-        private readonly IKernel kernel;
-
-        public WindsorControllerFactory(IKernel kernel)
+        public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            this.kernel = kernel;
-        }
-
-        public override void ReleaseController(IController controller)
-        {
-            if(controller != null)
-                kernel.ReleaseComponent(controller);
-        }
-
-        public override IController CreateController(RequestContext requestContext, string controllerName)
-        {
-            var controllerComponentName = controllerName + "Controller";
-            return kernel.HasComponent(controllerComponentName) ? kernel.Resolve<IController>(controllerComponentName) : null;
+            container.Register(
+                AllTypes.FromThisAssembly()
+                    .Where(x => x.Namespace.StartsWith("Colombo.Clerk.Web.Services.Impl"))
+                    .WithService.AllInterfaces()
+            );
         }
     }
 }

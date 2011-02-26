@@ -22,21 +22,32 @@
 // THE SOFTWARE.
 #endregion
 
+using System.Web.Mvc;
 using Castle.MicroKernel.Registration;
 using Castle.MicroKernel.SubSystems.Configuration;
 using Castle.Windsor;
 
-namespace Colombo.Clerk.Web.Infra
+namespace Colombo.Clerk.Web.Controllers
 {
-    public class ServicesInstaller : IWindsorInstaller
+    public class ControllersInstaller : IWindsorInstaller
     {
         public void Install(IWindsorContainer container, IConfigurationStore store)
         {
-            container.Register(
-                AllTypes.FromThisAssembly()
-                    .Where(x => x.Namespace.StartsWith("Colombo.Clerk.Web.Services.Impl"))
-                    .WithService.AllInterfaces()
-            );
+            container.Register(FindControllers().Configure(ConfigureControllers()));
+        }
+
+        private static ConfigureDelegate ConfigureControllers()
+        {
+            return c => c.Named(c.ServiceType.Name)
+                            .LifeStyle.Transient;
+        }
+
+        private static BasedOnDescriptor FindControllers()
+        {
+            return AllTypes.FromThisAssembly()
+                .BasedOn<IController>()
+                .If(Component.IsInSameNamespaceAs<HomeController>())
+                .If(t => t.Name.EndsWith("Controller"));
         }
     }
 }

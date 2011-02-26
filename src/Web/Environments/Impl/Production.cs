@@ -22,11 +22,9 @@
 // THE SOFTWARE.
 #endregion
 
-using System.Web.Mvc;
 using Castle.Facilities.Logging;
 using Castle.MicroKernel.Lifestyle;
 using Castle.Windsor;
-using Colombo.Clerk.Web.Infra;
 using Colombo.Facilities;
 
 namespace Colombo.Clerk.Web.Environments.Impl
@@ -47,9 +45,7 @@ namespace Colombo.Clerk.Web.Environments.Impl
             });
 
             RunInstallers(container);
-
-            var controllerFactory = new WindsorControllerFactory(container.Kernel);
-            ControllerBuilder.Current.SetControllerFactory(controllerFactory);
+            RegisterControllerFactory(container);
         }
     }
 }

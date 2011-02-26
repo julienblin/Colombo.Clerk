@@ -23,32 +23,31 @@
 #endregion
 
 using System.Web.Mvc;
-using Castle.MicroKernel.Registration;
-using Castle.MicroKernel.SubSystems.Configuration;
+using System.Web.Routing;
+using Castle.MicroKernel;
 using Castle.Windsor;
-using Colombo.Clerk.Web.Controllers;
 
-namespace Colombo.Clerk.Web.Infra
+namespace Colombo.Clerk.Web.Controllers
 {
-    public class ControllersInstaller : IWindsorInstaller
+    public class WindsorControllerFactory : DefaultControllerFactory
     {
-        public void Install(IWindsorContainer container, IConfigurationStore store)
+        private readonly IWindsorContainer container;
+
+        public WindsorControllerFactory(IWindsorContainer container)
         {
-            container.Register(FindControllers().Configure(ConfigureControllers()));
+            this.container = container;
         }
 
-        private static ConfigureDelegate ConfigureControllers()
+        public override void ReleaseController(IController controller)
         {
-            return c => c.Named(c.ServiceType.Name)
-                            .LifeStyle.Transient;
+            if(controller != null)
+                container.Release(controller);
         }
 
-        private static BasedOnDescriptor FindControllers()
+        public override IController CreateController(RequestContext requestContext, string controllerName)
         {
-            return AllTypes.FromThisAssembly()
-                .BasedOn<IController>()
-                .If(Component.IsInSameNamespaceAs<HomeController>())
-                .If(t => t.Name.EndsWith("Controller"));
+            var controllerComponentName = controllerName + "Controller";
+            return container.Kernel.HasComponent(controllerComponentName) ? container.Resolve<IController>(controllerComponentName) : null;
         }
     }
 }
