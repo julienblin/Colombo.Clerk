@@ -56,6 +56,11 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AuditEntry.cs" />
+    <Compile Include="CreateStreamRequest.cs" />
+    <Compile Include="CreateStreamResponse.cs" />
+    <Compile Include="DeleteStreamRequest.cs" />
+    <Compile Include="DeleteStreamResponse.cs" />
+    <Compile Include="Filters\RequestTypeFilter.cs" />
     <Compile Include="GetAuditEntryByIdResponse.cs" />
     <Compile Include="GetAuditEntryByIdRequest.cs" />
     <Compile Include="GetDistinctValuesRequest.cs" />
@@ -64,6 +69,9 @@
     <Compile Include="GetStatsByServerResponse.cs" />
     <Compile Include="SearchAuditEntryRequest.cs" />
     <Compile Include="SearchAuditEntryResponse.cs" />
+    <Compile Include="Filters\BaseFilter.cs" />
+    <Compile Include="Filters\IFilter.cs" />
+    <Compile Include="Filters\RequestNamespaceFilter.cs" />
     <Compile Include="WriteAuditEntryRequest.cs" />
     <Compile Include="WriteAuditEntryResponse.cs" />
   </ItemGroup>

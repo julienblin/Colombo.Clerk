@@ -114,9 +114,13 @@
     <Compile Include="Interceptors\InternalAuditRequestHandlerInterceptor.cs" />
     <Compile Include="Mappings\AuditEntryModelMap.cs" />
     <Compile Include="Mappings\ContextEntryModelMap.cs" />
+    <Compile Include="Mappings\FilterModelMap.cs" />
     <Compile Include="Mappings\MapConstants.cs" />
+    <Compile Include="Mappings\StreamModelMap.cs" />
     <Compile Include="Models\AuditEntryModel.cs" />
     <Compile Include="Models\ContextEntryModel.cs" />
+    <Compile Include="Models\FilterModel.cs" />
+    <Compile Include="Models\StreamModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
     <Compile Include="Queries\AuditEntrySearchQuery.cs" />
     <Compile Include="Queries\DistinctMachineNamesQuery.cs" />
