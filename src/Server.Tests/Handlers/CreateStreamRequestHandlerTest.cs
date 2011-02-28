@@ -19,10 +19,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         [Test]
         public void It_should_be_able_to_save_a_Stream()
         {
-            Container.Register(Component.For<IFilterService>().ImplementedBy<ReflectionFilterService>());
             StubMessageBus.TestHandler<CreateStreamRequestHandler>();
-
-            var filterService = Container.Resolve<IFilterService>();
 
             var request = new CreateStreamRequest { Name = "StreamName" };
             var requestNamespaceFilter = new RequestNamespaceFilter { Value = "RequestNamespaceValue" };
@@ -64,7 +61,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var requestNamespaceFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(requestNamespaceFilter).FilterName)
+                        f => f.FilterName == requestNamespaceFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(requestNamespaceFilterModel, Is.Not.Null);
@@ -72,7 +69,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var requestTypeFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(requestTypeFilter).FilterName)
+                        f => f.FilterName == requestTypeFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(requestTypeFilterModel, Is.Not.Null);
@@ -80,7 +77,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var requestCorrelationGuidFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(requestCorrelationGuidFilter).FilterName)
+                        f => f.FilterName == requestCorrelationGuidFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(requestCorrelationGuidFilterModel, Is.Not.Null);
@@ -88,7 +85,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var responseNamespaceFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(responseNamespaceFilter).FilterName)
+                        f => f.FilterName == responseNamespaceFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(responseNamespaceFilterModel, Is.Not.Null);
@@ -96,7 +93,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var responseTypeFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(responseTypeFilter).FilterName)
+                        f => f.FilterName == responseTypeFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(responseTypeFilterModel, Is.Not.Null);
@@ -104,7 +101,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var responseCorrelationGuidFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(responseCorrelationGuidFilter).FilterName)
+                        f => f.FilterName == responseCorrelationGuidFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(responseCorrelationGuidFilterModel, Is.Not.Null);
@@ -112,7 +109,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var hasExceptionFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(hasExceptionFilter).FilterName)
+                        f => f.FilterName == hasExceptionFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(hasExceptionFilterModel, Is.Not.Null);
@@ -120,7 +117,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var exceptionContainsFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(exceptionContainsFilter).FilterName)
+                        f => f.FilterName == exceptionContainsFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(exceptionContainsFilterModel, Is.Not.Null);
@@ -128,7 +125,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var hasMessageFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(hasMessageFilter).FilterName)
+                        f => f.FilterName == hasMessageFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(hasMessageFilterModel, Is.Not.Null);
@@ -136,7 +133,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var messageContainsFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(messageContainsFilter).FilterName)
+                        f => f.FilterName == messageContainsFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(messageContainsFilterModel, Is.Not.Null);
@@ -144,7 +141,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var requestUtcTimestampAfterFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == filterService.GetFilterDescription(requestUtcTimestampAfterFilter).FilterName)
+                        f => f.FilterName == requestUtcTimestampAfterFilter.GetType().Name)
                         .FirstOrDefault();
 
                 Assert.That(requestUtcTimestampAfterFilterModel, Is.Not.Null);
@@ -157,7 +154,6 @@ namespace Colombo.Clerk.Server.Tests.Handlers
         [Test]
         public void It_should_reject_Streams_with_no_names_or_duplicate()
         {
-            Container.Register(Component.For<IFilterService>().ImplementedBy<ReflectionFilterService>());
             StubMessageBus.TestHandler<CreateStreamRequestHandler>();
 
             var request = new CreateStreamRequest();

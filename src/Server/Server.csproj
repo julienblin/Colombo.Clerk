@@ -130,8 +130,6 @@
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\SessionExtensions.cs" />
     <Compile Include="Services\IClock.cs" />
-    <Compile Include="Services\IFilterService.cs" />
-    <Compile Include="Services\Impl\ReflectionFilterService.cs" />
     <Compile Include="Services\Impl\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>

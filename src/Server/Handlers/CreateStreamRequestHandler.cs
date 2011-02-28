@@ -15,12 +15,9 @@ namespace Colombo.Clerk.Server.Handlers
     {
         private readonly ISession session;
 
-        private readonly IFilterService filterService;
-
-        public CreateStreamRequestHandler(ISession session, IFilterService filterService)
+        public CreateStreamRequestHandler(ISession session)
         {
             this.session = session;
-            this.filterService = filterService;
         }
 
         protected override void Handle()
@@ -39,9 +36,8 @@ namespace Colombo.Clerk.Server.Handlers
 
             foreach (var filterRequest in Request.Filters)
             {
-                var filterDescription = filterService.GetFilterDescription(filterRequest);
-                var filterModel = new FilterModel { FilterName = filterDescription.FilterName };
-                filterModel.SetValue(filterDescription.FilterType, filterRequest.GetValue());
+                var filterModel = new FilterModel { FilterName = filterRequest.GetType().Name };
+                filterModel.SetValue(filterRequest.ValueType, filterRequest.GetValue());
                 stream.Filters.Add(filterModel);
             }
 
