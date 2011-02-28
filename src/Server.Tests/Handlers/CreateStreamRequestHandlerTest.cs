@@ -41,6 +41,13 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
             var hasExceptionFilter = new HasExceptionFilter() { Value = true };
             request.Filters.Add(hasExceptionFilter);
+            var exceptionContainsFilter = new ExceptionContainsFilter { Value = "ExceptionContainsValue" };
+            request.Filters.Add(exceptionContainsFilter);
+
+            var hasMessageFilter = new HasMessageFilter { Value = true };
+            request.Filters.Add(hasMessageFilter);
+            var messageContainsFilter = new MessageContainsFilter { Value = "MessageContainsValue" };
+            request.Filters.Add(messageContainsFilter);
 
             var requestUtcTimestampAfterFilter = new RequestUtcTimestampAfterFilter() { Value = new DateTime(2011, 02, 01) };
             request.Filters.Add(requestUtcTimestampAfterFilter);
@@ -110,6 +117,30 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 Assert.That(hasExceptionFilterModel, Is.Not.Null);
                 Assert.That(hasExceptionFilterModel.BoolValue, Is.EqualTo(hasExceptionFilter.Value));
+
+                var exceptionContainsFilterModel =
+                    streamModel.Filters.Where(
+                        f => f.FilterName == filterService.GetFilterDescription(exceptionContainsFilter).FilterName)
+                        .FirstOrDefault();
+
+                Assert.That(exceptionContainsFilterModel, Is.Not.Null);
+                Assert.That(exceptionContainsFilterModel.StringValue, Is.EqualTo(exceptionContainsFilter.Value));
+
+                var hasMessageFilterModel =
+                    streamModel.Filters.Where(
+                        f => f.FilterName == filterService.GetFilterDescription(hasMessageFilter).FilterName)
+                        .FirstOrDefault();
+
+                Assert.That(hasMessageFilterModel, Is.Not.Null);
+                Assert.That(hasMessageFilterModel.BoolValue, Is.EqualTo(hasMessageFilter.Value));
+
+                var messageContainsFilterModel =
+                    streamModel.Filters.Where(
+                        f => f.FilterName == filterService.GetFilterDescription(messageContainsFilter).FilterName)
+                        .FirstOrDefault();
+
+                Assert.That(messageContainsFilterModel, Is.Not.Null);
+                Assert.That(messageContainsFilterModel.StringValue, Is.EqualTo(messageContainsFilter.Value));
 
                 var requestUtcTimestampAfterFilterModel =
                     streamModel.Filters.Where(

@@ -109,6 +109,7 @@
     <Compile Include="ClerkServiceTest.cs" />
     <Compile Include="BaseDbTest.cs" />
     <Compile Include="Handlers\CreateStreamRequestHandlerTest.cs" />
+    <Compile Include="Handlers\GetAuditEntriesForStreamRequestHandlerTest.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandlerTest.cs" />
     <Compile Include="Handlers\GetDistinctValuesRequestHandlerTest.cs" />
     <Compile Include="Handlers\GetStatsByServerRequestHandlerTest.cs" />

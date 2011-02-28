@@ -107,6 +107,7 @@
     <Compile Include="ClerkService.cs" />
     <Compile Include="EndPointConfig.cs" />
     <Compile Include="Handlers\CreateStreamRequestHandler.cs" />
+    <Compile Include="Handlers\GetAuditEntriesForStreamRequestHandler.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\GetDistinctValuesRequestHandler.cs" />
     <Compile Include="Handlers\GetStatsByServerRequestHandler.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Models\FilterModel.cs" />
     <Compile Include="Models\StreamModel.cs" />
     <Compile Include="Properties\AssemblyVisibility.cs" />
+    <Compile Include="Queries\AuditEntriesFromFiltersQuery.cs" />
     <Compile Include="Queries\AuditEntrySearchQuery.cs" />
     <Compile Include="Queries\DistinctMachineNamesQuery.cs" />
     <Compile Include="Queries\IQuery.cs" />
