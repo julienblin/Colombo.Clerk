@@ -60,11 +60,12 @@
     <Compile Include="CreateStreamResponse.cs" />
     <Compile Include="DeleteStreamRequest.cs" />
     <Compile Include="DeleteStreamResponse.cs" />
+    <Compile Include="Filters\BaseRangeFilter.cs" />
     <Compile Include="Filters\ExceptionContainsFilter.cs" />
     <Compile Include="Filters\HasExceptionFilter.cs" />
     <Compile Include="Filters\HasMessageFilter.cs" />
     <Compile Include="Filters\MessageContainsFilter.cs" />
-    <Compile Include="Filters\RequestUtcTimestampAfterFilter.cs" />
+    <Compile Include="Filters\RequestUtcTimestampFilter.cs" />
     <Compile Include="Filters\ResponseCorrelationGuidFilter.cs" />
     <Compile Include="Filters\ResponseNamespaceFilter.cs" />
     <Compile Include="Filters\ResponseTypeFilter.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="GetStatsByServerResponse.cs" />
     <Compile Include="SearchAuditEntryRequest.cs" />
     <Compile Include="SearchAuditEntryResponse.cs" />
-    <Compile Include="Filters\BaseFilter.cs" />
+    <Compile Include="Filters\BaseSimpleFilter.cs" />
     <Compile Include="Filters\IFilter.cs" />
     <Compile Include="Filters\RequestNamespaceFilter.cs" />
     <Compile Include="WriteAuditEntryRequest.cs" />

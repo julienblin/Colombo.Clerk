@@ -5,11 +5,7 @@ using System.Text;
 
 namespace Colombo.Clerk.Messages.Filters
 {
-    public class MessageContainsFilter : BaseFilter<string>
+    public class MessageContainsFilter : BaseSimpleFilter<string>
     {
-        public override string Label
-        {
-            get { return "message contains"; }
-        }
     }
 }

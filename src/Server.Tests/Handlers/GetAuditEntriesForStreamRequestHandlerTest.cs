@@ -591,5 +591,118 @@ namespace Colombo.Clerk.Server.Tests.Handlers
                 Contains.Item(auditEntryReference2.Id)
                 .And.Contains(auditEntryReference3.Id));
         }
+
+        [Test]
+        public void It_should_filter_by_RequestUtcTimestamps()
+        {
+            AuditEntryModel auditEntryReference1, auditEntryReference2, auditEntryReference3 = null;
+            var streamModel1 = new StreamModel
+            {
+                Filters = new List<FilterModel>
+                {
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterAfter", DateTimeValue = new DateTime(2003, 01, 01) }
+                }
+            };
+            var streamModel2 = new StreamModel
+            {
+                Filters = new List<FilterModel>
+                {
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterAfter", DateTimeValue = new DateTime(2006, 01, 01) }
+                }
+            };
+            var streamModel3 = new StreamModel
+            {
+                Filters = new List<FilterModel>
+                {
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterBefore", DateTimeValue = new DateTime(2009, 01, 01) }
+                }
+            };
+            var streamModel4 = new StreamModel
+            {
+                Filters = new List<FilterModel>
+                {
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterBefore", DateTimeValue = new DateTime(1999, 01, 01) }
+                }
+            };
+            var streamModel5 = new StreamModel
+            {
+                Filters = new List<FilterModel>
+                {
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterAfter", DateTimeValue = new DateTime(2004, 01, 01) },
+                    new FilterModel { FilterName = "RequestUtcTimestampFilterBefore", DateTimeValue = new DateTime(2009, 01, 01) }
+                }
+            };
+
+            using (var tx = Session.BeginTransaction())
+            {
+
+                auditEntryReference1 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2001, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference1);
+
+                auditEntryReference2 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2005, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference2);
+
+                auditEntryReference3 = new AuditEntryModel { RequestUtcTimestamp = new DateTime(2010, 01, 01, 01, 01, 01) };
+                Session.Save(auditEntryReference3);
+
+                Session.Save(streamModel1);
+                Session.Save(streamModel2);
+                Session.Save(streamModel3);
+                Session.Save(streamModel4);
+                Session.Save(streamModel5);
+                tx.Commit();
+            }
+
+            StubMessageBus.TestHandler<GetAuditEntriesForStreamRequestHandler>();
+            var request = new GetAuditEntriesForStreamRequest { Id = streamModel1.Id };
+            var response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id)
+                .And.Contains(auditEntryReference3.Id));
+
+            request = new GetAuditEntriesForStreamRequest { Id = streamModel2.Id };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference3.Id));
+
+            request = new GetAuditEntriesForStreamRequest { Id = streamModel3.Id };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(2));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(2));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference1.Id)
+                .And.Contains(auditEntryReference2.Id));
+
+            request = new GetAuditEntriesForStreamRequest { Id = streamModel4.Id };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(0));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(0));
+
+            request = new GetAuditEntriesForStreamRequest { Id = streamModel5.Id };
+            response = MessageBus.Send(request);
+
+            Assert.That(response.TotalEntries, Is.EqualTo(1));
+            Assert.That(response.CurrentPage, Is.EqualTo(1));
+            Assert.That(response.PerPage, Is.EqualTo(request.PerPage));
+            Assert.That(response.Results.Count, Is.EqualTo(1));
+            Assert.That(response.Results.Select(x => x.Id),
+                Contains.Item(auditEntryReference2.Id));
+        }
     }
 }

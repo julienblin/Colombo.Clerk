@@ -5,11 +5,7 @@ using System.Text;
 
 namespace Colombo.Clerk.Messages.Filters
 {
-    public class ResponseNamespaceFilter : BaseFilter<string>
+    public class ResponseNamespaceFilter : BaseSimpleFilter<string>
     {
-        public override string Label
-        {
-            get { return "response namespace"; }
-        }
     }
 }

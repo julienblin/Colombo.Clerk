@@ -5,11 +5,7 @@ using System.Text;
 
 namespace Colombo.Clerk.Messages.Filters
 {
-    public class ResponseCorrelationGuidFilter : BaseFilter<Guid>
+    public class ResponseCorrelationGuidFilter : BaseSimpleFilter<Guid>
     {
-        public override string Label
-        {
-            get { return "response correlation guid"; }
-        }
     }
 }

@@ -24,7 +24,7 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var request = new CreateStreamRequest { Name = "StreamName" };
             var requestNamespaceFilter = new RequestNamespaceFilter { Value = "RequestNamespaceValue" };
             request.Filters.Add(requestNamespaceFilter);
-            var requestTypeFilter = new RequestTypeFilter {Value = "RequestTypeValue"};
+            var requestTypeFilter = new RequestTypeFilter { Value = "RequestTypeValue" };
             request.Filters.Add(requestTypeFilter);
             var requestCorrelationGuidFilter = new RequestCorrelationGuidFilter() { Value = Guid.NewGuid() };
             request.Filters.Add(requestCorrelationGuidFilter);
@@ -46,8 +46,11 @@ namespace Colombo.Clerk.Server.Tests.Handlers
             var messageContainsFilter = new MessageContainsFilter { Value = "MessageContainsValue" };
             request.Filters.Add(messageContainsFilter);
 
-            var requestUtcTimestampAfterFilter = new RequestUtcTimestampAfterFilter() { Value = new DateTime(2011, 02, 01) };
-            request.Filters.Add(requestUtcTimestampAfterFilter);
+            var requestUtcTimestampFilter = new RequestUtcTimestampFilter()
+                                                {
+                                                    ValueAfter = new DateTime(2011, 01, 01)
+                                                };
+            request.Filters.Add(requestUtcTimestampFilter);
 
             var response = MessageBus.Send(request);
 
@@ -141,11 +144,18 @@ namespace Colombo.Clerk.Server.Tests.Handlers
 
                 var requestUtcTimestampAfterFilterModel =
                     streamModel.Filters.Where(
-                        f => f.FilterName == requestUtcTimestampAfterFilter.GetType().Name)
+                        f => f.FilterName == requestUtcTimestampFilter.GetType().Name + "After")
                         .FirstOrDefault();
 
                 Assert.That(requestUtcTimestampAfterFilterModel, Is.Not.Null);
-                Assert.That(requestUtcTimestampAfterFilterModel.DateTimeValue, Is.EqualTo(requestUtcTimestampAfterFilter.Value));
+                Assert.That(requestUtcTimestampAfterFilterModel.DateTimeValue, Is.EqualTo(requestUtcTimestampFilter.ValueAfter));
+
+                var requestUtcTimestampBeforeFilterModel =
+                    streamModel.Filters.Where(
+                        f => f.FilterName == requestUtcTimestampFilter.GetType().Name + "Before")
+                        .FirstOrDefault();
+
+                Assert.That(requestUtcTimestampBeforeFilterModel, Is.Null);
 
                 tx.Commit();
             }

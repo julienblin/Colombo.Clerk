@@ -52,8 +52,11 @@ namespace Colombo.Clerk.Server.Queries
                         else
                             queryOver.Where(x => (x.Exception == null || x.Exception == ""));
                         break;
-                    case "RequestUtcTimestampAfterFilter":
+                    case "RequestUtcTimestampFilterAfter":
                         queryOver.Where(x => x.RequestUtcTimestamp >= filterModel.DateTimeValue);
+                        break;
+                    case "RequestUtcTimestampFilterBefore":
+                        queryOver.Where(x => x.RequestUtcTimestamp <= filterModel.DateTimeValue);
                         break;
                     case "ExceptionContainsFilter":
                         queryOver.Where(Restrictions.On<AuditEntryModel>(r => r.Exception).IsLike(filterModel.StringValue, MatchMode.Anywhere));

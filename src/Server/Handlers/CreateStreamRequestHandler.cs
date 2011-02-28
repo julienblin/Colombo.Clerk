@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using Colombo.Clerk.Messages;
+using Colombo.Clerk.Messages.Filters;
 using Colombo.Clerk.Server.Models;
 using Colombo.Clerk.Server.Services;
 using NHibernate;
@@ -36,9 +37,34 @@ namespace Colombo.Clerk.Server.Handlers
 
             foreach (var filterRequest in Request.Filters)
             {
-                var filterModel = new FilterModel { FilterName = filterRequest.GetType().Name };
-                filterModel.SetValue(filterRequest.ValueType, filterRequest.GetValue());
-                stream.Filters.Add(filterModel);
+                switch (filterRequest.FilterCategory)
+                {
+                    case FilterCategory.SingleValue:
+                        var filterModel = new FilterModel { FilterName = filterRequest.GetType().Name };
+                        filterModel.SetValue(filterRequest.ValueTypes.First(), filterRequest.GetValues().First());
+                        stream.Filters.Add(filterModel);
+                        break;
+                    case FilterCategory.Range:
+                        var valueTypes = filterRequest.ValueTypes.ToArray();
+                        var values = filterRequest.GetValues().ToArray();
+
+                        if (values[0] != null)
+                        {
+                            var filterModelAfter = new FilterModel { FilterName = filterRequest.GetType().Name + "After" };
+                            filterModelAfter.SetValue(valueTypes[0], values[0]);
+                            stream.Filters.Add(filterModelAfter);
+                        }
+
+                        if (values[1] != null)
+                        {
+                            var filterModelBefore = new FilterModel { FilterName = filterRequest.GetType().Name + "Before" };
+                            filterModelBefore.SetValue(valueTypes[1], values[1]);
+                            stream.Filters.Add(filterModelBefore);
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             session.Save(stream);

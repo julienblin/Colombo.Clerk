@@ -29,11 +29,20 @@ namespace Colombo.Clerk.Server.Models
             if(filterType == typeof(DateTime))
                 DateTimeValue = (DateTime) value;
 
+            if (filterType == typeof(DateTime?))
+                DateTimeValue = ((DateTime?)value).Value;
+
             if(filterType == typeof(bool))
                 BoolValue = (bool) value;
 
+            if (filterType == typeof(bool?))
+                BoolValue = ((bool?)value).Value;
+
             if(filterType == typeof(Guid))
                 GuidValue = (Guid) value;
+
+            if (filterType == typeof(Guid?))
+                GuidValue = ((Guid?)value).Value;
         }
     }
 }

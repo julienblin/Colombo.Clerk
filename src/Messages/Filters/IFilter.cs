@@ -7,9 +7,16 @@ namespace Colombo.Clerk.Messages.Filters
 {
     public interface IFilter
     {
-        string Label { get; }
-        Type ValueType { get; }
+        FilterCategory FilterCategory { get; }
 
-        object GetValue();
+        IEnumerable<Type> ValueTypes { get; }
+
+        IEnumerable<object> GetValues();
+    }
+
+    public enum FilterCategory
+    {
+        SingleValue,
+        Range
     }
 }
