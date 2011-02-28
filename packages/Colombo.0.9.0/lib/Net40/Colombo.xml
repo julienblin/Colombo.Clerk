@@ -1251,7 +1251,7 @@
             Only register the components needed to act as a client, which means no message handling can happen locally.
             </summary>
     </member>
-    <member name="M:Colombo.Facilities.ColomboFacility.DisableSendingThroughWcf(System.Boolean)">
+    <member name="M:Colombo.Facilities.ColomboFacility.DisableSendingThroughWcf">
       <summary>
             Disable the send operations using WCF.
             </summary>
