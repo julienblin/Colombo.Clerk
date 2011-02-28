@@ -106,6 +106,7 @@
     </Compile>
     <Compile Include="ClerkService.cs" />
     <Compile Include="EndPointConfig.cs" />
+    <Compile Include="Handlers\CreateStreamRequestHandler.cs" />
     <Compile Include="Handlers\GetAuditEntryByIdRequestHandler.cs" />
     <Compile Include="Handlers\GetDistinctValuesRequestHandler.cs" />
     <Compile Include="Handlers\GetStatsByServerRequestHandler.cs" />
@@ -127,6 +128,8 @@
     <Compile Include="Queries\IQuery.cs" />
     <Compile Include="Queries\SessionExtensions.cs" />
     <Compile Include="Services\IClock.cs" />
+    <Compile Include="Services\IFilterService.cs" />
+    <Compile Include="Services\Impl\ReflectionFilterService.cs" />
     <Compile Include="Services\Impl\SystemClock.cs" />
   </ItemGroup>
   <ItemGroup>

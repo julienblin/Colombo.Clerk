@@ -9,7 +9,7 @@ namespace Colombo.Clerk.Server.Models
     {
         public virtual Guid Id { get; set; }
 
-        public virtual FilterType FilterType { get; set; }
+        public virtual string FilterName { get; set; }
 
         public virtual string StringValue { get; set; }
 
@@ -20,13 +20,20 @@ namespace Colombo.Clerk.Server.Models
         public virtual Guid? GuidValue { get; set; }
 
         public virtual StreamModel StreamModel { get; set; }
-    }
 
-    public enum FilterType
-    {
-        @String,
-        @DateTime,
-        @Bool,
-        @Guid
+        public virtual void SetValue(Type filterType, object value)
+        {
+            if(filterType == typeof(string))
+                StringValue = (string)value;
+
+            if(filterType == typeof(DateTime))
+                DateTimeValue = (DateTime) value;
+
+            if(filterType == typeof(bool))
+                BoolValue = (bool) value;
+
+            if(filterType == typeof(Guid))
+                GuidValue = (Guid) value;
+        }
     }
 }

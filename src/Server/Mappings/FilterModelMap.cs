@@ -16,7 +16,7 @@ namespace Colombo.Clerk.Server.Mappings
             Table(tableName);
             Id(x => x.Id);
 
-            Map(x => x.FilterType);
+            Map(x => x.FilterName);
             Map(x => x.StringValue);
             Map(x => x.DateTimeValue);
             Map(x => x.BoolValue);

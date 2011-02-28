@@ -16,7 +16,7 @@ namespace Colombo.Clerk.Server.Mappings
             Table(tableName);
             Id(x => x.Id);
 
-            Map(x => x.Name);
+            Map(x => x.Name).Unique();
 
             HasMany(x => x.Filters).Cascade.AllDeleteOrphan();
         }

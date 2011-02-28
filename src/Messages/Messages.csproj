@@ -60,6 +60,12 @@
     <Compile Include="CreateStreamResponse.cs" />
     <Compile Include="DeleteStreamRequest.cs" />
     <Compile Include="DeleteStreamResponse.cs" />
+    <Compile Include="Filters\HasExceptionFilter.cs" />
+    <Compile Include="Filters\RequestUtcTimestampAfterFilter.cs" />
+    <Compile Include="Filters\ResponseCorrelationGuidFilter.cs" />
+    <Compile Include="Filters\ResponseNamespaceFilter.cs" />
+    <Compile Include="Filters\ResponseTypeFilter.cs" />
+    <Compile Include="Filters\RequestCorrelationGuidFilter.cs" />
     <Compile Include="Filters\RequestTypeFilter.cs" />
     <Compile Include="GetAuditEntryByIdResponse.cs" />
     <Compile Include="GetAuditEntryByIdRequest.cs" />

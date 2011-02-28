@@ -7,5 +7,6 @@ namespace Colombo.Clerk.Messages
 {
     public class CreateStreamResponse : ValidatedResponse
     {
+        public virtual Guid Id { get; set; }
     }
 }
